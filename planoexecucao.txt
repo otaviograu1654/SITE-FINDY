@@ -1,0 +1,466 @@
+PLANO DE EXECUÇÃO - PLATAFORMA DE SERVIÇOS
+
+IDEIA DO BANCO:
+
+TABELA: USUARIOS
+
+- id
+- nome
+- email
+- senha
+- telefone
+- cidade
+- estado
+- foto
+- data_cadastro
+
+Relacionamentos:
+- Um usuário pode cadastrar vários serviços.
+- Um usuário pode fazer várias solicitações de orçamento.
+- Um usuário pode receber várias solicitações por meio dos serviços que oferece.
+- Um usuário pode fazer várias avaliações.
+- Um usuário pode receber várias avaliações.
+
+
+TABELA: CATEGORIAS
+
+- id
+- nome
+- descricao
+
+Relacionamentos:
+- Uma categoria pode possuir vários serviços.
+- Cada serviço pertence a uma categoria.
+
+
+TABELA: SERVICOS
+
+- id
+- usuario_id
+- categoria_id
+- titulo
+- descricao
+- ativo
+- data_cadastro
+
+Relacionamentos:
+- Cada serviço pertence a um usuário.
+- Cada serviço pertence a uma categoria.
+- Um usuário pode cadastrar vários serviços.
+- Um serviço pode receber várias solicitações de orçamento.
+
+
+TABELA: SOLICITACOES
+
+- id
+- cliente_id
+- servico_id
+- mensagem
+- status
+- data_solicitacao
+
+Relacionamentos:
+- Cada solicitação é feita por um usuário.
+- Cada solicitação pertence a um serviço.
+- O dono do serviço é o usuário que está recebendo a solicitação.
+- Um usuário pode fazer várias solicitações.
+- Um serviço pode receber várias solicitações.
+- Uma solicitação concluída pode gerar uma avaliação.
+
+
+TABELA: AVALIACOES
+
+- id
+- avaliador_id
+- avaliado_id
+- solicitacao_id
+- nota
+- comentario
+- data_avaliacao
+
+Relacionamentos:
+- Cada avaliação é feita por um usuário.
+- Cada avaliação é destinada a outro usuário.
+- Cada avaliação está ligada a uma solicitação.
+- Um usuário pode fazer várias avaliações.
+- Um usuário pode receber várias avaliações.
+- Uma solicitação pode ter no máximo uma avaliação.
+
+
+USUARIOS 1 ---- N SERVICOS
+
+CATEGORIAS 1 ---- N SERVICOS
+
+USUARIOS 1 ---- N SOLICITACOES
+(cliente que solicitou)
+
+SERVICOS 1 ---- N SOLICITACOES
+
+USUARIOS 1 ---- N AVALIACOES
+(avaliador)
+
+USUARIOS 1 ---- N AVALIACOES
+(avaliado)
+
+SOLICITACOES 1 ---- 0..1 AVALIACOES
+
+CHAVES estrangeiras:
+SERVICOS.usuario_id
+→ USUARIOS.id
+
+SERVICOS.categoria_id
+→ CATEGORIAS.id
+
+SOLICITACOES.cliente_id
+→ USUARIOS.id
+
+SOLICITACOES.servico_id
+→ SERVICOS.id
+
+AVALIACOES.avaliador_id
+→ USUARIOS.id
+
+AVALIACOES.avaliado_id
+→ USUARIOS.id
+
+AVALIACOES.solicitacao_id
+→ SOLICITACOES.id
+
+
+
+
+
+Objetivo:
+Desenvolver uma plataforma web responsiva para conectar pessoas que precisam de serviços com profissionais que oferecem esses serviços.
+
+Status:
+[ ] Pendente
+[~] Em andamento
+[x] Concluído
+
+
+FASE 1 - PREPARAÇÃO DO PROJETO
+
+Objetivo:
+Configurar o ambiente de desenvolvimento e a estrutura inicial do sistema.
+
+Tarefas:
+[x] Criar estrutura principal de pastas
+[x] Instalar Java
+[x] Instalar VS Code
+[x] Instalar extensões Java e Spring Boot
+[x] Criar projeto Spring Boot
+[x] Executar projeto Spring Boot pela primeira vez
+[ ] Instalar/configurar PostgreSQL
+[ ] Configurar conexão Spring Boot + PostgreSQL
+[ ] Configurar Git
+[ ] Criar repositório no GitHub
+
+
+FASE 2 - MODELAGEM DO BANCO DE DADOS
+
+Objetivo:
+Definir a estrutura dos dados utilizados pelo sistema.
+
+Tarefas:
+[ ] Criar tabela de usuários
+[ ] Criar tabela de prestadores
+[ ] Criar tabela de categorias
+[ ] Criar tabela de serviços
+[ ] Criar tabela de solicitações
+[ ] Criar tabela de avaliações
+[ ] Definir chaves primárias
+[ ] Definir chaves estrangeiras
+[ ] Definir relacionamentos
+[ ] Criar diagrama do banco de dados
+
+
+FASE 3 - ESTRUTURA DO BACKEND
+
+Objetivo:
+Organizar o backend Java utilizando Spring Boot.
+
+Tarefas:
+[ ] Criar packages model
+[ ] Criar package repository
+[ ] Criar package service
+[ ] Criar package controller
+[ ] Criar package dto
+[ ] Criar package config
+[ ] Testar primeira rota da API REST
+[ ] Testar comunicação com PostgreSQL
+
+
+FASE 4 - CADASTRO DE USUÁRIO
+
+Objetivo:
+Permitir a criação de contas na plataforma.
+
+Tarefas:
+[ ] Criar tela de cadastro
+[ ] Criar model de usuário
+[ ] Criar repository de usuário
+[ ] Criar service de usuário
+[ ] Criar controller de usuário
+[ ] Criar rota POST /usuarios
+[ ] Validar campos obrigatórios
+[ ] Impedir e-mails duplicados
+[ ] Salvar usuário no banco
+[ ] Testar cadastro pela API
+[ ] Integrar frontend com backend
+
+
+FASE 5 - LOGIN E AUTENTICAÇÃO
+
+Objetivo:
+Permitir que usuários cadastrados façam login com segurança.
+
+Tarefas:
+[ ] Criar tela de login
+[ ] Configurar Spring Security
+[ ] Validar e-mail e senha
+[ ] Implementar autenticação
+[ ] Manter usuário autenticado
+[ ] Criar logout
+[ ] Proteger páginas privadas
+[ ] Proteger rotas privadas da API
+
+
+FASE 6 - PERFIL DO USUÁRIO
+
+Objetivo:
+Permitir que o usuário visualize e altere seus dados.
+
+Tarefas:
+[ ] Criar página Minha Conta
+[ ] Exibir dados do usuário
+[ ] Editar nome
+[ ] Editar telefone
+[ ] Editar cidade e estado
+[ ] Alterar foto
+[ ] Alterar senha
+
+
+FASE 7 - PERFIL DE PRESTADOR
+
+Objetivo:
+Permitir que qualquer usuário também ofereça serviços.
+
+Tarefas:
+[ ] Criar opção Tornar-se Prestador
+[ ] Criar perfil profissional
+[ ] Adicionar descrição profissional
+[ ] Adicionar experiência
+[ ] Adicionar foto
+[ ] Definir cidade de atuação
+[ ] Ativar/desativar perfil de prestador
+
+
+FASE 8 - CATEGORIAS
+
+Objetivo:
+Organizar os serviços oferecidos pela plataforma.
+
+Tarefas:
+[ ] Criar cadastro de categorias
+[ ] Criar categorias iniciais
+[ ] Construção
+[ ] Saúde e cuidados
+[ ] Tecnologia
+[ ] Marketing
+[ ] Pets
+[ ] Serviços domésticos
+[ ] Educação
+[ ] Relacionar categorias aos serviços
+
+
+FASE 9 - SERVIÇOS
+
+Objetivo:
+Permitir que prestadores cadastrem os serviços oferecidos.
+
+Tarefas:
+[ ] Criar tela Meus Serviços
+[ ] Cadastrar serviço
+[ ] Editar serviço
+[ ] Excluir serviço
+[ ] Ativar/desativar serviço
+[ ] Relacionar serviço ao prestador
+[ ] Relacionar serviço à categoria
+[ ] Criar API de serviços
+
+
+FASE 10 - PÁGINA INICIAL
+
+Objetivo:
+Criar a principal entrada para busca de profissionais.
+
+Tarefas:
+[ ] Criar página inicial
+[ ] Criar campo O que você precisa?
+[ ] Criar campo de localização
+[ ] Criar botão de busca
+[ ] Mostrar categorias
+[ ] Criar chamada para prestadores
+
+
+FASE 11 - BUSCA DE PRESTADORES
+
+Objetivo:
+Permitir que clientes encontrem profissionais.
+
+Tarefas:
+[ ] Buscar por serviço
+[ ] Buscar por categoria
+[ ] Buscar por cidade
+[ ] Combinar filtros
+[ ] Mostrar lista de resultados
+[ ] Mostrar avaliação média
+[ ] Criar cards de prestadores
+
+
+FASE 12 - PERFIL PÚBLICO DO PRESTADOR
+
+Objetivo:
+Exibir informações profissionais para possíveis clientes.
+
+Tarefas:
+[ ] Mostrar nome
+[ ] Mostrar foto
+[ ] Mostrar descrição
+[ ] Mostrar experiência
+[ ] Mostrar localização
+[ ] Mostrar serviços oferecidos
+[ ] Mostrar avaliação média
+[ ] Mostrar avaliações
+[ ] Criar botão Solicitar Orçamento
+
+
+FASE 13 - SOLICITAÇÃO DE ORÇAMENTO
+
+Objetivo:
+Permitir contato entre cliente e prestador.
+
+Tarefas:
+[ ] Criar formulário de solicitação
+[ ] Enviar mensagem para prestador
+[ ] Registrar solicitação no banco
+[ ] Criar status PENDENTE
+[ ] Criar status ACEITA
+[ ] Criar status RECUSADA
+[ ] Criar status CONCLUIDA
+[ ] Permitir prestador visualizar solicitações
+
+
+FASE 14 - PAINEL DO PRESTADOR
+
+Objetivo:
+Centralizar as funcionalidades do profissional.
+
+Tarefas:
+[ ] Criar dashboard
+[ ] Mostrar serviços cadastrados
+[ ] Mostrar solicitações recebidas
+[ ] Mostrar avaliações
+[ ] Mostrar média das avaliações
+[ ] Permitir editar perfil
+[ ] Permitir gerenciar serviços
+
+
+FASE 15 - AVALIAÇÕES
+
+Objetivo:
+Permitir que clientes avaliem prestadores.
+
+Tarefas:
+[ ] Criar sistema de notas
+[ ] Permitir notas de 1 a 5
+[ ] Criar campo de comentário
+[ ] Relacionar avaliação à solicitação
+[ ] Impedir avaliações sem serviço concluído
+[ ] Calcular média do prestador
+[ ] Exibir avaliações no perfil
+
+
+FASE 16 - RESPONSIVIDADE
+
+Objetivo:
+Garantir boa utilização em diferentes dispositivos.
+
+Tarefas:
+[ ] Revisar desktop
+[ ] Revisar tablet
+[ ] Revisar celular
+[ ] Ajustar menus
+[ ] Ajustar formulários
+[ ] Ajustar cards
+[ ] Ajustar perfil do prestador
+[ ] Ajustar dashboard
+
+
+FASE 17 - SEGURANÇA E VALIDAÇÕES
+
+Objetivo:
+Melhorar a segurança e a confiabilidade do sistema.
+
+Tarefas:
+[ ] Armazenar senhas com hash
+[ ] Validar dados recebidos pela API
+[ ] Validar formulários
+[ ] Proteger rotas
+[ ] Impedir alteração de dados de outros usuários
+[ ] Tratar erros do backend
+[ ] Tratar erros do frontend
+
+
+FASE 18 - TESTES
+
+Objetivo:
+Identificar e corrigir erros antes da entrega.
+
+Tarefas:
+[ ] Testar cadastro
+[ ] Testar login
+[ ] Testar edição de perfil
+[ ] Testar cadastro de serviço
+[ ] Testar busca
+[ ] Testar filtros
+[ ] Testar solicitação de orçamento
+[ ] Testar avaliações
+[ ] Testar responsividade
+[ ] Testar API
+
+
+FASE 19 - INTERFACE FINAL
+
+Objetivo:
+Finalizar identidade visual e experiência do usuário.
+
+Tarefas:
+[ ] Definir cores finais
+[ ] Definir tipografia
+[ ] Criar logo
+[ ] Padronizar botões
+[ ] Padronizar cards
+[ ] Adicionar ícones
+[ ] Criar mensagens de sucesso
+[ ] Criar mensagens de erro
+[ ] Criar estados de carregamento
+
+
+FASE 20 - DEPLOY E DOCUMENTAÇÃO
+
+Objetivo:
+Preparar o projeto para apresentação e utilização online.
+
+Tarefas:
+[ ] Publicar frontend
+[ ] Publicar backend
+[ ] Publicar banco PostgreSQL
+[ ] Configurar variáveis de ambiente
+[ ] Criar README
+[ ] Documentar tecnologias
+[ ] Documentar funcionalidades
+[ ] Adicionar diagrama do banco
+[ ] Adicionar UML
+[ ] Preparar apresentação final
