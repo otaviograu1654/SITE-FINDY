@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Findy - Categorias</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- ===================== BARRA DE NAVEGAÇÃO ===================== -->
+  <header class="app-nav">
+    <a href="index.html" class="logo logo--on-blue">
+      <img src="images/findy-logo.png" alt="Findy" class="logo__image">
+    </a>
+
+    <!-- Botão "Categorias" + o menu que abre ao passar o mouse por cima -->
+    <div class="categories-dropdown" id="categories-dropdown">
+      <button
+        type="button"
+        class="categories-dropdown__toggle"
+        id="categories-toggle"
+        aria-haspopup="true"
+        aria-expanded="false"
+        aria-controls="categories-menu"
+      >
+        Categorias
+        <span class="categories-dropdown__chevron" aria-hidden="true">&#9662;</span>
+      </button>
+
+      <!-- "hidden" começa escondendo essa lista; o JavaScript remove/adiciona
+           esse atributo ao passar o mouse (não mais ao clicar). Cada opção
+           é um link de verdade: clicar nela navega para
+           categoria.html?categoria=Nome, abrindo a página de resultados
+           daquela categoria. São as mesmas 7 categorias da grade da Home. -->
+      <ul class="categories-dropdown__menu" id="categories-menu" hidden>
+        <li><a href="categoria.html?categoria=Servi%C3%A7os%20Dom%C3%A9sticos" class="categories-dropdown__option">Serviços Domésticos</a></li>
+        <li><a href="categoria.html?categoria=Eventos" class="categories-dropdown__option">Eventos</a></li>
+        <li><a href="categoria.html?categoria=Infantil" class="categories-dropdown__option">Infantil</a></li>
+        <li><a href="categoria.html?categoria=Servi%C3%A7os%20Gerais" class="categories-dropdown__option">Serviços Gerais</a></li>
+        <li><a href="categoria.html?categoria=Constru%C3%A7%C3%A3o%20Civil" class="categories-dropdown__option">Construção Civil</a></li>
+        <li><a href="categoria.html?categoria=Marketing%20e%20Vendas" class="categories-dropdown__option">Marketing e Vendas</a></li>
+        <li><a href="categoria.html?categoria=Tecnologia%20e%20Design" class="categories-dropdown__option">Tecnologia e Design</a></li>
+      </ul>
+    </div>
+
+    <form class="search-form" role="search">
+      <input type="text" class="search-form__input" placeholder="Busque por um autônomo ou serviço">
+      <button type="submit" class="search-form__button" aria-label="Buscar">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <circle cx="11" cy="11" r="6" stroke="currentColor" stroke-width="2"/>
+          <line x1="16" y1="16" x2="21" y2="21" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </button>
+    </form>
+
+    <a href="perfil.html" class="btn btn--dark app-nav__profile">
+      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <circle cx="12" cy="8" r="4" fill="currentColor"/>
+        <path d="M4 20c0-4.4 3.6-7 8-7s8 2.6 8 7" fill="currentColor"/>
+      </svg>
+      Perfil
+    </a>
+  </header>
+
+  <!-- ===================== RESULTADOS DA CATEGORIA ===================== -->
+  <main class="category-results">
+    <h1 class="category-results__title">Principais da categoria</h1>
+
+    <div class="professional-grid">
+
+      <!-- Cada profissional é um cartão com foto real + faixa azul
+           com nome, nota e a categoria selecionada no momento. -->
+      <article class="professional-card">
+        <div class="professional-card__photo professional-card__photo--a" aria-hidden="true"></div>
+        <div class="professional-card__footer">
+          <h2 class="professional-card__name">José Humberto</h2>
+          <div class="professional-card__row">
+            <span class="professional-card__rating">
+              <span class="professional-card__star" aria-hidden="true">&#9733;</span> 4.8
+            </span>
+            <a href="#" class="card__arrow professional-card__arrow" aria-label="Ver perfil de José Humberto">&rarr;</a>
+          </div>
+          <p class="professional-card__category" data-categoria-label>Serviços Gerais</p>
+        </div>
+      </article>
+
+      <article class="professional-card">
+        <div class="professional-card__photo professional-card__photo--b" aria-hidden="true"></div>
+        <div class="professional-card__footer">
+          <h2 class="professional-card__name">Amilton Ribeiro</h2>
+          <div class="professional-card__row">
+            <span class="professional-card__rating">
+              <span class="professional-card__star" aria-hidden="true">&#9733;</span> 4.9
+            </span>
+            <a href="#" class="card__arrow professional-card__arrow" aria-label="Ver perfil de Amilton Ribeiro">&rarr;</a>
+          </div>
+          <p class="professional-card__category" data-categoria-label>Serviços Gerais</p>
+        </div>
+      </article>
+
+      <article class="professional-card">
+        <div class="professional-card__photo professional-card__photo--c" aria-hidden="true"></div>
+        <div class="professional-card__footer">
+          <h2 class="professional-card__name">Oswaldo Ramos</h2>
+          <div class="professional-card__row">
+            <span class="professional-card__rating">
+              <span class="professional-card__star" aria-hidden="true">&#9733;</span> 5.0
+            </span>
+            <a href="#" class="card__arrow professional-card__arrow" aria-label="Ver perfil de Oswaldo Ramos">&rarr;</a>
+          </div>
+          <p class="professional-card__category" data-categoria-label>Serviços Gerais</p>
+        </div>
+      </article>
+
+      <article class="professional-card">
+        <div class="professional-card__photo professional-card__photo--d" aria-hidden="true"></div>
+        <div class="professional-card__footer">
+          <h2 class="professional-card__name">Gustavo Figueira</h2>
+          <div class="professional-card__row">
+            <span class="professional-card__rating">
+              <span class="professional-card__star" aria-hidden="true">&#9733;</span> 4.7
+            </span>
+            <a href="#" class="card__arrow professional-card__arrow" aria-label="Ver perfil de Gustavo Figueira">&rarr;</a>
+          </div>
+          <p class="professional-card__category" data-categoria-label>Serviços Gerais</p>
+        </div>
+      </article>
+
+    </div>
+
+    <nav class="pagination" aria-label="Paginação de resultados">
+      <button type="button" class="pagination__page pagination__page--active">1</button>
+      <button type="button" class="pagination__page">2</button>
+      <button type="button" class="pagination__page">3</button>
+      <button type="button" class="pagination__page">4</button>
+      <button type="button" class="pagination__page">5</button>
+      <button type="button" class="pagination__next" aria-label="Próxima página">&rarr;</button>
+    </nav>
+  </main>
+
+  <!-- ===================== WIDGET DE CHAT (CANTO INFERIOR) ===================== -->
+  <div class="chat-widget">
+    <p class="chat-widget__bubble">Dúvidas? Fale com o Fido!</p>
+
+    <!-- role="button" + tabindex="0" avisam leitores de tela e permitem
+         navegar até aqui pelo teclado (Tab), já que uma <img> sozinha
+         não é focável nem clicável por padrão como um <button> seria -->
+    <img
+      src="images/chat-avatar.png"
+      alt="Abrir chat com Fido, assistente virtual da Findy"
+      class="chat-widget__avatar"
+      id="chat-avatar"
+      role="button"
+      tabindex="0"
+      aria-haspopup="dialog"
+      aria-expanded="false"
+      aria-controls="chat-panel"
+    >
+
+    <!-- A janela de chat em si. Começa escondida ("hidden") e só abre
+         quando o avatar acima é clicado. -->
+    <div class="chat-panel" id="chat-panel" role="dialog" aria-label="Chat com Fido" hidden>
+      <header class="chat-panel__header">
+        <img src="images/chat-avatar.png" alt="" class="chat-panel__header-avatar" aria-hidden="true">
+        <div class="chat-panel__header-text">
+          <p class="chat-panel__title">Fido</p>
+          <p class="chat-panel__subtitle">Assistente virtual da Findy</p>
+        </div>
+        <button type="button" class="chat-panel__close" id="chat-panel-close" aria-label="Fechar chat">&times;</button>
+      </header>
+
+      <!-- Aqui é onde as mensagens (perguntas + respostas) vão se
+           acumulando conforme a conversa acontece -->
+      <div class="chat-panel__messages" id="chat-panel-messages">
+        <p class="chat-message chat-message--bot">
+          Oi! Eu sou o Fido 🦫 Escolha uma das perguntas abaixo:
+        </p>
+      </div>
+
+      <!-- O roteiro fixo: cada botão já carrega sua própria resposta em
+           "data-resposta". Pra adicionar uma pergunta nova ao FAQ, basta
+           copiar um desses botões e trocar o texto e o data-resposta —
+           não precisa mexer no JavaScript. -->
+      <div class="chat-panel__quick-replies" id="chat-panel-quick-replies">
+        <button type="button" class="chat-quick-reply" data-resposta="O cadastro é rápido: na tela de login, clique em &quot;Cadastre-se agora&quot; e preencha nome, e-mail, uma senha e se você é Autônomo ou Contratante.">
+          Como funciona o cadastro?
+        </button>
+        <button type="button" class="chat-quick-reply" data-resposta="Sim! Criar sua conta e buscar profissionais na Findy é 100% gratuito.">
+          A Findy é gratuita?
+        </button>
+        <button type="button" class="chat-quick-reply" data-resposta="É só escolher uma categoria — pelo menu &quot;Categorias&quot; no topo ou pelos cartões da página inicial — que você já vê os profissionais mais bem avaliados daquela área.">
+          Como encontro um profissional?
+        </button>
+        <button type="button" class="chat-quick-reply" data-resposta="No cadastro, escolha a opção &quot;Autônomo&quot; em vez de &quot;Contratante&quot; — assim seu perfil passa a aparecer nas buscas de quem procura seus serviços.">
+          Sou autônomo, como apareço nas buscas?
+        </button>
+        <button type="button" class="chat-quick-reply" data-resposta="Na tela de login, logo abaixo do campo de senha, tem o link &quot;Esqueceu a senha?&quot; — clique nele para recuperar o acesso.">
+          Esqueci minha senha, e agora?
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js" defer></script>
+</body>
+</html>

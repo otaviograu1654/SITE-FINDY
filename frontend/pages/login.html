@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Findy - Login e Cadastro</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- ===================== SEÇÃO 1: FAIXA DE LOGIN (RODAPÉ AZUL) ===================== -->
+  <section class="login-bar">
+    <!-- O logo agora é um link: clicar nele volta para a página de serviços -->
+    <a href="index.html" class="logo logo--on-blue">
+      <img src="images/findy-logo.png" alt="Findy" class="logo__image">
+    </a>
+
+    <form class="login-form">
+      <div class="field">
+        <label for="login-email">Email ou telefone</label>
+        <input type="text" id="login-email" placeholder="Insira seu email">
+      </div>
+
+      <div class="field">
+        <label for="login-senha">Senha</label>
+        <input type="password" id="login-senha" placeholder="Insira sua senha">
+        <a href="#" class="field__link">Esqueceu a senha?</a>
+      </div>
+
+      <button type="submit" class="btn btn--dark">Login</button>
+    </form>
+  </section>
+
+  <!-- ===================== SEÇÃO 2: CADASTRO ===================== -->
+  <section class="signup">
+    <div class="signup__mascote" aria-hidden="true">
+      <img src="images/beaver-mascot.png" alt="Mascote Findy, um castor azul" class="signup__mascote-image">
+    </div>
+
+    <div class="signup__form-wrap">
+      <h2 class="signup__title">Cadastre-se agora!</h2>
+      <p class="signup__subtitle">Gratuitamente</p>
+
+      <form class="signup-form" id="signup-form">
+        <input type="text" placeholder="Nome Completo">
+        <input type="text" placeholder="Email ou Telefone">
+
+        <div class="password-field">
+          <div class="password-input-wrap">
+            <input
+              type="password"
+              id="signup-senha"
+              class="password-input"
+              placeholder="Crie uma senha"
+              required
+              minlength="6"
+            >
+            <span class="password-status" id="password-status">
+              <span class="password-status__icon" id="password-status-icon"></span>
+              <span class="password-status__text" id="password-status-text"></span>
+            </span>
+          </div>
+        </div>
+
+        <select class="signup-form__select" required>
+          <option value="" disabled selected hidden>Autônomo ou Contratante</option>
+          <option value="autonomo">Autônomo</option>
+          <option value="contratante">Contratante</option>
+        </select>
+        <button type="submit" class="btn btn--dark btn--full">Cadastrar</button>
+      </form>
+    </div>
+  </section>
+
+  <script src="script.js"></script>
+</body>
+</html>

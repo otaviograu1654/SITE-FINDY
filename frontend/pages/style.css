@@ -1,0 +1,1223 @@
+/* ===================================================================
+   1. VARIÁVEIS DE COR E CONFIGURAÇÃO GERAL
+   Guardamos as cores em "variáveis" (--nome) pra não repetir o mesmo
+   código hexadecimal várias vezes pelo arquivo inteiro.
+   =================================================================== */
+:root {
+  --color-bg: #ececec;
+  --color-blue: #4854E8;
+  --color-blue-dark: #1B2166;
+  --color-blue-light: #9EAFFF; /* usado nos pills da página de Perfil */
+  --color-blue-pale: #C4CFFF;  /* tom mais claro, só do botão "Excluir conta" */
+  --color-red: #E25B5B;
+  --color-dark-overlay: #1a1a1a;
+  --color-black: #111111;
+  --color-white: #ffffff;
+  --color-gray-text: #6b6b6b;
+  --radius: 6px;
+}
+
+/* "Reset" básico: navegadores aplicam margens/paddings padrão diferentes
+   uns dos outros. Zeramos tudo pra começar do mesmo lugar sempre. */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box; /* padding e borda passam a contar DENTRO da largura, não somados a ela */
+}
+
+/* Antes travávamos "html, body" em 100% de altura pra fazer a página
+   inteira caber numa única tela (sem rolagem). Voltamos ao padrão
+   normal: a altura da página é definida pelo conteúdo, e o navegador
+   mostra uma barra de rolagem sozinho se o conteúdo for mais alto
+   que a tela — é assim que a grande maioria dos sites funciona. */
+body {
+  font-family: 'Poppins', Arial, sans-serif;
+  background-color: var(--color-bg);
+  color: var(--color-black);
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* ===================================================================
+   2. BOTÕES (reaproveitados em várias seções)
+   =================================================================== */
+.btn {
+  display: inline-block; /* faz um <a> se comportar como um botão de verdade,
+                             respeitando padding e altura igual ao <button> */
+  border: none;
+  border-radius: var(--radius);
+  padding: 14px 28px;
+  font-family: inherit;
+  font-weight: 700;
+  font-size: 0.95rem;
+  cursor: pointer;
+  text-align: center;
+}
+
+.btn--dark {
+  background-color: var(--color-black);
+  color: var(--color-white);
+}
+
+.btn--full {
+  width: 100%;
+}
+
+/* ===================================================================
+   3. LOGOTIPO
+   =================================================================== */
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--color-black);
+}
+
+/* A logo agora é uma imagem única (ícone + texto já desenhados nela).
+   Fixamos a ALTURA em 34px — a mesma altura que o ícone antigo ocupava —
+   e deixamos "width: auto" para a largura acompanhar proporcionalmente,
+   sem esticar ou achatar a imagem. */
+.logo__image {
+  height: clamp(26px, 4vw, 34px);
+  width: auto;
+  display: block;
+}
+
+/* Logo maior no cabeçalho da Home — mesmo raciocínio das barras azuis:
+   uma regra específica (que "vence" a genérica acima, por ser mais
+   detalhada) só pra este contexto, sem afetar onde a logo aparece
+   em outros lugares. */
+.brand-block .logo__image {
+  height: clamp(34px, 5vw, 46px);
+}
+
+/* ===================================================================
+   4. GRADE DE SERVIÇOS (hero-grid)
+   Aqui está o "pulo do gato" do layout: usamos CSS Grid para criar
+   4 colunas e 2 linhas. Como o HTML já lista os itens na ordem certa
+   (cabeçalho, dom, evt, inf, geral, con, mkt, tec), o grid preenche
+   as células sozinho, da esquerda pra direita, linha por linha.
+   =================================================================== */
+.hero-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  /* Cada linha da grade tem uma altura fixa — em telas menores, quem se
+     adapta é o número de COLUNAS (veja a seção de responsividade lá
+     embaixo), não a altura das linhas. Isso permite rolagem normal em
+     telas mais baixas, em vez de forçar tudo a encolher pra caber
+     numa tela só. */
+  grid-auto-rows: 300px;
+  gap: clamp(12px, 2vw, 24px);
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: clamp(24px, 4vw, 48px) clamp(16px, 2.5vw, 32px);
+}
+
+.brand-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;   /* centraliza horizontalmente (logo, frase e botão) */
+  justify-content: center; /* centraliza verticalmente dentro do espaço da
+                               célula — que tem a mesma altura dos cards
+                               ao lado, sobrando espaço em branco embaixo
+                               do conteúdo */
+  text-align: center;
+  gap: clamp(8px, 1.6vw, 16px);
+}
+
+.brand-block__tagline {
+  color: var(--color-blue);
+  font-weight: 700;
+}
+
+/* ===================================================================
+   5. CARDS DE SERVIÇO
+   Cada card é uma coluna flexível: o título fica perto do topo e a
+   setinha é empurrada para o rodapé com "margin-top: auto".
+   =================================================================== */
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  border-radius: var(--radius);
+  padding: clamp(14px, 2.2vw, 24px);
+  overflow: hidden;
+  color: var(--color-white);
+  min-height: 0; /* permite que o card encolha dentro da célula do grid,
+                     em vez de forçar a célula a crescer além do 1fr */
+
+  /* A foto de fundo de cada card (definida pelas classes --photo-*)
+     preenche todo o cartão, cortando o excesso em vez de distorcer. */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+/* Essa camada colorida fica ENTRE a foto de fundo e o texto: um
+   pseudo-elemento posicionado ocupando o cartão inteiro (inset: 0 é
+   um atalho pra top/right/bottom/left todos = 0), com uma cor
+   semi-transparente (rgba com o 4º valor < 1) — dá pra ver a foto
+   por trás, mas com o tom da categoria por cima, garantindo que o
+   texto branco continue legível em qualquer foto. */
+.card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+/* Título e seta precisam ficar ACIMA dessa camada — por isso
+   recebem position + z-index maior, senão o ::before (que também é
+   "position: absolute") ficaria por cima do texto, escondendo-o. */
+.card__title,
+.card__arrow {
+  position: relative;
+  z-index: 1;
+}
+
+/* Cada variação de cor é a camada semi-transparente por cima da foto. */
+.card--blue::before { background-color: rgba(72, 84, 232, 0.55); }
+.card--red::before  { background-color: rgba(226, 91, 91, 0.55); }
+.card--dark::before { background-color: rgba(20, 20, 20, 0.5); }
+.card--dom::before  { background-color: rgba(20, 20, 20, 0.35); }
+
+/* E cada classe --photo-* liga o cartão à foto real correspondente. */
+.card--photo-dom { background-image: url('images/card-servicos-domesticos.jpg'); }
+.card--photo-evt { background-image: url('images/card-eventos.jpg'); }
+.card--photo-inf { background-image: url('images/card-infantil.jpg'); }
+.card--photo-ger { background-image: url('images/card-servicos-gerais.jpg'); }
+.card--photo-con { background-image: url('images/card-construcao-civil.jpg'); }
+.card--photo-mkt { background-image: url('images/card-marketing-vendas.jpg'); }
+.card--photo-tec { background-image: url('images/card-tecnologia-design.jpg'); }
+
+.card--tall {
+  grid-row: span 1; /* já ocupa uma célula igual às outras; a altura "extra"
+                        visual vem do espaço livre deixado pelo brand-block */
+}
+
+.card__title {
+  font-size: clamp(1.1rem, 2.4vw, 1.6rem);
+  font-weight: 800;
+  line-height: 1.15;
+  text-shadow: 0 2px 6px rgba(0,0,0,0.25);
+}
+
+.card__arrow {
+  margin-top: auto; /* empurra a seta para o fundo do card */
+  width: clamp(32px, 4.5vw, 42px);
+  height: clamp(32px, 4.5vw, 42px);
+  border: 2px solid var(--color-white);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+
+/* ===================================================================
+   6. FAIXA DE LOGIN
+   =================================================================== */
+.login-bar {
+  background-color: var(--color-blue);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: clamp(12px, 2vw, 24px);
+  padding: clamp(14px, 2.5vw, 32px) clamp(20px, 3vw, 48px);
+}
+
+/* Logo maior especificamente dentro desta barra azul — a versão
+   "padrão" (usada no cabeçalho claro da Home) continua menor. Como a
+   barra usa "align-items: center" e o padding não é uma altura fixa,
+   a barra cresce sozinha pra acomodar a logo maior, sem precisar
+   ajustar mais nada. */
+.login-bar .logo__image {
+  height: clamp(38px, 5.5vw, 52px);
+}
+
+.login-form {
+  display: flex;
+  align-items: flex-end;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  position: relative;
+}
+
+.field label {
+  font-weight: 700;
+  color: var(--color-black);
+  font-size: clamp(0.8rem, 1.5vw, 0.95rem);
+}
+
+.field input {
+  font-family: inherit;
+  padding: clamp(8px, 1.4vw, 12px) 14px;
+  border: none;
+  border-radius: 4px;
+  width: 260px;
+}
+
+.field__link {
+  position: absolute;
+  top: 100%;
+  margin-top: 4px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--color-black);
+}
+
+/* ===================================================================
+   7. SEÇÃO DE CADASTRO
+   =================================================================== */
+.signup {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: clamp(20px, 4vw, 48px);
+  max-width: 1300px;
+  width: 100%;
+  margin: 0 auto;
+  padding: clamp(12px, 3vw, 64px) clamp(20px, 3vw, 48px);
+}
+
+.signup__mascote-image {
+  width: clamp(120px, 22vw, 320px);
+  height: auto;
+  display: block;
+}
+
+.signup__form-wrap {
+  flex: 1;
+  min-width: 320px;
+  max-width: 480px;
+}
+
+.signup__title {
+  font-size: clamp(1.3rem, 3.2vw, 2rem);
+  font-weight: 800;
+}
+
+.signup__subtitle {
+  color: var(--color-gray-text);
+  font-size: clamp(0.85rem, 1.7vw, 1rem);
+  margin-bottom: clamp(10px, 2vw, 24px);
+}
+
+.signup-form {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(8px, 1.6vw, 18px);
+}
+
+.signup-form input,
+.signup-form__select {
+  font-family: inherit;
+  font-size: clamp(0.85rem, 1.6vw, 1rem);
+  padding: clamp(9px, 1.7vw, 16px);
+  border: none;
+  border-radius: 4px;
+  background: linear-gradient(180deg, #ffffff 0%, #c9c9c9 100%);
+}
+
+/* Texto de dica (placeholder) dos campos: usamos a MESMA regra para os
+   campos de login e os de cadastro, com uma cor semi-transparente em vez
+   de cinza sólido — fica mais discreto, igual ao padrão da faixa de login. */
+.field input::placeholder,
+.signup-form input::placeholder {
+  color: rgba(17, 17, 17, 0.38);
+  font-weight: 400;
+}
+
+/* O <select> não tem ::placeholder de verdade (é uma <option> normal),
+   então imitamos o mesmo tom semi-transparente enquanto nada foi escolhido. */
+.signup-form__select {
+  color: rgba(17, 17, 17, 0.38);
+  font-weight: 400;
+}
+
+/* O <select> nativo já abre a "abinha" vertical com as opções sozinho —
+   só precisamos deixá-lo com a cara dos outros campos do formulário. */
+.signup-form__select {
+  appearance: none;         /* remove o visual padrão (varia de navegador pra navegador) */
+  -webkit-appearance: none;
+  cursor: pointer;
+
+  /* Desenhamos nossa própria setinha com um SVG embutido no CSS,
+     posicionada à direita do campo */
+  background-image:
+    linear-gradient(180deg, #ffffff 0%, #c9c9c9 100%),
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23555' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");
+  background-repeat: no-repeat;
+  background-position: left, right 16px center;
+  background-size: 100%, 18px;
+  padding-right: 44px; /* espaço reservado pra seta não ficar em cima do texto */
+}
+
+/* Depois que o usuário escolhe uma opção, o texto passa a ser preto,
+   igual ao valor digitado nos outros campos */
+.signup-form__select:valid {
+  color: var(--color-black);
+}
+
+/* ===================================================================
+   7.1 MEDIDOR DE FORÇA DE SENHA
+   Em vez de uma barra separada, o indicador (palavra + símbolo) fica
+   sobreposto DENTRO do próprio campo, encostado à direita.
+   =================================================================== */
+.password-field {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Esse wrapper existe só para servir de "âncora" de posicionamento:
+   com position: relative aqui, o indicador (que é position: absolute)
+   se posiciona relativo a ESTA caixa, não à página inteira. */
+.password-input-wrap {
+  position: relative;
+  display: flex;
+}
+
+/* Reserva espaço à direita do texto digitado, pra ele nunca ficar
+   escondido atrás do indicador "Forte ✓" */
+.password-input {
+  width: 100%;
+  padding-right: clamp(96px, 13vw, 118px) !important;
+}
+
+.password-status {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  pointer-events: none; /* clique "atravessa" o indicador e cai no campo de texto */
+}
+
+.password-status__text {
+  font-size: clamp(0.72rem, 1.3vw, 0.8rem);
+  font-weight: 700;
+}
+
+/* O símbolo (✓ / – / ✕) fica dentro de uma bolinha colorida,
+   pequena o bastante pra caber ao lado da palavra */
+.password-status__icon {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.65rem;
+  line-height: 1;
+  color: var(--color-white);
+}
+
+.password-status__icon:empty {
+  display: none; /* enquanto o campo está vazio, não mostra bolinha nem texto */
+}
+
+.password-status--weak   .password-status__icon { background-color: #E25B5B; }
+.password-status--weak   .password-status__text { color: #E25B5B; }
+
+.password-status--medium .password-status__icon { background-color: #E8A93F; }
+.password-status--medium .password-status__text { color: #C98A1E; }
+
+.password-status--strong .password-status__icon { background-color: #3FA76B; }
+.password-status--strong .password-status__text { color: #2F8C57; }
+
+/* Se o usuário tentar enviar o formulário com a senha vazia, destacamos
+   o campo em vermelho para chamar atenção — reforça visualmente o que o
+   navegador já bloqueia por causa do atributo "required". */
+.password-field--invalid .password-input {
+  outline: 2px solid #E25B5B;
+}
+
+/* ===================================================================
+   8. PÁGINA DE CATEGORIA (BARRA DE NAVEGAÇÃO + RESULTADOS)
+   =================================================================== */
+
+/* --- 8.1 Barra de navegação azul do topo --- */
+.app-nav {
+  background-color: var(--color-blue);
+  display: flex;
+  align-items: center;
+  gap: clamp(12px, 2.5vw, 32px);
+  padding: clamp(12px, 2vw, 20px) clamp(20px, 3vw, 40px);
+}
+
+.app-nav .logo__image {
+  height: clamp(38px, 5.5vw, 52px);
+}
+
+/* O botão "Perfil" reaproveita a classe .btn, mas precisa de flex pra
+   alinhar o ícone de pessoa ao lado do texto */
+.app-nav__profile {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto; /* empurra o botão pro canto direito da barra,
+                         depois que os outros itens já ocuparam seu espaço */
+  white-space: nowrap;
+}
+
+.app-nav__profile svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* --- 8.2 Campo de busca --- */
+.search-form {
+  flex: 1 1 320px; /* cresce pra ocupar o espaço do meio, mas nunca
+                        menos que 320px de largura */
+  max-width: 620px;
+  display: flex;
+  align-items: center;
+  background-color: var(--color-white);
+  border-radius: 999px; /* um valor bem alto arredonda os dois lados
+                             por completo, criando o formato de "pílula" */
+  padding: 4px 4px 4px 20px;
+}
+
+.search-form__input {
+  flex: 1;
+  border: none;
+  font-family: inherit;
+  font-size: clamp(0.85rem, 1.6vw, 1rem);
+  color: var(--color-black);
+  background: transparent;
+}
+
+.search-form__input::placeholder {
+  color: rgba(17, 17, 17, 0.4);
+}
+
+.search-form__input:focus {
+  outline: none; /* removemos o contorno padrão do navegador porque o
+                     próprio botão azul ao lado já indica onde é o campo */
+}
+
+.search-form__button {
+  flex-shrink: 0;
+  width: clamp(32px, 4.5vw, 40px);
+  height: clamp(32px, 4.5vw, 40px);
+  border: none;
+  border-radius: 50%;
+  background-color: var(--color-blue);
+  color: var(--color-white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.search-form__button svg {
+  width: 55%;
+  height: 55%;
+}
+
+/* --- 8.3 Rótulo "Categorias" --- */
+.categories-dropdown {
+  position: relative; /* âncora pro menu, que é position: absolute,
+                          se posicionar em relação a ESTA caixa */
+}
+
+.categories-dropdown__toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: transparent;
+  border: none;
+  color: var(--color-white);
+  font-family: inherit;
+  font-weight: 700;
+  font-size: clamp(0.9rem, 1.8vw, 1.05rem);
+  cursor: pointer;
+  padding: 8px 4px;
+  white-space: nowrap;
+}
+
+.categories-dropdown__chevron {
+  font-size: 0.7rem;
+  transition: transform 0.2s ease;
+}
+
+/* Quando o botão está com aria-expanded="true" (o JS controla isso),
+   giramos a setinha 180° pra apontar pra cima em vez de pra baixo —
+   um sinal visual comum de "isso já está aberto". */
+.categories-dropdown__toggle[aria-expanded="true"] .categories-dropdown__chevron {
+  transform: rotate(180deg);
+}
+
+.categories-dropdown__menu {
+  position: absolute;
+  top: 100%; /* encostado no botão, sem espaço vazio no meio — importante
+                 pro hover não "perder" o menu ao mover o mouse pra baixo.
+                 "margin" criaria essa lacuna de novo (margem não faz
+                 parte da caixa clicável/hoverável do elemento), por
+                 isso o respiro visual abaixo vem de "padding-top" —
+                 que continua sendo parte da caixa. */
+  left: 0;
+  z-index: 20;
+  list-style: none; /* tira as bolinhas padrão de uma lista <ul> */
+  background-color: var(--color-white);
+  border-radius: var(--radius);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.18);
+  padding: 14px 8px 8px;
+  min-width: 220px;
+  display: flex;
+  flex-direction: column; /* é essa linha que faz o menu abrir "pra
+                              baixo", em uma coluna — a "aba vertical" */
+  gap: 2px;
+}
+
+/* O ATRIBUTO "hidden" do HTML já vem com "display: none" embutido no
+   navegador — mas isso é uma regra "de fábrica" (user-agent), e regras
+   escritas por nós (como o "display: flex" ali em cima) SEMPRE ganham
+   dessas regras de fábrica, mesmo com a mesma especificidade. Resultado:
+   o menu ficava com "display: flex" o tempo todo, ignorando o "hidden"
+   que o JavaScript liga e desliga — por isso ele nunca fechava.
+   Esta regra resolve isso: quando o atributo "hidden" estiver presente,
+   ela força "display: none" de volta, agora com prioridade nossa. */
+.categories-dropdown__menu[hidden] {
+  display: none;
+}
+
+.categories-dropdown__option {
+  display: block; /* <a> é "inline" por padrão — sem isso, ele só ocupa
+                       a largura do próprio texto, em vez da linha inteira */
+  text-align: left;
+  background: transparent;
+  border-radius: 4px;
+  padding: 10px 12px;
+  font-family: inherit;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--color-black);
+  cursor: pointer;
+}
+
+.categories-dropdown__option:hover,
+.categories-dropdown__option:focus-visible {
+  background-color: var(--color-bg);
+}
+
+/* --- 8.4 Seção "Principais da categoria" --- */
+.category-results {
+  display: flex;
+  flex-direction: column;
+  padding: clamp(16px, 3vw, 40px) clamp(20px, 4vw, 48px);
+  max-width: 1300px;
+  width: 100%;
+  margin: 0 auto;
+  gap: clamp(12px, 2.4vw, 28px);
+}
+
+.category-results__title {
+  flex: 0 0 auto;
+  text-align: center;
+  font-size: clamp(1.3rem, 3.4vw, 2rem);
+  font-weight: 800;
+}
+
+/* --- 8.5 Grade de profissionais --- */
+.professional-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: clamp(12px, 2vw, 24px);
+}
+
+.professional-card {
+  display: flex;
+  flex-direction: column;
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+/* Cada foto ocupa uma altura fixa dentro do cartão — o rodapé azul
+   embaixo (nome, nota, categoria) fica com altura própria, então o
+   cartão inteiro mede "foto + rodapé". */
+.professional-card__photo {
+  height: 200px;
+  background-size: cover;     /* a foto preenche o espaço inteiro,
+                                   cortando o excesso em vez de esticar */
+  background-position: center top; /* prioriza o rosto da pessoa,
+                                        que costuma estar na parte
+                                        de cima da foto */
+  background-repeat: no-repeat;
+}
+
+.professional-card__photo--a { background-image: url('images/pro-jose-humberto.jpg'); }
+.professional-card__photo--b { background-image: url('images/pro-amilton-ribeiro.jpg'); }
+.professional-card__photo--c { background-image: url('images/pro-oswaldo-ramos.jpg'); }
+.professional-card__photo--d { background-image: url('images/pro-gustavo-figueira.jpg'); }
+
+.professional-card__footer {
+  flex: 0 0 auto;
+  background-color: var(--color-blue);
+  color: var(--color-white);
+  padding: clamp(10px, 1.8vw, 18px);
+  display: flex;
+  flex-direction: column;
+  gap: clamp(4px, 1vw, 8px);
+}
+
+.professional-card__name {
+  font-size: clamp(0.85rem, 1.7vw, 1.05rem);
+  font-weight: 700;
+}
+
+.professional-card__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.professional-card__rating {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-weight: 700;
+  font-size: clamp(0.9rem, 1.9vw, 1.15rem);
+}
+
+.professional-card__star {
+  color: #F2B84B;
+}
+
+.professional-card__arrow {
+  width: clamp(26px, 4vw, 36px);
+  height: clamp(26px, 4vw, 36px);
+  border: 2px solid var(--color-white);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 0.85rem;
+}
+
+.professional-card__category {
+  font-size: clamp(0.72rem, 1.4vw, 0.85rem);
+  font-weight: 600;
+  opacity: 0.85;
+}
+
+/* --- 8.6 Paginação --- */
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(8px, 1.4vw, 14px);
+}
+
+.pagination__page,
+.pagination__next {
+  width: clamp(28px, 4.2vw, 36px);
+  height: clamp(28px, 4.2vw, 36px);
+  border-radius: 50%;
+  border: 2px solid rgba(17, 17, 17, 0.35);
+  background-color: transparent;
+  font-family: inherit;
+  font-weight: 700;
+  font-size: 0.85rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pagination__page--active {
+  background-color: var(--color-blue);
+  border-color: var(--color-blue);
+  color: var(--color-white);
+}
+
+.pagination__next {
+  border-color: var(--color-black);
+  color: var(--color-black);
+}
+
+/* --- 8.7 Widget de chat flutuante --- */
+.chat-widget {
+  position: fixed; /* "fixed" tira o elemento do fluxo normal da página
+                       e o prende num ponto da JANELA — por isso ele
+                       fica sempre visível no canto da tela, mesmo se
+                       o restante da página rolar */
+  right: clamp(16px, 2.5vw, 32px);
+  bottom: clamp(16px, 2.5vw, 32px);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  z-index: 30;
+}
+
+/* Por padrão a mensagem fica invisível. "opacity: 0" a torna transparente
+   (mas ela ainda ocupa espaço/existe no HTML) e "pointer-events: none"
+   impede que ela intercepte cliques enquanto está escondida — sem essa
+   linha, um balão invisível ainda poderia "roubar" o clique de quem
+   tentasse acertar o avatar embaixo dele. */
+.chat-widget__bubble {
+  background-color: var(--color-blue);
+  color: var(--color-white);
+  font-weight: 700;
+  font-size: clamp(0.78rem, 1.5vw, 0.9rem);
+  padding: 10px 16px;
+  border-radius: 16px 16px 4px 16px; /* os 4 valores são os cantos, em
+                                          sentido horário a partir do
+                                          canto superior-esquerdo — o
+                                          canto inferior-direito quase
+                                          reto é o que cria o "biquinho"
+                                          de balão de fala apontando
+                                          pro avatar */
+  max-width: 200px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+
+/* Essa classe é ligada/desligada pelo JavaScript quando o mouse entra
+   ou sai do avatar (veja script.js) */
+.chat-widget__bubble--visivel {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.chat-widget__avatar {
+  width: clamp(46px, 7vw, 60px);
+  height: clamp(46px, 7vw, 60px);
+  border-radius: 50%;
+  background-color: var(--color-white);
+  padding: 6px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+  flex-shrink: 0;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Ao passar o mouse, a sombra fica mais forte (dá sensação de o avatar
+   "subir" em direção à tela) e a animação abaixo faz ele balançar. */
+.chat-widget__avatar:hover {
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.28);
+  animation: balancar-avatar 0.5s ease;
+}
+
+/* Uma animação de rotação pra lá e pra cá, em graus, passando por
+   vários instantes (0%, 25%, 50%...) até voltar ao normal (100%) —
+   como se o personagem estivesse "acenando" ao ser notado. */
+@keyframes balancar-avatar {
+  0%   { transform: rotate(0deg) scale(1); }
+  25%  { transform: rotate(-12deg) scale(1.08); }
+  50%  { transform: rotate(10deg) scale(1.08); }
+  75%  { transform: rotate(-6deg) scale(1.08); }
+  100% { transform: rotate(0deg) scale(1.08); }
+}
+
+/* --- 8.8 Painel de chat (FAQ) --- */
+.chat-panel {
+  position: absolute;
+  right: 0;
+  bottom: calc(100% + 14px); /* fica flutuando ACIMA do avatar, com um
+                                  respiro — "bottom: 100%" empurraria o
+                                  painel pra colar exatamente no topo
+                                  do avatar */
+  width: min(320px, 82vw); /* nunca mais que 320px, mas encolhe em
+                                telas estreitas (82% da largura da tela) */
+  max-height: min(70vh, 480px);
+  background-color: var(--color-white);
+  border-radius: 16px;
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.25);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Mesmo cuidado que já tomamos no menu de categorias: o atributo
+   "hidden" do HTML perde para um "display: flex" escrito por nós, a
+   não ser que a gente reforce explicitamente esta regra. */
+.chat-panel[hidden] {
+  display: none;
+}
+
+.chat-panel__header {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 16px;
+  background-color: var(--color-blue);
+  color: var(--color-white);
+}
+
+.chat-panel__header-avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background-color: var(--color-white);
+  padding: 3px;
+  flex-shrink: 0;
+}
+
+.chat-panel__header-text {
+  flex: 1;
+  min-width: 0; /* permite que o texto quebre/trunque em vez de
+                    espremer o resto do cabeçalho */
+}
+
+.chat-panel__title {
+  font-weight: 700;
+  font-size: 0.95rem;
+  line-height: 1.2;
+}
+
+.chat-panel__subtitle {
+  font-size: 0.72rem;
+  opacity: 0.85;
+  line-height: 1.2;
+}
+
+.chat-panel__close {
+  flex-shrink: 0;
+  width: 26px;
+  height: 26px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  color: var(--color-white);
+  font-size: 1.1rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+/* A área das mensagens: cresce pra ocupar o espaço disponível e ganha
+   rolagem própria (overflow-y: auto) quando a conversa fica mais longa
+   do que cabe no painel — assim o cabeçalho e os botões de pergunta
+   continuam sempre visíveis, só o "meio" rola. */
+.chat-panel__messages {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background-color: var(--color-bg);
+}
+
+.chat-message {
+  max-width: 85%;
+  padding: 10px 14px;
+  border-radius: 14px;
+  font-size: 0.85rem;
+  line-height: 1.4;
+}
+
+/* Mensagens do Fido (bot): alinhadas à esquerda, fundo branco */
+.chat-message--bot {
+  align-self: flex-start;
+  background-color: var(--color-white);
+  color: var(--color-black);
+  border-bottom-left-radius: 4px; /* o "bico" do balão, apontando
+                                       pro lado de quem enviou */
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+/* Mensagens do usuário (a pergunta clicada): alinhadas à direita,
+   fundo azul — o mesmo padrão visual de qualquer app de mensagem */
+.chat-message--usuario {
+  align-self: flex-end;
+  background-color: var(--color-blue);
+  color: var(--color-white);
+  border-bottom-right-radius: 4px;
+}
+
+.chat-panel__quick-replies {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 10px 14px 14px;
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+  max-height: 40%; /* se houver muitas perguntas, essa área também
+                        ganha rolagem própria, em vez de espremer
+                        demais a área de mensagens acima */
+  overflow-y: auto;
+}
+
+.chat-quick-reply {
+  text-align: left;
+  background-color: var(--color-white);
+  border: 1.5px solid var(--color-blue);
+  color: var(--color-blue);
+  border-radius: 999px;
+  padding: 8px 14px;
+  font-family: inherit;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.chat-quick-reply:hover,
+.chat-quick-reply:focus-visible {
+  background-color: var(--color-blue);
+  color: var(--color-white);
+}
+
+/* ===================================================================
+   9. PÁGINA DE PERFIL
+   =================================================================== */
+
+/* --- 9.1 Cabeçalho claro (mesmo fundo da página, sem faixa colorida) --- */
+.profile-nav {
+  display: flex;
+  align-items: center;
+  gap: clamp(12px, 2.2vw, 28px);
+  padding: clamp(14px, 2vw, 20px) clamp(20px, 3vw, 40px);
+}
+
+.profile-nav .logo__image {
+  height: clamp(30px, 4vw, 40px);
+}
+
+.profile-nav__label {
+  font-weight: 800;
+  font-size: clamp(1rem, 2vw, 1.3rem);
+  white-space: nowrap;
+}
+
+.profile-nav__search {
+  flex: 1 1 320px;
+  max-width: 620px;
+}
+
+/* Reaproveita o componente .search-form (definido lá na seção da
+   página de categoria), só troca a cor do botão de lupa pra preto —
+   nesta página o botão é preto, não azul. */
+.profile-nav .search-form__button {
+  background-color: var(--color-black);
+}
+
+/* Botão circular preto genérico — usado aqui só no ícone "i", mas dá
+   pra reaproveitar em qualquer outro botão redondo no futuro. */
+.icon-button {
+  flex-shrink: 0;
+  width: clamp(32px, 4.5vw, 40px);
+  height: clamp(32px, 4.5vw, 40px);
+  border: none;
+  border-radius: 50%;
+  background-color: var(--color-black);
+  color: var(--color-white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.icon-button svg {
+  width: 55%;
+  height: 55%;
+}
+
+.profile-nav__avatar-link {
+  flex-shrink: 0;
+  display: block;
+}
+
+.profile-nav__avatar {
+  width: clamp(38px, 5vw, 48px);
+  height: clamp(38px, 5vw, 48px);
+  border-radius: 50%;
+  object-fit: cover; /* preenche o círculo cortando o excesso da foto,
+                         sem esticar/distorcer a imagem */
+  border: 2.5px solid var(--color-blue);
+}
+
+/* --- 9.2 Layout principal: menu lateral + dados do perfil --- */
+.profile-layout {
+  display: flex;
+  align-items: flex-start;
+  gap: clamp(24px, 5vw, 64px);
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: clamp(24px, 4vw, 56px) clamp(20px, 3vw, 48px);
+  flex-wrap: wrap;
+}
+
+/* --- 9.3 Menu lateral (pills empilhados) --- */
+.profile-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(12px, 2vh, 20px);
+  flex: 1 1 300px;
+  max-width: 400px;
+}
+
+.profile-sidebar__item {
+  display: block;
+  width: 100%;
+  text-align: left;
+  font-family: inherit;
+  font-size: clamp(1rem, 1.8vw, 1.15rem);
+  font-weight: 700;
+  color: var(--color-black);
+  background-color: var(--color-blue-light);
+  border: none;
+  border-radius: 999px; /* valor bem alto = pílula, cantos 100% redondos */
+  padding: clamp(14px, 2.4vh, 20px) clamp(20px, 3vw, 28px);
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.profile-sidebar__item:hover,
+.profile-sidebar__item:focus-visible {
+  background-color: var(--color-blue);
+  color: var(--color-white);
+}
+
+.profile-sidebar__item--danger {
+  background-color: var(--color-blue-pale);
+  color: var(--color-red);
+}
+
+.profile-sidebar__item--danger:hover,
+.profile-sidebar__item--danger:focus-visible {
+  background-color: var(--color-red);
+  color: var(--color-white);
+}
+
+/* --- 9.4 Foto de perfil + dados --- */
+.profile-details {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(20px, 3vh, 32px);
+  flex: 1 1 340px;
+  max-width: 420px;
+}
+
+.profile-photo-wrap {
+  position: relative; /* âncora pro botão de editar, que é posicionado
+                          de forma absoluta em relação a esta caixa */
+}
+
+.profile-photo {
+  width: clamp(120px, 16vw, 160px);
+  height: clamp(120px, 16vw, 160px);
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid var(--color-blue);
+}
+
+.profile-photo__edit {
+  position: absolute;
+  right: 2px;
+  bottom: 2px;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 2px solid var(--color-white);
+  background-color: var(--color-black);
+  color: var(--color-white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.profile-photo__edit svg {
+  width: 55%;
+  height: 55%;
+}
+
+.profile-fields {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(10px, 1.8vh, 16px);
+  width: 100%;
+}
+
+.profile-field {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 2px;
+  background-color: var(--color-blue-light);
+  border-radius: 999px;
+  padding: clamp(10px, 1.8vh, 14px) clamp(16px, 3vw, 24px);
+}
+
+.profile-field__label {
+  font-weight: 700;
+  font-size: clamp(0.95rem, 1.7vw, 1.1rem);
+}
+
+.profile-field__value {
+  font-weight: 400;
+  font-size: clamp(0.9rem, 1.6vw, 1.05rem);
+}
+
+/* ===================================================================
+   10. RESPONSIVIDADE
+   @media é um bloco que só se aplica quando a tela é menor que o valor
+   informado. Aqui simplificamos a grade para telas de tablet e celular.
+   =================================================================== */
+@media (max-width: 900px) {
+  .hero-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .professional-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .app-nav {
+    flex-wrap: wrap;
+  }
+
+  .search-form {
+    order: 3; /* manda a busca pra própria linha, embaixo do
+                 logo/categorias/perfil, quando o espaço aperta */
+    flex-basis: 100%;
+  }
+}
+
+@media (max-width: 560px) {
+  .hero-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .login-bar,
+  .signup {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .field input {
+    width: 100%;
+  }
+
+  .professional-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .chat-widget__bubble {
+    display: none; /* em telas bem pequenas, mantém só o avatar
+                       redondo, pra não tomar espaço precioso */
+  }
+}
