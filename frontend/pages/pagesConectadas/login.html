@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Findy</title>
+    <link rel="stylesheet" href="">
+</head>
+<body>
+    <main class="pagina">
+        <header class="cabecalho-pagina">
+            <h1 class="titulo-pagina">Entrar</h1>
+            <p class="descricao-pagina">Acesse sua conta para buscar ou oferecer servicos.</p>
+        </header>
+
+        <p class="mensagem-sucesso" hidden></p>
+        <p class="mensagem-erro" hidden></p>
+
+        <form class="formulario" action="/login" method="POST">
+            <div class="campo-grupo">
+                <label class="rotulo-campo" for="email">Email</label>
+                <input class="campo" type="email" id="email" name="email" required>
+            </div>
+
+            <div class="campo-grupo">
+                <label class="rotulo-campo" for="senha">Senha</label>
+                <input class="campo" type="password" id="senha" name="senha" required>
+            </div>
+
+            <button class="botao" type="submit">Entrar</button>
+        </form>
+
+        <p>
+            Depois de entrar:
+            <a class="link-navegacao" href="busca_servicos.html">buscar servicos</a> ·
+            <a class="link-navegacao" href="cadastro_servico.html">oferecer um servico</a> ·
+            <a class="link-navegacao" href="solicitacoes_recebidas.html">solicitacoes recebidas</a> ·
+            <a class="link-navegacao" href="solicitacoes_enviadas.html">solicitacoes enviadas</a> ·
+            <a class="link-navegacao" href="avaliacoes_recebidas.html">minhas avaliacoes</a>
+        </p>
+        <p><a class="link-navegacao" href="cadastro_usuario.html">Ainda nao tenho conta</a></p>
+    </main>
+
+    <script src="../js/mensagens.js"></script>
+</body>
+</html>

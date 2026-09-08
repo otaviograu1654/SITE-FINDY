@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastrar servico - Findy</title>
+    <link rel="stylesheet" href="../css/estilo.css">
+</head>
+<body>
+    <main class="pagina">
+        <header class="cabecalho-pagina">
+            <h1 class="titulo-pagina">Oferecer um servico</h1>
+            <p class="descricao-pagina">O servico fica associado a conta com a qual voce esta logado (via sessao).</p>
+        </header>
+
+        <p class="mensagem-sucesso" hidden></p>
+        <p class="mensagem-erro" hidden></p>
+
+        <form class="formulario" action="/servicos" method="POST">
+            <div class="campo-grupo">
+                <label class="rotulo-campo" for="categoria_id">Categoria</label>
+                <select class="campo campo-categoria" id="categoria_id" name="categoria_id" required>
+                    <option value="">Selecione uma categoria</option>
+                </select>
+            </div>
+
+            <div class="campo-grupo">
+                <label class="rotulo-campo" for="titulo">Titulo</label>
+                <input class="campo" type="text" id="titulo" name="titulo" required>
+            </div>
+
+            <div class="campo-grupo">
+                <label class="rotulo-campo" for="descricao">Descricao</label>
+                <textarea class="campo" id="descricao" name="descricao" rows="4"></textarea>
+            </div>
+
+            <button class="botao" type="submit">Cadastrar servico</button>
+        </form>
+
+        <p><a class="link-navegacao" href="login.html">Preciso entrar primeiro</a></p>
+    </main>
+
+    <script src="../js/mensagens.js"></script>
+    <script src="../js/categorias.js"></script>
+</body>
+</html>

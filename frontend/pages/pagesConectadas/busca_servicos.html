@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buscar servicos - Findy</title>
+    <link rel="stylesheet" href="../css/estilo.css">
+</head>
+<body>
+    <main class="pagina">
+        <header class="cabecalho-pagina">
+            <h1 class="titulo-pagina">Buscar servicos</h1>
+            <p class="descricao-pagina">Busque prestadores por categoria e cidade.</p>
+        </header>
+
+        <p class="mensagem-sucesso" hidden></p>
+        <p class="mensagem-erro" hidden></p>
+
+        <form class="formulario formulario-busca" action="/servicos" method="GET">
+            <div class="campo-grupo">
+                <label class="rotulo-campo" for="categoria_id">Categoria</label>
+                <select class="campo campo-categoria" id="categoria_id" name="categoria_id" required>
+                    <option value="">Selecione uma categoria</option>
+                </select>
+            </div>
+
+            <div class="campo-grupo">
+                <label class="rotulo-campo" for="cidade">Cidade</label>
+                <input class="campo" type="text" id="cidade" name="cidade" required>
+            </div>
+
+            <button class="botao" type="submit">Buscar</button>
+        </form>
+
+        <section class="secao-tabela">
+            <table class="tabela-dados">
+                <caption>Resultados da busca</caption>
+                <thead>
+                    <tr>
+                        <th scope="col">Servico</th>
+                        <th scope="col">Categoria</th>
+                        <th scope="col">Prestador</th>
+                        <th scope="col">Descricao</th>
+                        <th scope="col">Acao</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </section>
+    </main>
+
+    <script src="../js/mensagens.js"></script>
+    <script src="../js/categorias.js"></script>
+    <script src="../js/busca_servicos.js"></script>
+</body>
+</html>

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de usuario - Findy</title>
+    <link rel="stylesheet" href="../css/estilo.css">
+</head>
+<body>
+    <main class="pagina">
+        <header class="cabecalho-pagina">
+            <h1 class="titulo-pagina">Criar conta</h1>
+            <p class="descricao-pagina">Cadastre-se para pedir orcamentos ou oferecer seus servicos.</p>
+        </header>
+
+        <p class="mensagem-sucesso" hidden></p>
+        <p class="mensagem-erro" hidden></p>
+
+        <form class="formulario" action="/usuarios" method="POST">
+            <div class="campo-grupo">
+                <label class="rotulo-campo" for="nome">Nome</label>
+                <input class="campo" type="text" id="nome" name="nome" required>
+            </div>
+
+            <div class="campo-grupo">
+                <label class="rotulo-campo" for="email">Email</label>
+                <input class="campo" type="email" id="email" name="email" required>
+            </div>
+
+            <div class="campo-grupo">
+                <label class="rotulo-campo" for="senha">Senha</label>
+                <input class="campo" type="password" id="senha" name="senha" minlength="6" required>
+            </div>
+
+            <div class="campo-grupo">
+                <label class="rotulo-campo" for="telefone">Telefone</label>
+                <input class="campo" type="tel" id="telefone" name="telefone">
+            </div>
+
+            <div class="campo-grupo">
+                <label class="rotulo-campo" for="cidade">Cidade</label>
+                <input class="campo" type="text" id="cidade" name="cidade" required>
+            </div>
+
+            <div class="campo-grupo">
+                <label class="rotulo-campo" for="estado">Estado (UF)</label>
+                <input class="campo" type="text" id="estado" name="estado" maxlength="2" minlength="2" required>
+            </div>
+
+            <div class="campo-grupo">
+                <label class="rotulo-campo" for="foto">Foto (caminho do arquivo)</label>
+                <input class="campo" type="text" id="foto" name="foto">
+                <p class="texto-auxiliar">Opcional. Este campo guarda apenas o caminho do arquivo, nao a imagem.</p>
+            </div>
+
+            <button class="botao" type="submit">Cadastrar</button>
+        </form>
+
+        <p><a class="link-navegacao" href="login.html">Ja tenho conta, entrar</a></p>
+    </main>
+
+    <script src="../js/mensagens.js"></script>
+</body>
+</html>

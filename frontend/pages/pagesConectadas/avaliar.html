@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Avaliar - Findy</title>
+    <link rel="stylesheet" href="../css/estilo.css">
+</head>
+<body>
+    <main class="pagina">
+        <header class="cabecalho-pagina">
+            <h1 class="titulo-pagina">Avaliar</h1>
+            <p class="descricao-pagina">
+                So e possivel avaliar solicitacoes com status CONCLUIDA das quais voce participou
+                (como cliente ou como prestador). O avaliado e sempre o outro participante, calculado pelo servidor.
+            </p>
+        </header>
+
+        <p class="mensagem-sucesso" hidden></p>
+        <p class="mensagem-erro" hidden></p>
+
+        <form class="formulario" action="/avaliacoes" method="POST">
+            <div class="campo-grupo">
+                <label class="rotulo-campo" for="solicitacao_id">Id da solicitacao</label>
+                <input class="campo" type="number" id="solicitacao_id" name="solicitacao_id" min="1" required data-preencher-de-url>
+                <p class="texto-auxiliar">Preenchido automaticamente ao vir da tela de solicitacoes enviadas.</p>
+            </div>
+
+            <div class="campo-grupo">
+                <label class="rotulo-campo" for="nota">Nota</label>
+                <input class="campo" type="number" id="nota" name="nota" min="0" max="5" required>
+            </div>
+
+            <div class="campo-grupo">
+                <label class="rotulo-campo" for="comentario">Comentario</label>
+                <textarea class="campo" id="comentario" name="comentario" rows="4"></textarea>
+            </div>
+
+            <button class="botao" type="submit">Enviar avaliacao</button>
+        </form>
+
+        <p><a class="link-navegacao" href="solicitacoes_enviadas.html">Voltar para minhas solicitacoes</a></p>
+    </main>
+
+    <script src="../js/mensagens.js"></script>
+    <script src="../js/preencher-query.js"></script>
+</body>
+</html>

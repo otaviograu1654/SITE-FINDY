@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Avaliacoes recebidas - Findy</title>
+    <link rel="stylesheet" href="../css/estilo.css">
+</head>
+<body>
+    <main class="pagina">
+        <header class="cabecalho-pagina">
+            <h1 class="titulo-pagina">Avaliacoes recebidas</h1>
+            <p class="descricao-pagina">
+                Mostra as avaliacoes do usuario logado. Para ver as de outra pessoa, acesse esta
+                pagina com ?id=&lt;id-do-usuario&gt; na URL.
+            </p>
+        </header>
+
+        <p class="mensagem-sucesso" hidden></p>
+        <p class="mensagem-erro" hidden></p>
+        <p class="resumo-avaliacoes"></p>
+
+        <section class="secao-tabela">
+            <table class="tabela-dados">
+                <caption>Avaliacoes</caption>
+                <thead>
+                    <tr>
+                        <th scope="col">Avaliador</th>
+                        <th scope="col">Nota</th>
+                        <th scope="col">Comentario</th>
+                        <th scope="col">Data</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </section>
+
+        <p><a class="link-navegacao" href="login.html">Preciso entrar primeiro</a></p>
+    </main>
+
+    <script src="../js/mensagens.js"></script>
+    <script src="../js/avaliacoes_recebidas.js"></script>
+</body>
+</html>

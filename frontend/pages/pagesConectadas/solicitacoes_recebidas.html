@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solicitacoes recebidas - Findy</title>
+    <link rel="stylesheet" href="../css/estilo.css">
+</head>
+<body>
+    <main class="pagina">
+        <header class="cabecalho-pagina">
+            <h1 class="titulo-pagina">Solicitacoes recebidas</h1>
+            <p class="descricao-pagina">Solicitacoes feitas para os servicos que voce oferece (prestador logado via sessao).</p>
+        </header>
+
+        <p class="mensagem-sucesso" hidden></p>
+        <p class="mensagem-erro" hidden></p>
+
+        <section class="secao-tabela">
+            <table class="tabela-dados">
+                <caption>Minhas solicitacoes recebidas</caption>
+                <thead>
+                    <tr>
+                        <th scope="col">Servico</th>
+                        <th scope="col">Cliente</th>
+                        <th scope="col">Telefone</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Data</th>
+                        <th scope="col">Acoes</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </section>
+
+        <p><a class="link-navegacao" href="login.html">Preciso entrar primeiro</a></p>
+    </main>
+
+    <script src="../js/mensagens.js"></script>
+    <script src="../js/solicitacoes_recebidas.js"></script>
+</body>
+</html>

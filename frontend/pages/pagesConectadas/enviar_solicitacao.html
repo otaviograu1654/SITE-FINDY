@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solicitar orcamento - Findy</title>
+    <link rel="stylesheet" href="../css/estilo.css">
+</head>
+<body>
+    <main class="pagina">
+        <header class="cabecalho-pagina">
+            <h1 class="titulo-pagina">Solicitar orcamento</h1>
+            <p class="descricao-pagina">O cliente e sempre a conta com a qual voce esta logado (via sessao).</p>
+        </header>
+
+        <p class="mensagem-sucesso" hidden></p>
+        <p class="mensagem-erro" hidden></p>
+
+        <form class="formulario" action="/solicitacoes" method="POST">
+            <div class="campo-grupo">
+                <label class="rotulo-campo" for="servico_id">Id do servico</label>
+                <input class="campo" type="number" id="servico_id" name="servico_id" min="1" required data-preencher-de-url>
+                <p class="texto-auxiliar">Preenchido automaticamente ao vir da tela de busca.</p>
+            </div>
+
+            <div class="campo-grupo">
+                <label class="rotulo-campo" for="mensagem">Mensagem</label>
+                <textarea class="campo" id="mensagem" name="mensagem" rows="4"></textarea>
+            </div>
+
+            <button class="botao" type="submit">Enviar solicitacao</button>
+        </form>
+
+        <p><a class="link-navegacao" href="busca_servicos.html">Voltar para a busca</a></p>
+    </main>
+
+    <script src="../js/mensagens.js"></script>
+    <script src="../js/preencher-query.js"></script>
+</body>
+</html>
