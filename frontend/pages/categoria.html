@@ -58,7 +58,7 @@
       </button>
     </form>
 
-    <a href="perfil.html" class="btn btn--dark app-nav__profile">
+    <a href="perfil-prestador.html" class="btn btn--dark app-nav__profile">
       <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
         <circle cx="12" cy="8" r="4" fill="currentColor"/>
         <path d="M4 20c0-4.4 3.6-7 8-7s8 2.6 8 7" fill="currentColor"/>
@@ -71,66 +71,12 @@
   <main class="category-results">
     <h1 class="category-results__title">Principais da categoria</h1>
 
-    <div class="professional-grid">
-
-      <!-- Cada profissional é um cartão com foto real + faixa azul
-           com nome, nota e a categoria selecionada no momento. -->
-      <article class="professional-card">
-        <div class="professional-card__photo professional-card__photo--a" aria-hidden="true"></div>
-        <div class="professional-card__footer">
-          <h2 class="professional-card__name">José Humberto</h2>
-          <div class="professional-card__row">
-            <span class="professional-card__rating">
-              <span class="professional-card__star" aria-hidden="true">&#9733;</span> 4.8
-            </span>
-            <a href="#" class="card__arrow professional-card__arrow" aria-label="Ver perfil de José Humberto">&rarr;</a>
-          </div>
-          <p class="professional-card__category" data-categoria-label>Serviços Gerais</p>
-        </div>
-      </article>
-
-      <article class="professional-card">
-        <div class="professional-card__photo professional-card__photo--b" aria-hidden="true"></div>
-        <div class="professional-card__footer">
-          <h2 class="professional-card__name">Amilton Ribeiro</h2>
-          <div class="professional-card__row">
-            <span class="professional-card__rating">
-              <span class="professional-card__star" aria-hidden="true">&#9733;</span> 4.9
-            </span>
-            <a href="#" class="card__arrow professional-card__arrow" aria-label="Ver perfil de Amilton Ribeiro">&rarr;</a>
-          </div>
-          <p class="professional-card__category" data-categoria-label>Serviços Gerais</p>
-        </div>
-      </article>
-
-      <article class="professional-card">
-        <div class="professional-card__photo professional-card__photo--c" aria-hidden="true"></div>
-        <div class="professional-card__footer">
-          <h2 class="professional-card__name">Oswaldo Ramos</h2>
-          <div class="professional-card__row">
-            <span class="professional-card__rating">
-              <span class="professional-card__star" aria-hidden="true">&#9733;</span> 5.0
-            </span>
-            <a href="#" class="card__arrow professional-card__arrow" aria-label="Ver perfil de Oswaldo Ramos">&rarr;</a>
-          </div>
-          <p class="professional-card__category" data-categoria-label>Serviços Gerais</p>
-        </div>
-      </article>
-
-      <article class="professional-card">
-        <div class="professional-card__photo professional-card__photo--d" aria-hidden="true"></div>
-        <div class="professional-card__footer">
-          <h2 class="professional-card__name">Gustavo Figueira</h2>
-          <div class="professional-card__row">
-            <span class="professional-card__rating">
-              <span class="professional-card__star" aria-hidden="true">&#9733;</span> 4.7
-            </span>
-            <a href="#" class="card__arrow professional-card__arrow" aria-label="Ver perfil de Gustavo Figueira">&rarr;</a>
-          </div>
-          <p class="professional-card__category" data-categoria-label>Serviços Gerais</p>
-        </div>
-      </article>
-
+    <!-- A grade é preenchida dinamicamente pelo script.js, de acordo com
+         a categoria escolhida na URL (?categoria=Nome). Cada categoria
+         mostra apenas os seus próprios profissionais (4 colunas x 3
+         linhas). Ver PROFISSIONAIS_POR_CATEGORIA em script.js. -->
+    <div class="professional-grid" id="professional-grid">
+      <noscript>Ative o JavaScript para ver os profissionais desta categoria.</noscript>
     </div>
 
     <nav class="pagination" aria-label="Paginação de resultados">

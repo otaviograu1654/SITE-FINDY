@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Findy - Perfil do Prestador</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body class="perfil-prestador">
+<div class="wrap">
+
+  <!-- HEADER -->
+  <header>
+    <a href="index.html" class="logo-block" style="text-decoration:none; color:inherit;">
+      <img class="logo-img" src="images/findy-logo.png" alt="Findy">
+      <div class="logo-text">
+        <h1>Encontre seu<br>melhor serviço</h1>
+      </div>
+    </a>
+
+    <div class="search-box">
+      <input type="text" placeholder="Buscar serviços ou profissionais...">
+    </div>
+
+    <nav>
+      <a href="index.html">Início</a>
+      <a href="#" class="active">Perfil</a>
+      <a href="#">Mensagens</a>
+    </nav>
+
+    <a href="login.html" class="btn-black" style="text-decoration:none; display:inline-block;">Login</a>
+  </header>
+
+  <!-- PROFILE HERO -->
+  <section class="profile-hero">
+    <div class="avatar-ring">
+      <img src="https://i.pravatar.cc/300?img=32" alt="Foto de perfil">
+    </div>
+
+    <div class="profile-info">
+      <h2>Camila Duarte</h2>
+      <span class="role-tag">Serviços Domésticos</span>
+      <p>Profissional autônoma com mais de 6 anos de experiência em limpeza residencial e organização de ambientes. Atendimento pontual, cuidadoso e com produtos próprios.</p>
+      <div class="location-line">📍 Patos de Minas, MG · Atende em toda a região</div>
+    </div>
+
+    <div class="hero-actions">
+      <a
+        href="contratacao.html?prestador=Camila%20Duarte&categoria=Servi%C3%A7os%20Dom%C3%A9sticos&valor=90&local=Patos%20de%20Minas%2C%20MG&foto=https%3A%2F%2Fi.pravatar.cc%2F300%3Fimg%3D32"
+        class="btn-white"
+      >Contratar agora</a>
+      <button
+        class="btn-outline"
+        id="btn-ver-agenda"
+        type="button"
+        title="Abre o Google Agenda com um horário sugerido pra você confirmar"
+        data-nome="Camila Duarte"
+        data-categoria="Serviços Domésticos"
+        data-local="Patos de Minas, MG"
+      >Ver agenda</button>
+      <div class="rating-line">⭐ 4.9 · 87 avaliações</div>
+    </div>
+  </section>
+
+  <!-- STATS -->
+  <section class="stats-strip">
+    <div class="stat-card">
+      <div class="num">87</div>
+      <div class="label">Serviços concluídos</div>
+    </div>
+    <div class="stat-card">
+      <div class="num">4.9</div>
+      <div class="label">Avaliação média</div>
+    </div>
+    <div class="stat-card">
+      <div class="num">98%</div>
+      <div class="label">Taxa de resposta</div>
+    </div>
+    <div class="stat-card">
+      <div class="num">6 anos</div>
+      <div class="label">De experiência</div>
+    </div>
+  </section>
+
+  <!-- MAIN GRID -->
+  <section class="main-grid">
+
+    <div style="display:flex; flex-direction:column; gap:26px;">
+
+      <div class="panel">
+        <h3>Habilidades</h3>
+        <div class="skills-list">
+          <span class="skill-pill blue">Limpeza residencial</span>
+          <span class="skill-pill black">Organização</span>
+          <span class="skill-pill red">Passadoria</span>
+          <span class="skill-pill blue">Pós-obra</span>
+          <span class="skill-pill black">Cuidado de plantas</span>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h3>Trabalhos recentes</h3>
+        <div class="portfolio-grid">
+          <div class="port-card" style="background-image:url('https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=400');"><span>Limpeza pós-obra</span></div>
+          <div class="port-card" style="background-image:url('https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=400');"><span>Organização de armários</span></div>
+          <div class="port-card" style="background-image:url('https://images.unsplash.com/photo-1585421514738-01798e348b17?w=400');"><span>Limpeza residencial</span></div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h3>Avaliações</h3>
+
+        <div class="review">
+          <img src="https://i.pravatar.cc/100?img=12" alt="">
+          <div>
+            <div class="review-name">Rafael Souza</div>
+            <div class="review-stars">⭐⭐⭐⭐⭐</div>
+            <div class="review-text">Serviço impecável, super pontual e cuidadosa com os detalhes. Recomendo muito!</div>
+          </div>
+        </div>
+
+        <div class="review">
+          <img src="https://i.pravatar.cc/100?img=48" alt="">
+          <div>
+            <div class="review-name">Larissa Prado</div>
+            <div class="review-stars">⭐⭐⭐⭐⭐</div>
+            <div class="review-text">Contratei para organizar a casa toda e o resultado foi excelente. Já virou nossa profissional fixa.</div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- SIDEBAR -->
+    <div style="display:flex; flex-direction:column; gap:26px;">
+
+      <div class="panel">
+        <h3>Informações</h3>
+        <div class="info-row"><span class="k">Tipo de perfil</span><span class="v">Autônomo</span></div>
+        <div class="info-row"><span class="k">Categoria</span><span class="v">Serviços Domésticos</span></div>
+        <div class="info-row"><span class="k">Região de atendimento</span><span class="v">Patos de Minas, MG</span></div>
+        <div class="info-row"><span class="k">Membro desde</span><span class="v">Mar. 2022</span></div>
+        <div class="info-row"><span class="k">Valor médio</span><span class="v">R$ 90 / diária</span></div>
+        <a
+          href="contratacao.html?prestador=Camila%20Duarte&categoria=Servi%C3%A7os%20Dom%C3%A9sticos&valor=90&local=Patos%20de%20Minas%2C%20MG&foto=https%3A%2F%2Fi.pravatar.cc%2F300%3Fimg%3D32"
+          class="contact-btn"
+        >Contratar agora</a>
+      </div>
+
+      <div class="panel">
+        <h3>Disponibilidade</h3>
+        <div class="info-row"><span class="k">Segunda a sexta</span><span class="v">08h – 17h</span></div>
+        <div class="info-row"><span class="k">Sábado</span><span class="v">08h – 12h</span></div>
+        <div class="info-row"><span class="k">Domingo</span><span class="v">Indisponível</span></div>
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <img class="logo-img footer-logo-img" src="images/findy-logo.png" alt="Findy">
+    <div class="foot-links">
+      <span>Início</span>
+      <span>Sobre</span>
+      <span>Ajuda</span>
+      <span>Contato</span>
+    </div>
+  </footer>
+
+</div>
+</body>
+</html>
