@@ -1,468 +1,123 @@
-PLANO DE EXECUÇÃO - PLATAFORMA DE SERVIÇOS
-
-ADICIONEI UM ARQUIVO CHAMADO .GITKEEP SO PARA AS PASTAS VAZIAS SUBIREM PRO REPOSITORIIO DO GIT HUB 
-
-IDEIA DO BANCO:
-
-TABELA: USUARIOS
-
-- id
-- nome
-- email
-- senha
-- telefone
-- cidade
-- estado
-- foto
-- data_cadastro
-
-Relacionamentos:
-- Um usuário pode cadastrar vários serviços.
-- Um usuário pode fazer várias solicitações de orçamento.
-- Um usuário pode receber várias solicitações por meio dos serviços que oferece.
-- Um usuário pode fazer várias avaliações.
-- Um usuário pode receber várias avaliações.
-
-
-TABELA: CATEGORIAS
-
-- id
-- nome
-- descricao
-
-Relacionamentos:
-- Uma categoria pode possuir vários serviços.
-- Cada serviço pertence a uma categoria.
-
-
-TABELA: SERVICOS
-
-- id
-- usuario_id
-- categoria_id
-- titulo
-- descricao
-- ativo
-- data_cadastro
-
-Relacionamentos:
-- Cada serviço pertence a um usuário.
-- Cada serviço pertence a uma categoria.
-- Um usuário pode cadastrar vários serviços.
-- Um serviço pode receber várias solicitações de orçamento.
-
-
-TABELA: SOLICITACOES
-
-- id
-- cliente_id
-- servico_id
-- mensagem
-- status
-- data_solicitacao
-
-Relacionamentos:
-- Cada solicitação é feita por um usuário.
-- Cada solicitação pertence a um serviço.
-- O dono do serviço é o usuário que está recebendo a solicitação.
-- Um usuário pode fazer várias solicitações.
-- Um serviço pode receber várias solicitações.
-- Uma solicitação concluída pode gerar uma avaliação.
-
-
-TABELA: AVALIACOES
-
-- id
-- avaliador_id
-- avaliado_id
-- solicitacao_id
-- nota
-- comentario
-- data_avaliacao
-
-Relacionamentos:
-- Cada avaliação é feita por um usuário.
-- Cada avaliação é destinada a outro usuário.
-- Cada avaliação está ligada a uma solicitação.
-- Um usuário pode fazer várias avaliações.
-- Um usuário pode receber várias avaliações.
-- Uma solicitação pode ter no máximo uma avaliação.
-
-
-USUARIOS 1 ---- N SERVICOS
-
-CATEGORIAS 1 ---- N SERVICOS
-
-USUARIOS 1 ---- N SOLICITACOES
-(cliente que solicitou)
-
-SERVICOS 1 ---- N SOLICITACOES
-
-USUARIOS 1 ---- N AVALIACOES
-(avaliador)
-
-USUARIOS 1 ---- N AVALIACOES
-(avaliado)
-
-SOLICITACOES 1 ---- 0..1 AVALIACOES
-
-CHAVES estrangeiras:
-SERVICOS.usuario_id
-→ USUARIOS.id
-
-SERVICOS.categoria_id
-→ CATEGORIAS.id
-
-SOLICITACOES.cliente_id
-→ USUARIOS.id
-
-SOLICITACOES.servico_id
-→ SERVICOS.id
-
-AVALIACOES.avaliador_id
-→ USUARIOS.id
-
-AVALIACOES.avaliado_id
-→ USUARIOS.id
-
-AVALIACOES.solicitacao_id
-→ SOLICITACOES.id
-
-
-
-
-
-Objetivo:
-Desenvolver uma plataforma web responsiva para conectar pessoas que precisam de serviços com profissionais que oferecem esses serviços.
-
-Status:
-[ ] Pendente
-[~] Em andamento
-[x] Concluído
-
-
-FASE 1 - PREPARAÇÃO DO PROJETO
-
-Objetivo:
-Configurar o ambiente de desenvolvimento e a estrutura inicial do sistema.
-
-Tarefas:
-[x] Criar estrutura principal de pastas
-[x] Instalar Java
-[x] Instalar VS Code
-[x] Instalar extensões Java e Spring Boot
-[x] Criar projeto Spring Boot
-[x] Executar projeto Spring Boot pela primeira vez
-[ ] Instalar/configurar PostgreSQL
-[ ] Configurar conexão Spring Boot + PostgreSQL
-[ ] Configurar Git
-[ ] Criar repositório no GitHub
-
-
-FASE 2 - MODELAGEM DO BANCO DE DADOS
-
-Objetivo:
-Definir a estrutura dos dados utilizados pelo sistema.
-
-Tarefas:
-[ ] Criar tabela de usuários
-[ ] Criar tabela de prestadores
-[ ] Criar tabela de categorias
-[ ] Criar tabela de serviços
-[ ] Criar tabela de solicitações
-[ ] Criar tabela de avaliações
-[ ] Definir chaves primárias
-[ ] Definir chaves estrangeiras
-[ ] Definir relacionamentos
-[ ] Criar diagrama do banco de dados
-
-
-FASE 3 - ESTRUTURA DO BACKEND
-
-Objetivo:
-Organizar o backend Java utilizando Spring Boot.
-
-Tarefas:
-[ ] Criar packages model
-[ ] Criar package repository
-[ ] Criar package service
-[ ] Criar package controller
-[ ] Criar package dto
-[ ] Criar package config
-[ ] Testar primeira rota da API REST
-[ ] Testar comunicação com PostgreSQL
-
-
-FASE 4 - CADASTRO DE USUÁRIO
-
-Objetivo:
-Permitir a criação de contas na plataforma.
-
-Tarefas:
-[ ] Criar tela de cadastro
-[ ] Criar model de usuário
-[ ] Criar repository de usuário
-[ ] Criar service de usuário
-[ ] Criar controller de usuário
-[ ] Criar rota POST /usuarios
-[ ] Validar campos obrigatórios
-[ ] Impedir e-mails duplicados
-[ ] Salvar usuário no banco
-[ ] Testar cadastro pela API
-[ ] Integrar frontend com backend
-
-
-FASE 5 - LOGIN E AUTENTICAÇÃO
-
-Objetivo:
-Permitir que usuários cadastrados façam login com segurança.
-
-Tarefas:
-[ ] Criar tela de login
-[ ] Configurar Spring Security
-[ ] Validar e-mail e senha
-[ ] Implementar autenticação
-[ ] Manter usuário autenticado
-[ ] Criar logout
-[ ] Proteger páginas privadas
-[ ] Proteger rotas privadas da API
-
-
-FASE 6 - PERFIL DO USUÁRIO
-
-Objetivo:
-Permitir que o usuário visualize e altere seus dados.
-
-Tarefas:
-[ ] Criar página Minha Conta
-[ ] Exibir dados do usuário
-[ ] Editar nome
-[ ] Editar telefone
-[ ] Editar cidade e estado
-[ ] Alterar foto
-[ ] Alterar senha
-
-
-FASE 7 - PERFIL DE PRESTADOR
-
-Objetivo:
-Permitir que qualquer usuário também ofereça serviços.
-
-Tarefas:
-[ ] Criar opção Tornar-se Prestador
-[ ] Criar perfil profissional
-[ ] Adicionar descrição profissional
-[ ] Adicionar experiência
-[ ] Adicionar foto
-[ ] Definir cidade de atuação
-[ ] Ativar/desativar perfil de prestador
-
-
-FASE 8 - CATEGORIAS
-
-Objetivo:
-Organizar os serviços oferecidos pela plataforma.
-
-Tarefas:
-[ ] Criar cadastro de categorias
-[ ] Criar categorias iniciais
-[ ] Construção
-[ ] Saúde e cuidados
-[ ] Tecnologia
-[ ] Marketing
-[ ] Pets
-[ ] Serviços domésticos
-[ ] Educação
-[ ] Relacionar categorias aos serviços
-
-
-FASE 9 - SERVIÇOS
-
-Objetivo:
-Permitir que prestadores cadastrem os serviços oferecidos.
-
-Tarefas:
-[ ] Criar tela Meus Serviços
-[ ] Cadastrar serviço
-[ ] Editar serviço
-[ ] Excluir serviço
-[ ] Ativar/desativar serviço
-[ ] Relacionar serviço ao prestador
-[ ] Relacionar serviço à categoria
-[ ] Criar API de serviços
-
-
-FASE 10 - PÁGINA INICIAL
-
-Objetivo:
-Criar a principal entrada para busca de profissionais.
-
-Tarefas:
-[ ] Criar página inicial
-[ ] Criar campo O que você precisa?
-[ ] Criar campo de localização
-[ ] Criar botão de busca
-[ ] Mostrar categorias
-[ ] Criar chamada para prestadores
-
-
-FASE 11 - BUSCA DE PRESTADORES
-
-Objetivo:
-Permitir que clientes encontrem profissionais.
-
-Tarefas:
-[ ] Buscar por serviço
-[ ] Buscar por categoria
-[ ] Buscar por cidade
-[ ] Combinar filtros
-[ ] Mostrar lista de resultados
-[ ] Mostrar avaliação média
-[ ] Criar cards de prestadores
-
-
-FASE 12 - PERFIL PÚBLICO DO PRESTADOR
-
-Objetivo:
-Exibir informações profissionais para possíveis clientes.
-
-Tarefas:
-[ ] Mostrar nome
-[ ] Mostrar foto
-[ ] Mostrar descrição
-[ ] Mostrar experiência
-[ ] Mostrar localização
-[ ] Mostrar serviços oferecidos
-[ ] Mostrar avaliação média
-[ ] Mostrar avaliações
-[ ] Criar botão Solicitar Orçamento
-
-
-FASE 13 - SOLICITAÇÃO DE ORÇAMENTO
-
-Objetivo:
-Permitir contato entre cliente e prestador.
-
-Tarefas:
-[ ] Criar formulário de solicitação
-[ ] Enviar mensagem para prestador
-[ ] Registrar solicitação no banco
-[ ] Criar status PENDENTE
-[ ] Criar status ACEITA
-[ ] Criar status RECUSADA
-[ ] Criar status CONCLUIDA
-[ ] Permitir prestador visualizar solicitações
-
-
-FASE 14 - PAINEL DO PRESTADOR
-
-Objetivo:
-Centralizar as funcionalidades do profissional.
-
-Tarefas:
-[ ] Criar dashboard
-[ ] Mostrar serviços cadastrados
-[ ] Mostrar solicitações recebidas
-[ ] Mostrar avaliações
-[ ] Mostrar média das avaliações
-[ ] Permitir editar perfil
-[ ] Permitir gerenciar serviços
-
-
-FASE 15 - AVALIAÇÕES
-
-Objetivo:
-Permitir que clientes avaliem prestadores.
-
-Tarefas:
-[ ] Criar sistema de notas
-[ ] Permitir notas de 1 a 5
-[ ] Criar campo de comentário
-[ ] Relacionar avaliação à solicitação
-[ ] Impedir avaliações sem serviço concluído
-[ ] Calcular média do prestador
-[ ] Exibir avaliações no perfil
-
-
-FASE 16 - RESPONSIVIDADE
-
-Objetivo:
-Garantir boa utilização em diferentes dispositivos.
-
-Tarefas:
-[ ] Revisar desktop
-[ ] Revisar tablet
-[ ] Revisar celular
-[ ] Ajustar menus
-[ ] Ajustar formulários
-[ ] Ajustar cards
-[ ] Ajustar perfil do prestador
-[ ] Ajustar dashboard
-
-
-FASE 17 - SEGURANÇA E VALIDAÇÕES
-
-Objetivo:
-Melhorar a segurança e a confiabilidade do sistema.
-
-Tarefas:
-[ ] Armazenar senhas com hash
-[ ] Validar dados recebidos pela API
-[ ] Validar formulários
-[ ] Proteger rotas
-[ ] Impedir alteração de dados de outros usuários
-[ ] Tratar erros do backend
-[ ] Tratar erros do frontend
-
-
-FASE 18 - TESTES
-
-Objetivo:
-Identificar e corrigir erros antes da entrega.
-
-Tarefas:
-[ ] Testar cadastro
-[ ] Testar login
-[ ] Testar edição de perfil
-[ ] Testar cadastro de serviço
-[ ] Testar busca
-[ ] Testar filtros
-[ ] Testar solicitação de orçamento
-[ ] Testar avaliações
-[ ] Testar responsividade
-[ ] Testar API
-
-
-FASE 19 - INTERFACE FINAL
-
-Objetivo:
-Finalizar identidade visual e experiência do usuário.
-
-Tarefas:
-[ ] Definir cores finais
-[ ] Definir tipografia
-[ ] Criar logo
-[ ] Padronizar botões
-[ ] Padronizar cards
-[ ] Adicionar ícones
-[ ] Criar mensagens de sucesso
-[ ] Criar mensagens de erro
-[ ] Criar estados de carregamento
-
-
-FASE 20 - DEPLOY E DOCUMENTAÇÃO
-
-Objetivo:
-Preparar o projeto para apresentação e utilização online.
-
-Tarefas:
-[ ] Publicar frontend
-[ ] Publicar backend
-[ ] Publicar banco PostgreSQL
-[ ] Configurar variáveis de ambiente
-[ ] Criar README
-[ ] Documentar tecnologias
-[ ] Documentar funcionalidades
-[ ] Adicionar diagrama do banco
-[ ] Adicionar UML
-[ ] Preparar apresentação final
+﻿PLANO DE EXECUÇÃO - FINDY
+
+OBJETIVO
+Transformar o protótipo em uma plataforma real para contratar e oferecer serviços,
+reutilizando o visual atual e substituindo dados fixos por informações do banco.
+
+ESTADO ATUAL
+- Frontend HTML/CSS/JavaScript com sete telas: início, login/cadastro, categorias,
+  perfis de contratante/prestador, contratação e status do atendimento.
+- Logo, imagens, estilos e interações de demonstração já existem.
+- Profissionais e perfis são exemplos fixos; status/avaliações usam localStorage.
+- Backend Spring Boot/Maven, Java 21, com JPA, Validation e driver PostgreSQL.
+- PostgreSQL no Docker e conexão com Spring Boot configurados e testados.
+- Ainda faltam tabelas, API própria, autenticação e integração das telas.
+
+DECISÕES TOMADAS
+- Uma única conta permite contratar e também oferecer serviços.
+- Dados pessoais ficam em USUARIOS; perfil profissional opcional em PRESTADORES.
+- Pessoas preenchem e editam seus próprios dados e fotos.
+- Começar com um administrador para editar, aprovar/recusar e desativar cadastros.
+- Login único: backend identifica USUARIO ou ADMIN e libera as funções permitidas.
+- Exemplos atuais serão dados de demonstração no banco, acessados por ID.
+
+PRIMEIRA ENTREGA - ORDEM DE EXECUÇÃO
+1. Definir aprovação e dados obrigatórios; criar modelo, migrations e tabelas.
+2. Implementar cadastro, login/logout, hash de senha e autorização no backend.
+3. Criar Minha Conta e formulário para ativar/editar o perfil profissional.
+4. Criar administrador inicial por configuração segura e painel de cadastros.
+5. Implementar PENDENTE/APROVADO/RECUSADO, motivo, responsável/data e reenvio.
+6. Integrar telas com a API: perfis por ID, dados persistentes e publicação autorizada.
+7. Migrar exemplos e testar login, edição, aprovação e bloqueio de acesso indevido.
+
+MODELO DO BANCO PROPOSTO
+- USUARIOS: identificação, contato, localização, foto, senha_hash, papel e ativo.
+- PRESTADORES: usuario_id único, descrição, experiência e região de atendimento.
+- CATEGORIAS e SERVICOS: categoria, prestador, descrição, preço e unidade de cobrança.
+- SOLICITACOES: cliente, serviço, status, agendamento, endereço e valores acordados.
+- AVALIACOES: solicitação, participantes, nota 1 a 5 e comentário; uma por solicitação.
+- Aprovação fica no cadastro escolhido para análise, separada de papel e ativo.
+
+ENTREGAS SEGUINTES
+- Cadastro de serviços, busca/filtros e painel do prestador.
+- Solicitação, aceite/recusa, agendamento, conclusão, avaliação e histórico.
+- Recuperação de senha, revisão de responsividade, testes, documentação e publicação.
+
+DÚVIDAS PARA DISCUTIR COM O GPT
+- Aprovar todas as contas ou apenas perfis de prestadores?
+  Sugestão: permitir login/edição e exigir aprovação para publicar e oferecer serviços.
+- Login por e-mail ou também telefone?
+- Contratação direta ou orçamento? Preço por hora/diária e qual regra de taxa?
+- Como confirmar conclusão, liberar avaliação e tratar contestação?
+- Mudanças no perfil aprovado precisam de nova análise?
+- Chat entre usuários, pagamento online, portfólio e agenda real entram em qual etapa?
+  Hoje o chat é FAQ, pagamento é seleção visual e Google Agenda é link de criação de evento.
+
+CRITÉRIO DA PRIMEIRA ENTREGA
+Usuário cria conta, entra, salva dados, solicita ativação profissional e acompanha
+aprovação. Administrador gerencia cadastros. Perfil aprovado exibe dados do banco.
+Usuários comuns só editam seus dados; permissões são verificadas no servidor.
+Dados de demonstração ficam identificados, sem notas/históricos fictícios em contas reais.
+
+TUTORIAL - ABRIR O PROJETO NESTA MÁQUINA (WINDOWS/POWERSHELL)
+Não é preciso reinstalar nem recriar o banco a cada vez. Apenas iniciar o que
+estiver parado. Para ver somente as telas de exemplo, basta abrir o frontend.
+
+1. Abra o Docker Desktop e espere o motor terminar de iniciar.
+2. Abra a pasta SITE_FINDY no VS Code e um terminal PowerShell na raiz
+   (a pasta que contém compose.yaml e planoexecucao.txt).
+3. Inicie/confira o banco:
+   docker compose up -d --wait
+   docker compose ps
+   O serviço postgres deve aparecer como healthy. Se já estiver rodando,
+   o comando reaproveita o banco; não recria seus dados.
+4. No mesmo terminal, inicie o backend:
+   .\backend\plataformaservicos\start-local.ps1
+   O script lê o .env e executa o Maven. Deixe esse terminal aberto.
+   Aguarde "Started PlataformaservicosApplication"; o backend usa a porta 8080.
+   localhost:8080 pode retornar 404, pois ainda não há rotas próprias.
+5. Para ver o site, abra frontend/pages/index.html no navegador pelo Explorador
+   de Arquivos. Se usar a extensão Live Server do VS Code, clique com o botão
+   direito no index.html e escolha "Open with Live Server".
+   As telas ainda são protótipos: iniciar o backend não torna o login funcional.
+
+AO TERMINAR
+- Ctrl+C no terminal do backend para encerrá-lo.
+- Para parar o banco, execute na raiz:
+  docker compose stop
+- Os dados permanecem no volume. Não inicie o container manual antigo
+  findy-postgres junto com o Compose: ambos usam o mesmo armazenamento.
+
+TUTORIAL - PRIMEIRA VEZ EM OUTRA MÁQUINA (WINDOWS)
+1. Instale Git, JDK 21, Docker Desktop e VS Code. Abra o Docker Desktop.
+   Confira no PowerShell: java -version e docker info (Client e Server sem erro).
+2. Leve a versão atual do projeto para a outra máquina.
+   Se usar GitHub, as mudanças locais precisam ser commitadas e enviadas antes;
+   os arquivos de configuração recém-criados ainda estão pendentes no Git.
+   Para baixar a versão publicada:
+   git clone https://github.com/otaviograu1654/SITE-FINDY.git SITE_FINDY
+   cd SITE_FINDY
+   Abra essa pasta no VS Code. Também é possível transferir os arquivos diretamente.
+3. Na raiz, prepare a configuração local (somente se ainda não existir .env):
+   Copy-Item .env.example .env
+   Abra o .env e substitua POSTGRES_PASSWORD pela senha local desejada.
+   Mantenha POSTGRES_DB=findy, POSTGRES_USER=postgres, POSTGRES_PORT=5433
+   e POSTGRES_VOLUME=findy_postgres_data para seguir estes comandos.
+   O .env não vai para o Git. Não copie o nome de volume específico desta máquina.
+4. Crie o volume externo, necessário somente na preparação inicial:
+   docker volume create findy_postgres_data
+5. Execute os passos 3 a 5 do tutorial acima para iniciar banco, backend e telas.
+   Na primeira vez, é necessária internet para baixar a imagem e dependências.
+   Não precisa instalar Maven separado: o projeto possui Maven Wrapper.
+6. Nas próximas vezes, siga apenas o tutorial de abertura normal.
+
+IMPORTANTE SOBRE OUTRA MÁQUINA
+- O banco novo começa vazio; Git/cópia do projeto não transfere o volume Docker.
+  Para levar dados existentes, será necessário fazer backup e restaurar o banco.
+- Em banco já criado, mudar a senha no .env não altera a senha no PostgreSQL.
+- Se a porta 5433 estiver ocupada, escolha outra em POSTGRES_PORT no .env;
+  Compose e script do backend usam essa configuração.
+
+PRÓXIMO PASSO: definir e criar tabelas de usuários e prestadores.
+REGRA DE TRABALHO: alterações de arquivos somente com permissão explícita.
+Nesta atualização, foi autorizado alterar somente planoexecucao.txt.

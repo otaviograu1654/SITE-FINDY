@@ -127,7 +127,7 @@ if (categoriesToggle && categoriesMenu && categoriesDropdown) {
 // descrição — não precisa mexer no HTML nem no resto do script.
 
 const PROFISSIONAIS_POR_CATEGORIA = {
-  'Serviços Domésticos': [
+  'Serviços Domésticos': [ 
     { nome: 'Camila Duarte', foto: 'https://i.pravatar.cc/400?img=32', nota: '4.9', descricao: 'Diarista e organizadora, atendimento pontual e cuidadoso.', link: 'perfil-prestador.html' },
     { nome: 'Fernanda Castro', foto: 'https://i.pravatar.cc/400?img=47', nota: '4.6', descricao: 'Diarista com referências e disponibilidade imediata.' },
     { nome: 'Priscila Andrade', foto: 'https://i.pravatar.cc/400?img=44', nota: '4.8', descricao: 'Personal organizer, transforma qualquer ambiente.' },

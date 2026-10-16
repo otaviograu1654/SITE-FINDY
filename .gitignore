@@ -1,0 +1,4 @@
+# Credenciais locais; o exemplo pode ser versionado.
+.env
+.env.*
+!.env.example
