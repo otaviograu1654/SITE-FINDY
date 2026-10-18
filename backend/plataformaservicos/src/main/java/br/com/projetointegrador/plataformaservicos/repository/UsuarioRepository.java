@@ -1,3 +1,5 @@
+// Consulta e salva contas no PostgreSQL, incluindo a busca por e-mail.
+
 package br.com.projetointegrador.plataformaservicos.repository;
 
 import br.com.projetointegrador.plataformaservicos.model.Usuario;

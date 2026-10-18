@@ -1,3 +1,5 @@
+# Carrega a configuração do arquivo .env e inicia o backend local pelo Maven Wrapper.
+
 # Inicie com: .\backend\plataformaservicos\start-local.ps1
 # Le apenas as variaveis PostgreSQL do .env da raiz, sem imprimir credenciais.
 $ErrorActionPreference = 'Stop'
@@ -9,7 +11,7 @@ if (-not (Test-Path -LiteralPath $findyEnvPath)) {
 $findyOriginalEnv = @{}
 try {
     foreach ($findyLine in Get-Content -LiteralPath $findyEnvPath -Encoding UTF8) {
-        if ($findyLine -notmatch '^\s*(POSTGRES_(?:HOST|PORT|DB|USER|PASSWORD))\s*=(.*)$') {
+        if ($findyLine -notmatch '^\s*(POSTGRES_(?:HOST|PORT|DB|USER|PASSWORD)|BREVO_API_KEY|EMAIL_FROM|APP_URL)\s*=(.*)$') {
             continue
         }
         $findyKey = $Matches[1]

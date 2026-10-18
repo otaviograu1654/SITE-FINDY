@@ -15,6 +15,8 @@ ESTADO ATUAL
 - As seis tabelas e sete categorias foram criadas. Cadastro, login/logout,
   dados pessoais e ativação/edição de prestador já possuem API.
 - Login, Minha Conta e perfil profissional estão integrados ao banco.
+- Minha Conta permite selecionar foto do computador/galeria, visualizar e salvar.
+  Fotos JPG/PNG ficam no PostgreSQL. Para publicar, executar database/fotos_usuarios.sql no Neon.
 - Perfil profissional permite desativar/reativar e reenviar para análise;
   somente perfis aprovados e ativos ficam públicos. Onze testes passaram.
 - Painel administrativo integrado: edição, aprovação/recusa e ativação de cadastros.

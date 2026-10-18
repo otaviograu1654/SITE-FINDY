@@ -1,3 +1,5 @@
+// Define e valida o e-mail e a senha recebidos no login.
+
 package br.com.projetointegrador.plataformaservicos.dto;
 
 import jakarta.validation.constraints.Email;

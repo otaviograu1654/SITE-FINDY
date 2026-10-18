@@ -22,6 +22,12 @@ Devem existir usuarios, prestadores, categorias, servicos, solicitacoes e avalia
 além das sete categorias. Se você já executou os SQL, não precisa repetir a criação.
 Não é necessário importar `dados_demonstracao.sql`. Seu banco Docker fica separado.
 
+Para as funcionalidades novas, execute também `database/recuperacao_senha.sql`
+(somente se a tabela ainda não existir) e `database/fotos_usuarios.sql` no SQL Editor.
+O segundo arquivo cria a tabela das fotos selecionadas no computador ou galeria;
+ele pode ser executado novamente sem apagar dados. Faça isso antes do deploy do upload.
+As imagens ficam no PostgreSQL, não no disco temporário do Render.
+
 ## 2. Guardar a conexão do Neon
 
 Abra Connect no projeto/branch/database em que você executou os SQL.

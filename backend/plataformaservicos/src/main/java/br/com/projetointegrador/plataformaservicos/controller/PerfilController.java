@@ -1,3 +1,5 @@
+// Consulta e atualiza os dados pessoais da conta conectada.
+
 package br.com.projetointegrador.plataformaservicos.controller;
 
 import br.com.projetointegrador.plataformaservicos.dto.PerfilDTO;
@@ -65,9 +67,11 @@ public class PerfilController {
                         HttpStatus.UNAUTHORIZED
                 ));
 
-        if (!usuario.isAtivo()) {
+        if (!usuario.isAtivo()
+                || !usuario.getSenhaHash().equals(sessao.getAttribute("senhaDaSessao"))) {
             sessao.invalidate();
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,
+                    "Entre novamente na sua conta.");
         }
 
         return usuario;

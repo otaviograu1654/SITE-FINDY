@@ -1,3 +1,5 @@
+// Busca e pagina os serviços públicos de prestadores aprovados e ativos.
+
 package br.com.projetointegrador.plataformaservicos.controller;
 
 import org.springframework.jdbc.core.JdbcTemplate;

@@ -1,3 +1,5 @@
+# Mantém arquivos de compilação e configurações locais das ferramentas fora do Git.
+
 HELP.md
 target/
 .mvn/wrapper/maven-wrapper.jar

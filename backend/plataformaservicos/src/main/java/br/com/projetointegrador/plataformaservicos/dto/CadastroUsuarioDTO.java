@@ -1,3 +1,5 @@
+// Define e valida nome, e-mail e senha recebidos no cadastro de conta.
+
 package br.com.projetointegrador.plataformaservicos.dto;
 
 import jakarta.validation.constraints.Email;

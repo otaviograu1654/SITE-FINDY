@@ -1,3 +1,5 @@
+// Busca serviços no banco pela API e monta os cards e a paginação da categoria.
+
 (() => {
   const { api, mensagem, foto } = Findy;
   const grade = document.getElementById('professional-grid');

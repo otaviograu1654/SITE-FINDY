@@ -1,3 +1,5 @@
+// Consulta perfis públicos e permite ao dono editar, ativar ou desativar seu perfil profissional.
+
 /* Sem ?id=, edita o proprio perfil. Com ?id=, consulta um perfil publico aprovado. */
 (() => {
   const { api, mensagem, enviar, foto } = Findy;

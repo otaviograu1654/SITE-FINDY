@@ -1,3 +1,5 @@
+// Inicia o backend do Findy com Spring Boot.
+
 package br.com.projetointegrador.plataformaservicos;
 
 import org.springframework.boot.SpringApplication;

@@ -1,3 +1,5 @@
+/* Define os estilos dos perfis, formulários e painéis de gerenciamento da conta. */
+
 /* Formularios das contas reais, mantendo as cores do projeto. */
 .wrap main { padding: 24px 0 48px; }
 .wrap main > h1 { margin-bottom: 12px; }
@@ -23,4 +25,44 @@ button:disabled { opacity: .55; cursor: wait; }
   .wrap header { gap: 18px; flex-wrap: wrap; }
   .wrap header nav { display: flex; flex-wrap: wrap; gap: 12px; }
   .perfil-form button { width: 100%; }
+}
+.servico-campos {
+  border: 0;
+  padding: 0;
+  min-width: 0;
+}
+
+.perfil-form select {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #aeb5bf;
+  border-radius: 10px;
+  font: inherit;
+  color: #18212c;
+  background: #fff;
+}
+
+.perfil-form select:focus-visible {
+  outline: 3px solid #7dc8f4;
+}
+
+.perfil-form .servico-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.servico-checkbox input {
+  width: auto;
+}
+
+.servico-item {
+  padding: 20px 0;
+  border-bottom: 1px solid #d7dce2;
+  overflow-wrap: anywhere;
+}
+
+.servico-item p {
+  margin: 10px 0;
 }

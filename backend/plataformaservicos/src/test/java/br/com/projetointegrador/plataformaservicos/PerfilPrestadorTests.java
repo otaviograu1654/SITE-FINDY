@@ -1,3 +1,5 @@
+// Testa edição, ativação, aprovação e permissões dos perfis profissionais com rollback no banco.
+
 package br.com.projetointegrador.plataformaservicos;
 
 import br.com.projetointegrador.plataformaservicos.model.Usuario;
@@ -43,8 +45,10 @@ class PerfilPrestadorTests {
         outro = usuario("Outro");
         sessao = new MockHttpSession();
         sessao.setAttribute("usuarioId", dono.getId());
+        sessao.setAttribute("senhaDaSessao", dono.getSenhaHash());
         outraSessao = new MockHttpSession();
         outraSessao.setAttribute("usuarioId", outro.getId());
+        outraSessao.setAttribute("senhaDaSessao", outro.getSenhaHash());
     }
 
     private Usuario usuario(String nome) {

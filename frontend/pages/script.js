@@ -1,3 +1,5 @@
+// Controla interações gerais das telas e recursos de demonstração, como chat e atendimento.
+
 // ===================================================================
 // MEDIDOR DE FORÇA DE SENHA
 // ===================================================================

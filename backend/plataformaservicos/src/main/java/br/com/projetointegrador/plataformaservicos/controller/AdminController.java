@@ -1,3 +1,5 @@
+// Permite ao administrador editar, aprovar, recusar e ativar ou desativar cadastros.
+
 package br.com.projetointegrador.plataformaservicos.controller;
 
 import br.com.projetointegrador.plataformaservicos.dto.AtivacaoPrestadorDTO;

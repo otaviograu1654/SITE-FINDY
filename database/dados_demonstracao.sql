@@ -1,3 +1,5 @@
+-- Importa os profissionais e serviços fictícios para demonstração sem duplicar registros existentes.
+
 -- Gerado por gerar_demonstracao.cjs a partir do JSON preservado.
 -- Somente demonstração: sem notas fictícias, sem senhas compartilhadas e sem UPDATE de cadastros.
 -- Execute com psql --set=ON_ERROR_STOP=1. A transação já está neste arquivo.

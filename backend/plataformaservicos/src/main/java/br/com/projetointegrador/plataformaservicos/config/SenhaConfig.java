@@ -1,3 +1,5 @@
+// Configura o BCrypt para proteger e conferir as senhas das contas.
+
 package br.com.projetointegrador.plataformaservicos.config;
 
 import org.springframework.context.annotation.Bean;

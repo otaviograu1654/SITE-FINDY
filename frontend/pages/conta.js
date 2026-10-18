@@ -1,3 +1,5 @@
+// Controla cadastro, login, logout e edição dos dados pessoais nas telas de conta.
+
 /* Cadastro, login e edicao dos dados pessoais. */
 (() => {
   const { api, mensagem, enviar, foto } = Findy;
@@ -54,6 +56,42 @@
   const formulario = document.getElementById('perfil-form');
   const aviso = document.getElementById('conta-mensagem');
   const botao = formulario.querySelector('button[type="submit"]');
+  const arquivoFoto = document.getElementById('foto-arquivo');
+  let previaFoto = null;
+
+  function liberarPrevia() {
+    if (previaFoto) URL.revokeObjectURL(previaFoto);
+    previaFoto = null;
+  }
+
+  function validarFoto(arquivo) {
+    if (!['image/jpeg', 'image/png'].includes(arquivo.type)) {
+      throw new Error('Escolha uma foto JPG ou PNG.');
+    }
+    if (arquivo.size > 2 * 1024 * 1024) {
+      throw new Error('A foto deve ter até 2 MB.');
+    }
+  }
+
+  arquivoFoto.addEventListener('change', () => {
+    liberarPrevia();
+    try {
+      const arquivo = arquivoFoto.files[0];
+      if (!arquivo) {
+        document.getElementById('conta-foto').src = foto(formulario.elements.namedItem('foto').value);
+        return;
+      }
+      validarFoto(arquivo);
+      previaFoto = URL.createObjectURL(arquivo);
+      document.getElementById('conta-foto').src = previaFoto;
+      mensagem(aviso, 'Foto selecionada. Clique em Salvar meus dados para confirmar.');
+    } catch (erro) {
+      arquivoFoto.value = '';
+      document.getElementById('conta-foto').src = foto(formulario.elements.namedItem('foto').value);
+      mensagem(aviso, erro.message, true);
+    }
+  });
+  window.addEventListener('pagehide', liberarPrevia);
   function mostrar(dados) {
     document.getElementById('conta-nome').textContent = dados.nome;
     document.getElementById('conta-foto').src = foto(dados.foto);
@@ -67,7 +105,20 @@
   formulario.addEventListener('submit', async evento => {
     evento.preventDefault();
     await enviar(botao, async () => {
+      arquivoFoto.disabled = true;
       try {
+        const arquivo = arquivoFoto.files[0];
+        if (arquivo) {
+          validarFoto(arquivo);
+          mensagem(aviso, 'Salvando foto…');
+          const envio = new FormData();
+          envio.append('foto', arquivo);
+          const resposta = await api('/fotos/me', { method: 'POST', body: envio });
+          formulario.elements.namedItem('foto').value = resposta.foto;
+          document.getElementById('conta-foto').src = foto(resposta.foto);
+          arquivoFoto.value = '';
+          liberarPrevia();
+        }
         const dados = Object.fromEntries(['nome', 'telefone', 'cidade', 'estado', 'foto'].map(campo =>
           [campo, formulario.elements.namedItem(campo).value.trim() || null]));
         mostrar(await api('/perfil', { method: 'PUT', body: dados }));
@@ -75,6 +126,8 @@
       } catch (erro) {
         if (erro.status === 401) return location.assign('login.html');
         mensagem(aviso, erro.message, true);
+      } finally {
+        arquivoFoto.disabled = false;
       }
     });
   });
@@ -90,6 +143,7 @@
         if (erro.status !== 403) throw erro;
 }
       botao.disabled = false;
+      arquivoFoto.disabled = false;
       mensagem(aviso, '');
     } catch (erro) {
       if (erro.status === 401) return location.replace('login.html');

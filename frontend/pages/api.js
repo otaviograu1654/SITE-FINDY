@@ -1,3 +1,5 @@
+// Centraliza as chamadas à API, os cookies de sessão e as mensagens de resposta.
+
 /* Comunicacao com a API. A sessao fica no cookie HttpOnly do servidor. */
 window.Findy = (() => {
   const base = location.port === '5501'
@@ -8,12 +10,13 @@ window.Findy = (() => {
       throw new Error('Inicie o backend e abra http://localhost:8080/login.html.');
     }
     let resposta;
+    const multipart = opcoes.body instanceof FormData;
     try {
       resposta = await fetch(base + caminho, {
         ...opcoes,
         credentials: 'include',
-        headers: { 'Content-Type': 'application/json', ...opcoes.headers },
-        body: opcoes.body === undefined ? undefined : JSON.stringify(opcoes.body),
+        headers: { ...(multipart ? {} : { 'Content-Type': 'application/json' }), ...opcoes.headers },
+        body: opcoes.body === undefined ? undefined : multipart ? opcoes.body : JSON.stringify(opcoes.body),
       });
     } catch {
       throw new Error('Não foi possível conectar. Confira se o backend está iniciado.');
@@ -46,7 +49,7 @@ window.Findy = (() => {
   function foto(valor) {
     if (!valor) return 'images/chat-avatar.png';
     try {
-      const url = new URL(valor, location.href);
+      const url = new URL(valor, valor.startsWith('/fotos/') && base ? base : location.href);
       return ['http:', 'https:'].includes(url.protocol) ? url.href : 'images/chat-avatar.png';
     } catch { return 'images/chat-avatar.png'; }
   }

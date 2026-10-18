@@ -1,3 +1,5 @@
+// Carrega os cadastros e envia as alterações e decisões do administrador à API.
+
 (() => {
   const { api, mensagem, enviar } = Findy;
   const lista = document.getElementById('admin-lista');

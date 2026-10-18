@@ -1,3 +1,5 @@
+// Define e valida a apresentação, experiência e região do perfil profissional.
+
 package br.com.projetointegrador.plataformaservicos.dto;
 
 import jakarta.validation.constraints.NotBlank;

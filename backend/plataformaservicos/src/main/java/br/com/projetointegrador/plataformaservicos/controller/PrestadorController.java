@@ -1,3 +1,5 @@
+// Gerencia o perfil profissional da conta e consulta perfis públicos aprovados.
+
 package br.com.projetointegrador.plataformaservicos.controller;
 
 import br.com.projetointegrador.plataformaservicos.dto.*;

@@ -72,7 +72,7 @@ evita alterações automáticas da estrutura do banco.
 ## Usar os perfis reais
 
 1. Crie sua conta em `/login.html` e entre com e-mail e senha.
-2. Em `/minha-conta.html`, salve nome, telefone, cidade, UF e endereço da foto.
+2. Em `/minha-conta.html`, salve nome, telefone, cidade, UF e selecione a foto do computador ou galeria.
 3. Abra "Perfil profissional", preencha descrição, experiência e região e envie.
 4. O perfil começa PENDENTE. Você pode editar, desativar, reativar e reenviar
    após recusa. Alterações profissionais e reativação exigem nova análise.
@@ -80,8 +80,26 @@ evita alterações automáticas da estrutura do banco.
    ativos e de contas ativas. O dono acompanha a situação sem precisar publicar.
 
 Desativar o perfil profissional não desativa a conta. A mesma pessoa continua
-podendo contratar serviços. A foto usa um endereço de imagem;
-upload de arquivo e gestão de serviços são etapas separadas.
+podendo contratar serviços. A foto pode ser selecionada na Minha Conta e salva
+junto dos dados pessoais. Links de imagens que já estavam cadastrados continuam válidos.
+
+## Foto do computador ou galeria
+
+Execute `fotos_usuarios.sql` depois de criar a tabela `usuarios`. Nesta máquina,
+a tabela de fotos já foi criada no banco local. Antes de publicar esta alteração,
+execute o mesmo arquivo no SQL Editor do Neon; o código não cria tabelas automaticamente.
+
+Na Minha Conta, use **Escolher foto**, confira a prévia e clique em **Salvar meus dados**.
+São aceitos JPG e PNG de até 2 MB e até 4096 pixels em cada dimensão. O backend
+confere o conteúdo e grava uma versão com no máximo 512 pixels no maior lado,
+sem os metadados originais. Cada conta tem uma foto, substituída nos próximos envios.
+
+A imagem fica em `fotos_usuarios` no PostgreSQL, e `usuarios.foto` guarda seu
+endereço público. Isso preserva a foto quando a hospedagem reinicia.
+`POST /fotos/me` recebe multipart com o campo `foto` e exige sessão;
+`GET /fotos/{id}` retorna a imagem de uma conta ativa. Não é necessário serviço externo.
+
+Testes do cliente da API: `node --test frontend/tests/api.test.cjs`.
 
 Rotas novas: `GET/PUT /prestadores/me`, `PATCH /prestadores/me/ativacao`
 com corpo `{"ativo":true}` ou `{"ativo":false}`, e `GET /prestadores/{id}`.

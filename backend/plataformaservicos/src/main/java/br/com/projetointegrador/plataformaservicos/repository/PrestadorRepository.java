@@ -1,3 +1,5 @@
+// Consulta e salva perfis profissionais no PostgreSQL usando JPA.
+
 package br.com.projetointegrador.plataformaservicos.repository;
 
 import br.com.projetointegrador.plataformaservicos.model.Prestador;

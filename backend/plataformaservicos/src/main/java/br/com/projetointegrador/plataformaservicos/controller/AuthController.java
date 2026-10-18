@@ -1,3 +1,5 @@
+// Realiza login e logout e consulta a conta da sessão atual.
+
 package br.com.projetointegrador.plataformaservicos.controller;
 
 import br.com.projetointegrador.plataformaservicos.dto.LoginDTO;
@@ -63,6 +65,7 @@ public class AuthController {
 
         HttpSession sessao = request.getSession(true);
         sessao.setAttribute("usuarioId", usuario.getId());
+        sessao.setAttribute("senhaDaSessao", usuario.getSenhaHash());
 
         return resposta(usuario);
     }
@@ -87,9 +90,11 @@ public class AuthController {
                         HttpStatus.UNAUTHORIZED
                 ));
 
-        if (!usuario.isAtivo()) {
+        if (!usuario.isAtivo()
+                || !usuario.getSenhaHash().equals(sessao.getAttribute("senhaDaSessao"))) {
             sessao.invalidate();
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,
+                    "Entre novamente na sua conta.");
         }
 
         return resposta(usuario);

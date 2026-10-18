@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<!-- Apresenta o formulário e a lista para o prestador gerenciar seus serviços. -->
+
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Findy - Meus serviços</title>
+
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="perfil.css">
+</head>
+
+<body class="perfil-contratante">
+<div class="wrap">
+  <header>
+    <a href="index.html" class="logo-block">
+      <img
+        class="logo-img"
+        src="images/findy-logo.png"
+        alt="Findy"
+      >
+    </a>
+
+    <nav aria-label="Navegação principal">
+      <a href="index.html">Início</a>
+      <a href="minha-conta.html">Minha conta</a>
+      <a href="perfil-prestador.html">Perfil profissional</a>
+      <a href="meus-servicos.html" class="active">Meus serviços</a>
+    </nav>
+  </header>
+
+  <main>
+    <h1>Meus serviços</h1>
+
+    <p>
+      Cadastre o que você oferece. Para aparecer nas categorias,
+      o serviço precisa estar ativo e seu perfil profissional
+      precisa estar aprovado e ativo.
+    </p>
+
+    <p>
+      Ainda não preencheu seu perfil?
+      <a href="perfil-prestador.html">
+        Abrir perfil profissional
+      </a>
+    </p>
+
+    <p
+      id="servicos-mensagem"
+      class="mensagem"
+      role="status"
+      aria-live="polite"
+    >
+      Carregando…
+    </p>
+
+    <section class="panel">
+      <h2 id="form-titulo">Cadastrar serviço</h2>
+
+      <form id="servico-form">
+        <fieldset
+          id="servico-campos"
+          class="perfil-form servico-campos"
+          disabled
+        >
+          <label>
+            Título
+            <input
+              name="titulo"
+              required
+              maxlength="120"
+              placeholder="Ex.: Limpeza residencial"
+            >
+          </label>
+
+          <label>
+            Categoria
+            <select name="categoriaId" required>
+              <option value="">Selecione uma categoria</option>
+            </select>
+          </label>
+
+          <label>
+            Descrição
+            <textarea
+              name="descricao"
+              maxlength="5000"
+              placeholder="Explique o que está incluído no serviço."
+            ></textarea>
+          </label>
+
+          <label>
+            Preço em reais
+            <input
+              name="preco"
+              type="number"
+              min="0"
+              max="99999999.99"
+              step="0.01"
+              placeholder="Ex.: 150,00"
+            >
+            <small>
+              Deixe vazio para combinar o valor com o cliente.
+            </small>
+          </label>
+
+          <label>
+            Cobrança
+            <select name="unidadeCobranca" required>
+              <option value="SERVICO">Por serviço</option>
+              <option value="HORA">Por hora</option>
+              <option value="DIARIA">Por diária</option>
+            </select>
+          </label>
+
+          <label class="servico-checkbox">
+            <input name="ativo" type="checkbox" checked>
+            Serviço ativo
+          </label>
+
+          <div class="perfil-acoes">
+            <button class="btn-black" type="submit">
+              Salvar serviço
+            </button>
+
+            <button
+              class="btn-black"
+              id="cancelar-edicao"
+              type="button"
+              hidden
+            >
+              Cancelar edição
+            </button>
+          </div>
+        </fieldset>
+      </form>
+    </section>
+
+    <section class="panel">
+      <h2>Serviços cadastrados</h2>
+      <div id="servicos-lista"></div>
+    </section>
+  </main>
+</div>
+
+<script src="api.js"></script>
+<script src="meus-servicos.js"></script>
+</body>
+</html>

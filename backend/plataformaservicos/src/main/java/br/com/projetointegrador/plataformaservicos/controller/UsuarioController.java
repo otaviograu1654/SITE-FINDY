@@ -1,3 +1,5 @@
+// Cadastra novas contas com e-mail único e senha protegida por hash.
+
 package br.com.projetointegrador.plataformaservicos.controller;
 
 import br.com.projetointegrador.plataformaservicos.dto.CadastroUsuarioDTO;

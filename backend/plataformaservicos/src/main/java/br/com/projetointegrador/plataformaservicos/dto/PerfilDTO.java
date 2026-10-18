@@ -1,3 +1,5 @@
+// Transporta os dados pessoais usados na consulta e edição da conta.
+
 package br.com.projetointegrador.plataformaservicos.dto;
 
 import jakarta.validation.constraints.NotBlank;

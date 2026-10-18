@@ -1,3 +1,5 @@
+// Retorna os dados públicos do prestador, sem expor informações privadas da conta.
+
 package br.com.projetointegrador.plataformaservicos.dto;
 
 public record PrestadorPublicoDTO(

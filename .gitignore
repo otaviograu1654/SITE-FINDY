@@ -1,3 +1,5 @@
+# Evita enviar arquivos de configuração local e credenciais ao repositório Git.
+
 # Credenciais locais; o exemplo pode ser versionado.
 .env
 .env.*

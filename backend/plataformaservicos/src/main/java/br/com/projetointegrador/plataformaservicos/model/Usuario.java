@@ -1,3 +1,5 @@
+// Representa a conta, os dados pessoais e as permissões na tabela de usuários.
+
 package br.com.projetointegrador.plataformaservicos.model;
 
 import jakarta.persistence.*;

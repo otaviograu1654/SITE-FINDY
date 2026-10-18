@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<!-- Apresenta os formulários para pedir o link de recuperação e definir uma nova senha. -->
+
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="referrer" content="no-referrer">
+
+  <title>Findy - Recuperar senha</title>
+
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="perfil.css">
+</head>
+
+<body class="perfil-contratante">
+<div class="wrap">
+  <header>
+    <a href="index.html" class="logo-block">
+      <img
+        class="logo-img"
+        src="images/findy-logo.png"
+        alt="Findy"
+      >
+    </a>
+
+    <nav aria-label="Navegação">
+      <a href="login.html">Voltar ao login</a>
+    </nav>
+  </header>
+
+  <main>
+    <h1 id="recuperacao-titulo">Recuperar senha</h1>
+
+    <p
+      id="recuperacao-mensagem"
+      class="mensagem"
+      role="status"
+      aria-live="polite"
+    ></p>
+
+    <section class="panel">
+      <form id="pedir-recuperacao" class="perfil-form">
+        <label>
+          E-mail da sua conta
+          <input
+            name="email"
+            type="email"
+            required
+            maxlength="100"
+            autocomplete="email"
+          >
+        </label>
+
+        <button class="btn-black" type="submit">
+          Enviar link de recuperação
+        </button>
+      </form>
+
+      <form
+        id="redefinir-senha"
+        class="perfil-form"
+        hidden
+      >
+        <label>
+          Nova senha
+          <input
+            name="novaSenha"
+            type="password"
+            required
+            minlength="8"
+            maxlength="72"
+            autocomplete="new-password"
+          >
+        </label>
+
+        <label>
+          Confirme a nova senha
+          <input
+            name="confirmacao"
+            type="password"
+            required
+            minlength="8"
+            maxlength="72"
+            autocomplete="new-password"
+          >
+        </label>
+
+        <button class="btn-black" type="submit">
+          Salvar nova senha
+        </button>
+      </form>
+
+      <a
+        class="perfil-link"
+        href="recuperar-senha.html"
+        id="pedir-outro-link"
+        hidden
+      >
+        Solicitar outro link
+      </a>
+    </section>
+  </main>
+</div>
+
+<script src="api.js"></script>
+<script src="recuperar-senha.js"></script>
+</body>
+</html>

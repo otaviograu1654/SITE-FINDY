@@ -1,3 +1,5 @@
+// Verifica se o contexto do backend Spring Boot inicia corretamente.
+
 package br.com.projetointegrador.plataformaservicos;
 
 import org.junit.jupiter.api.Test;

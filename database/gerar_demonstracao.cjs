@@ -1,3 +1,5 @@
+// Gera o SQL de demonstração a partir dos exemplos preservados no arquivo JSON.
+
 // Rode: node database/gerar_demonstracao.cjs
 // Extrai os exemplos antigos uma vez e passa a usar o JSON preservado nesta pasta.
 const fs = require('node:fs');

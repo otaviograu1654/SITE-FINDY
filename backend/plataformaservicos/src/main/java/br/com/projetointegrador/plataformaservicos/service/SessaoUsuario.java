@@ -1,3 +1,5 @@
+// Exige uma conta ativa e uma sessão compatível com a senha atual para acessar rotas protegidas.
+
 package br.com.projetointegrador.plataformaservicos.service;
 
 import br.com.projetointegrador.plataformaservicos.model.Usuario;
@@ -21,9 +23,11 @@ public class SessaoUsuario {
         }
         Usuario usuario = usuarios.findById(id).orElseThrow(() ->
                 new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Entre na sua conta."));
-        if (!usuario.isAtivo()) {
+        if (!usuario.isAtivo()
+                || !usuario.getSenhaHash().equals(sessao.getAttribute("senhaDaSessao"))) {
             sessao.invalidate();
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Conta desativada.");
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,
+                    "Entre novamente na sua conta.");
         }
         return usuario;
     }

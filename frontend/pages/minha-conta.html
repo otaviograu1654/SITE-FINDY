@@ -1,4 +1,6 @@
 <!DOCTYPE html>
+<!-- Apresenta os dados pessoais e os acessos às funções da conta conectada. -->
+
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
@@ -14,7 +16,9 @@
 
   <nav aria-label="Navegação principal"><a href="index.html">Início</a> 
     <a href="admin.html" id="link-admin" hidden>Administração</a>
-    <a href="minha-conta.html" class="active">Minha conta</a><a href="perfil-prestador.html">Perfil profissional</a>
+    <a href="minha-conta.html" class="active">Minha conta</a>
+    <a href="perfil-prestador.html">Perfil profissional</a>
+    <a href="meus-servicos.html">Meus serviços</a>
   </nav>
 
     <button class="btn-black" type="button" data-sair>Sair</button>
@@ -33,7 +37,8 @@
         <label>Telefone<input name="telefone" type="tel" maxlength="20" autocomplete="tel"></label>
         <label>Cidade<input name="cidade" maxlength="100" autocomplete="address-level2"></label>
         <label>Estado (UF)<input name="estado" maxlength="2" pattern="[A-Z]{2}" placeholder="MG" autocomplete="address-level1"></label>
-        <label>Endereço da foto<input name="foto" type="url" maxlength="500" placeholder="https://exemplo.com/minha-foto.jpg"><small>Use o endereço de uma imagem. Deixe vazio para usar o avatar padrão.</small></label>
+        <label>Escolher foto<input id="foto-arquivo" type="file" accept="image/jpeg,image/png" disabled><small>Selecione do computador ou da galeria: JPG ou PNG de até 2 MB e até 4096 pixels em cada lado. Confira a prévia acima e clique em Salvar meus dados.</small></label>
+        <input name="foto" type="hidden">
         <button class="btn-black" type="submit" disabled>Salvar meus dados</button>
       </form>
     </section>

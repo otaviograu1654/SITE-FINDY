@@ -1,3 +1,5 @@
+# Descreve o serviço Docker e as variáveis necessárias para publicar o Findy pelo Blueprint do Render.
+
 # No Render: New > Blueprint > conectar este repositorio.
 services:
   - type: web

@@ -1,3 +1,5 @@
+// Retorna ao dono os dados e a situação de aprovação do seu perfil profissional.
+
 package br.com.projetointegrador.plataformaservicos.dto;
 
 import java.time.OffsetDateTime;

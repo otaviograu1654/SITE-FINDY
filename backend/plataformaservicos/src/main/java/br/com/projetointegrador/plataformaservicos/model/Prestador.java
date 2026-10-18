@@ -1,3 +1,5 @@
+// Representa o perfil profissional e sua aprovação na tabela de prestadores.
+
 package br.com.projetointegrador.plataformaservicos.model;
 
 import jakarta.persistence.*;

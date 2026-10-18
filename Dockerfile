@@ -1,3 +1,5 @@
+# Compila o backend com as telas e monta a imagem Java usada para publicar o Findy.
+
 # Execute o build na raiz: o Maven tambem empacota frontend/pages no JAR.
 FROM maven:3.9-eclipse-temurin-21 AS build
 WORKDIR /workspace/backend/plataformaservicos

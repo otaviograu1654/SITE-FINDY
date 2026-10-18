@@ -1,3 +1,5 @@
+# Configura o PostgreSQL local no Docker com porta, volume de dados e verificação de funcionamento.
+
 name: findy
 
 services:
