@@ -8,10 +8,20 @@ ESTADO ATUAL
 - Frontend HTML/CSS/JavaScript com sete telas: início, login/cadastro, categorias,
   perfis de contratante/prestador, contratação e status do atendimento.
 - Logo, imagens, estilos e interações de demonstração já existem.
-- Profissionais e perfis são exemplos fixos; status/avaliações usam localStorage.
+- Categorias e perfis públicos consultam o banco; contratação/status/avaliações
+  ainda possuem comportamento de demonstração no frontend.
 - Backend Spring Boot/Maven, Java 21, com JPA, Validation e driver PostgreSQL.
 - PostgreSQL no Docker e conexão com Spring Boot configurados e testados.
-- Ainda faltam tabelas, API própria, autenticação e integração das telas.
+- As seis tabelas e sete categorias foram criadas. Cadastro, login/logout,
+  dados pessoais e ativação/edição de prestador já possuem API.
+- Login, Minha Conta e perfil profissional estão integrados ao banco.
+- Perfil profissional permite desativar/reativar e reenviar para análise;
+  somente perfis aprovados e ativos ficam públicos. Onze testes passaram.
+- Painel administrativo integrado: edição, aprovação/recusa e ativação de cadastros.
+- 84 profissionais e 84 serviços de demonstração importados, sem notas fictícias.
+  Lista fixa removida; busca, paginação e links por ID integrados à API.
+- Validada a importação sem duplicações, a busca e os 84 perfis públicos pela API.
+- Próximo bloco: formulário para o prestador cadastrar e editar seus serviços.
 
 DECISÕES TOMADAS
 - Uma única conta permite contratar e também oferecer serviços.
@@ -19,16 +29,13 @@ DECISÕES TOMADAS
 - Pessoas preenchem e editam seus próprios dados e fotos.
 - Começar com um administrador para editar, aprovar/recusar e desativar cadastros.
 - Login único: backend identifica USUARIO ou ADMIN e libera as funções permitidas.
-- Exemplos atuais serão dados de demonstração no banco, acessados por ID.
+- Exemplos estão identificados no banco como demonstração, acessados por ID.
 
-PRIMEIRA ENTREGA - ORDEM DE EXECUÇÃO
-1. Definir aprovação e dados obrigatórios; criar modelo, migrations e tabelas.
-2. Implementar cadastro, login/logout, hash de senha e autorização no backend.
-3. Criar Minha Conta e formulário para ativar/editar o perfil profissional.
-4. Criar administrador inicial por configuração segura e painel de cadastros.
-5. Implementar PENDENTE/APROVADO/RECUSADO, motivo, responsável/data e reenvio.
-6. Integrar telas com a API: perfis por ID, dados persistentes e publicação autorizada.
-7. Migrar exemplos e testar login, edição, aprovação e bloqueio de acesso indevido.
+PRIMEIRA ENTREGA - CONCLUÍDO
+- Tabelas criadas com arquivos SQL; cadastro, login/logout e senhas com hash.
+- Minha Conta, perfil profissional e painel de cadastros com autorização no backend.
+- Conta ADMIN inicial promovida pelo banco; análise com motivo, responsável e data.
+- Aprovação, reenvio, ativação e perfis públicos integrados; exemplos migrados.
 
 MODELO DO BANCO PROPOSTO
 - USUARIOS: identificação, contato, localização, foto, senha_hash, papel e ativo.
@@ -39,17 +46,16 @@ MODELO DO BANCO PROPOSTO
 - Aprovação fica no cadastro escolhido para análise, separada de papel e ativo.
 
 ENTREGAS SEGUINTES
-- Cadastro de serviços, busca/filtros e painel do prestador.
+- Cadastro/edição de serviços pelo prestador (a busca/filtro já consulta o banco).
 - Solicitação, aceite/recusa, agendamento, conclusão, avaliação e histórico.
 - Recuperação de senha, revisão de responsividade, testes, documentação e publicação.
 
 DÚVIDAS PARA DISCUTIR COM O GPT
-- Aprovar todas as contas ou apenas perfis de prestadores?
-  Sugestão: permitir login/edição e exigir aprovação para publicar e oferecer serviços.
+- Já decidido: login/edição liberados; aprovação obrigatória para publicar prestadores.
 - Login por e-mail ou também telefone?
 - Contratação direta ou orçamento? Preço por hora/diária e qual regra de taxa?
 - Como confirmar conclusão, liberar avaliação e tratar contestação?
-- Mudanças no perfil aprovado precisam de nova análise?
+- Já implementado: mudanças profissionais e reativação exigem nova análise.
 - Chat entre usuários, pagamento online, portfólio e agenda real entram em qual etapa?
   Hoje o chat é FAQ, pagamento é seleção visual e Google Agenda é link de criação de evento.
 
@@ -71,20 +77,23 @@ estiver parado. Para ver somente as telas de exemplo, basta abrir o frontend.
    docker compose ps
    O serviço postgres deve aparecer como healthy. Se já estiver rodando,
    o comando reaproveita o banco; não recria seus dados.
+   Nesta sessão, o container manual findy-postgres está em uso. Enquanto usar
+   esse container, confira com docker ps e inicie com docker start findy-postgres
+   se necessário; não inicie o Compose ao mesmo tempo.
 4. No mesmo terminal, inicie o backend:
    .\backend\plataformaservicos\start-local.ps1
    O script lê o .env e executa o Maven. Deixe esse terminal aberto.
    Aguarde "Started PlataformaservicosApplication"; o backend usa a porta 8080.
-   localhost:8080 pode retornar 404, pois ainda não há rotas próprias.
-5. Para ver o site, abra frontend/pages/index.html no navegador pelo Explorador
-   de Arquivos. Se usar a extensão Live Server do VS Code, clique com o botão
-   direito no index.html e escolha "Open with Live Server".
-   As telas ainda são protótipos: iniciar o backend não torna o login funcional.
+   Abra http://localhost:8080/login.html para usar cadastro, login e perfis reais.
+5. Abra http://localhost:8080/index.html para navegar no site.
+   Com a conta ADMIN, abra http://localhost:8080/admin.html para gerenciar cadastros.
+   Categorias, busca e perfis usam o banco. A contratação ainda será integrada.
 
 AO TERMINAR
 - Ctrl+C no terminal do backend para encerrá-lo.
 - Para parar o banco, execute na raiz:
   docker compose stop
+- Se estiver usando o container manual, use docker stop findy-postgres.
 - Os dados permanecem no volume. Não inicie o container manual antigo
   findy-postgres junto com o Compose: ambos usam o mesmo armazenamento.
 
@@ -118,6 +127,15 @@ IMPORTANTE SOBRE OUTRA MÁQUINA
 - Se a porta 5433 estiver ocupada, escolha outra em POSTGRES_PORT no .env;
   Compose e script do backend usam essa configuração.
 
-PRÓXIMO PASSO: definir e criar tabelas de usuários e prestadores.
+PRÓXIMO PASSO: criar formulário e API de cadastro/edição de serviços pelo prestador.
+PUBLICAÇÃO: arquivos para Render + Neon preparados; seguir PUBLICACAO.md para
+configurar credenciais, publicar e criar a conta ADMIN no banco online.
+O banco local permanece separado. Hospedagem online ainda depende desses passos.
+VALIDAÇÃO DA PUBLICAÇÃO: imagem Docker compilada; inicialização em container
+com 512 MB, telas e consulta da API ao PostgreSQL local verificadas.
+A conexão com o Neon ainda depende das credenciais cadastradas no Render.
+Os exemplos já foram importados. Instruções para outro banco: database/README.md.
+Para usar os perfis reais: iniciar o backend e abrir http://localhost:8080/login.html.
+Não é necessário Live Server para esse fluxo. Após alterar as telas, reinicie o backend.
 REGRA DE TRABALHO: alterações de arquivos somente com permissão explícita.
-Nesta atualização, foi autorizado alterar somente planoexecucao.txt.
+Última autorização: preparar arquivos de publicação no Render com banco Neon.

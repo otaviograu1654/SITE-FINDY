@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Findy - Administração</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="perfil.css">
+</head>
+<body class="perfil-contratante">
+<div class="wrap">
+  <header>
+    <a href="index.html" class="logo-block">
+      <img class="logo-img" src="images/findy-logo.png" alt="Findy">
+    </a>
+    <nav>
+      <a href="minha-conta.html">Minha conta</a>
+      <a href="admin.html">Administração</a>
+    </nav>
+    <button class="btn-black" type="button" data-sair>Sair</button>
+  </header>
+
+  <main>
+    <h1>Administração</h1>
+    <p id="admin-mensagem" class="mensagem"
+       role="status" aria-live="polite">Carregando…</p>
+
+    <label>
+      Filtrar perfis profissionais
+      <select id="admin-filtro">
+        <option value="">Todos os cadastros</option>
+        <option value="PENDENTE">Pendentes</option>
+        <option value="APROVADO">Aprovados</option>
+        <option value="RECUSADO">Recusados</option>
+      </select>
+    </label>
+
+    <div id="admin-lista"></div>
+  </main>
+</div>
+
+<script src="api.js"></script>
+<script src="conta.js"></script>
+<script src="admin.js"></script>
+</body>
+</html>

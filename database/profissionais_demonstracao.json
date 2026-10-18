@@ -1,0 +1,506 @@
+[
+  {
+    "categoria": "Serviços Domésticos",
+    "nome": "Camila Duarte",
+    "foto": "https://i.pravatar.cc/400?img=32",
+    "descricao": "Diarista e organizadora, atendimento pontual e cuidadoso."
+  },
+  {
+    "categoria": "Serviços Domésticos",
+    "nome": "Fernanda Castro",
+    "foto": "https://i.pravatar.cc/400?img=47",
+    "descricao": "Diarista com referências e disponibilidade imediata."
+  },
+  {
+    "categoria": "Serviços Domésticos",
+    "nome": "Priscila Andrade",
+    "foto": "https://i.pravatar.cc/400?img=44",
+    "descricao": "Personal organizer, transforma qualquer ambiente."
+  },
+  {
+    "categoria": "Serviços Domésticos",
+    "nome": "Bruna Siqueira",
+    "foto": "https://i.pravatar.cc/400?img=29",
+    "descricao": "Cuidadora de idosos, curso técnico em enfermagem."
+  },
+  {
+    "categoria": "Serviços Domésticos",
+    "nome": "Marta Souza",
+    "foto": "https://i.pravatar.cc/400?img=5",
+    "descricao": "Cozinheira doméstica, marmitas e refeições sob encomenda."
+  },
+  {
+    "categoria": "Serviços Domésticos",
+    "nome": "Simone Rocha",
+    "foto": "https://i.pravatar.cc/400?img=9",
+    "descricao": "Arrumadeira, organização e limpeza geral da casa."
+  },
+  {
+    "categoria": "Serviços Domésticos",
+    "nome": "Wagner Lopes",
+    "foto": "https://i.pravatar.cc/400?img=13",
+    "descricao": "Jardineiro residencial, poda e manutenção de jardins."
+  },
+  {
+    "categoria": "Serviços Domésticos",
+    "nome": "Patrícia Mendes",
+    "foto": "https://i.pravatar.cc/400?img=18",
+    "descricao": "Lavadeira e passadeira, entrega em domicílio."
+  },
+  {
+    "categoria": "Serviços Domésticos",
+    "nome": "Carlos Eduardo Reis",
+    "foto": "https://i.pravatar.cc/400?img=24",
+    "descricao": "Dedetizador, controle de pragas residencial."
+  },
+  {
+    "categoria": "Serviços Domésticos",
+    "nome": "Juliana Ferraz",
+    "foto": "https://i.pravatar.cc/400?img=36",
+    "descricao": "Limpeza pós-obra e faxina pesada."
+  },
+  {
+    "categoria": "Serviços Domésticos",
+    "nome": "Vanessa Lopes",
+    "foto": "https://i.pravatar.cc/400?img=41",
+    "descricao": "Governanta, cuida da rotina completa da casa."
+  },
+  {
+    "categoria": "Serviços Domésticos",
+    "nome": "Roberta Aquino",
+    "foto": "https://i.pravatar.cc/400?img=6",
+    "descricao": "Passadeira profissional, roupas do dia a dia."
+  },
+  {
+    "categoria": "Eventos",
+    "nome": "Débora Martins",
+    "foto": "https://i.pravatar.cc/400?img=68",
+    "descricao": "Confeiteira, bolos e doces sob encomenda para festas."
+  },
+  {
+    "categoria": "Eventos",
+    "nome": "Renata Alves",
+    "foto": "https://i.pravatar.cc/400?img=3",
+    "descricao": "Cerimonialista, planejamento completo de eventos."
+  },
+  {
+    "categoria": "Eventos",
+    "nome": "Marcelo Teixeira",
+    "foto": "https://i.pravatar.cc/400?img=8",
+    "descricao": "DJ para festas e casamentos."
+  },
+  {
+    "categoria": "Eventos",
+    "nome": "Helena Prado",
+    "foto": "https://i.pravatar.cc/400?img=14",
+    "descricao": "Decoradora de eventos e festas temáticas."
+  },
+  {
+    "categoria": "Eventos",
+    "nome": "Bruno Castilho",
+    "foto": "https://i.pravatar.cc/400?img=19",
+    "descricao": "Garçom e bartender para eventos."
+  },
+  {
+    "categoria": "Eventos",
+    "nome": "Camila Rezende",
+    "foto": "https://i.pravatar.cc/400?img=25",
+    "descricao": "Fotógrafa de eventos e ensaios."
+  },
+  {
+    "categoria": "Eventos",
+    "nome": "Diego Martins",
+    "foto": "https://i.pravatar.cc/400?img=31",
+    "descricao": "Som e iluminação para festas."
+  },
+  {
+    "categoria": "Eventos",
+    "nome": "Beatriz Lacerda",
+    "foto": "https://i.pravatar.cc/400?img=39",
+    "descricao": "Buffet e doces finos para casamentos."
+  },
+  {
+    "categoria": "Eventos",
+    "nome": "Fábio Andrade",
+    "foto": "https://i.pravatar.cc/400?img=45",
+    "descricao": "Mestre de cerimônias."
+  },
+  {
+    "categoria": "Eventos",
+    "nome": "Tatiane Borges",
+    "foto": "https://i.pravatar.cc/400?img=50",
+    "descricao": "Aluguel de decoração e mobiliário para eventos."
+  },
+  {
+    "categoria": "Eventos",
+    "nome": "Rogério Nunes",
+    "foto": "https://i.pravatar.cc/400?img=55",
+    "descricao": "Segurança para eventos e festas."
+  },
+  {
+    "categoria": "Eventos",
+    "nome": "Vinícius Rocha",
+    "foto": "https://i.pravatar.cc/400?img=58",
+    "descricao": "Fornecedor de tendas, mesas e cadeiras."
+  },
+  {
+    "categoria": "Infantil",
+    "nome": "Ana Beatriz Lima",
+    "foto": "https://i.pravatar.cc/400?img=4",
+    "descricao": "Babá com experiência em bebês e crianças pequenas."
+  },
+  {
+    "categoria": "Infantil",
+    "nome": "Rodrigo Faria",
+    "foto": "https://i.pravatar.cc/400?img=10",
+    "descricao": "Recreador infantil, monitor de festas."
+  },
+  {
+    "categoria": "Infantil",
+    "nome": "Cristiane Moura",
+    "foto": "https://i.pravatar.cc/400?img=16",
+    "descricao": "Professora particular, reforço escolar."
+  },
+  {
+    "categoria": "Infantil",
+    "nome": "Marina Duarte",
+    "foto": "https://i.pravatar.cc/400?img=20",
+    "descricao": "Contadora de histórias para eventos infantis."
+  },
+  {
+    "categoria": "Infantil",
+    "nome": "Felipe Rocha",
+    "foto": "https://i.pravatar.cc/400?img=27",
+    "descricao": "Personagem vivo para festas infantis."
+  },
+  {
+    "categoria": "Infantil",
+    "nome": "Luciana Peixoto",
+    "foto": "https://i.pravatar.cc/400?img=34",
+    "descricao": "Cuidadora infantil em período integral."
+  },
+  {
+    "categoria": "Infantil",
+    "nome": "Gabriel Souza",
+    "foto": "https://i.pravatar.cc/400?img=37",
+    "descricao": "Professor de reforço em matemática."
+  },
+  {
+    "categoria": "Infantil",
+    "nome": "Isadora Campos",
+    "foto": "https://i.pravatar.cc/400?img=42",
+    "descricao": "Musicalização infantil."
+  },
+  {
+    "categoria": "Infantil",
+    "nome": "Henrique Alves",
+    "foto": "https://i.pravatar.cc/400?img=48",
+    "descricao": "Recreação com brinquedos infláveis."
+  },
+  {
+    "categoria": "Infantil",
+    "nome": "Vitória Nascimento",
+    "foto": "https://i.pravatar.cc/400?img=53",
+    "descricao": "Babá noturna e plantões."
+  },
+  {
+    "categoria": "Infantil",
+    "nome": "Diego Paiva",
+    "foto": "https://i.pravatar.cc/400?img=57",
+    "descricao": "Aulas de reforço escolar geral."
+  },
+  {
+    "categoria": "Infantil",
+    "nome": "Paula Andrade",
+    "foto": "https://i.pravatar.cc/400?img=62",
+    "descricao": "Professora de inglês para crianças."
+  },
+  {
+    "categoria": "Serviços Gerais",
+    "nome": "José Humberto",
+    "foto": "images/pro-jose-humberto.jpg",
+    "descricao": "Eletricista residencial, mais de 10 anos de experiência."
+  },
+  {
+    "categoria": "Serviços Gerais",
+    "nome": "Thiago Nogueira",
+    "foto": "https://i.pravatar.cc/400?img=22",
+    "descricao": "Motorista de fretes e mudanças."
+  },
+  {
+    "categoria": "Serviços Gerais",
+    "nome": "Rafael Tavares",
+    "foto": "https://i.pravatar.cc/400?img=15",
+    "descricao": "Jardineiro e paisagista, cuida de quintais e áreas verdes."
+  },
+  {
+    "categoria": "Serviços Gerais",
+    "nome": "Vagner Correia",
+    "foto": "https://i.pravatar.cc/400?img=63",
+    "descricao": "Chaveiro 24 horas."
+  },
+  {
+    "categoria": "Serviços Gerais",
+    "nome": "Sandra Melo",
+    "foto": "https://i.pravatar.cc/400?img=6",
+    "descricao": "Costureira, ajustes e consertos de roupa."
+  },
+  {
+    "categoria": "Serviços Gerais",
+    "nome": "Alexandre Vieira",
+    "foto": "https://i.pravatar.cc/400?img=11",
+    "descricao": "Montador de móveis planejados e de loja."
+  },
+  {
+    "categoria": "Serviços Gerais",
+    "nome": "Roberta Cunha",
+    "foto": "https://i.pravatar.cc/400?img=17",
+    "descricao": "Manicure e pedicure a domicílio."
+  },
+  {
+    "categoria": "Serviços Gerais",
+    "nome": "Marcos Antunes",
+    "foto": "https://i.pravatar.cc/400?img=23",
+    "descricao": "Dedetização e desentupimento."
+  },
+  {
+    "categoria": "Serviços Gerais",
+    "nome": "Elaine Barros",
+    "foto": "https://i.pravatar.cc/400?img=28",
+    "descricao": "Passadeira profissional, entrega e retirada em casa."
+  },
+  {
+    "categoria": "Serviços Gerais",
+    "nome": "Ricardo Nascimento",
+    "foto": "https://i.pravatar.cc/400?img=33",
+    "descricao": "Técnico em ar-condicionado, instalação e manutenção."
+  },
+  {
+    "categoria": "Serviços Gerais",
+    "nome": "Fabiana Rocha",
+    "foto": "https://i.pravatar.cc/400?img=38",
+    "descricao": "Personal shopper e consultoria de estilo."
+  },
+  {
+    "categoria": "Serviços Gerais",
+    "nome": "Douglas Ramos",
+    "foto": "https://i.pravatar.cc/400?img=43",
+    "descricao": "Frete e carreto para mudanças pequenas."
+  },
+  {
+    "categoria": "Construção Civil",
+    "nome": "Amilton Ribeiro",
+    "foto": "images/pro-amilton-ribeiro.jpg",
+    "descricao": "Pintor profissional, reformas rápidas e acabamento fino."
+  },
+  {
+    "categoria": "Construção Civil",
+    "nome": "Oswaldo Ramos",
+    "foto": "images/pro-oswaldo-ramos.jpg",
+    "descricao": "Encanador disponível para emergências e instalações."
+  },
+  {
+    "categoria": "Construção Civil",
+    "nome": "Gustavo Figueira",
+    "foto": "images/pro-gustavo-figueira.jpg",
+    "descricao": "Marceneiro especializado em móveis planejados."
+  },
+  {
+    "categoria": "Construção Civil",
+    "nome": "Paulo Sérgio Duarte",
+    "foto": "https://i.pravatar.cc/400?img=49",
+    "descricao": "Pedreiro, reformas e construções pequenas."
+  },
+  {
+    "categoria": "Construção Civil",
+    "nome": "Renato Souza",
+    "foto": "https://i.pravatar.cc/400?img=54",
+    "descricao": "Mestre de obras, acompanhamento de projetos."
+  },
+  {
+    "categoria": "Construção Civil",
+    "nome": "Jorge Almeida",
+    "foto": "https://i.pravatar.cc/400?img=59",
+    "descricao": "Gesseiro, forros e sancas."
+  },
+  {
+    "categoria": "Construção Civil",
+    "nome": "Wellington Dias",
+    "foto": "https://i.pravatar.cc/400?img=64",
+    "descricao": "Azulejista, revestimentos e pisos."
+  },
+  {
+    "categoria": "Construção Civil",
+    "nome": "Marcelo Freitas",
+    "foto": "https://i.pravatar.cc/400?img=69",
+    "descricao": "Soldador e serralheiro."
+  },
+  {
+    "categoria": "Construção Civil",
+    "nome": "César Rocha",
+    "foto": "https://i.pravatar.cc/400?img=2",
+    "descricao": "Instalador de piso laminado e vinílico."
+  },
+  {
+    "categoria": "Construção Civil",
+    "nome": "Adriano Melo",
+    "foto": "https://i.pravatar.cc/400?img=7",
+    "descricao": "Telhadista, reparos e impermeabilização de telhado."
+  },
+  {
+    "categoria": "Construção Civil",
+    "nome": "Luiz Fernando Costa",
+    "foto": "https://i.pravatar.cc/400?img=12",
+    "descricao": "Vidraceiro, instalação e reparo de vidros."
+  },
+  {
+    "categoria": "Construção Civil",
+    "nome": "Anderson Silva",
+    "foto": "https://i.pravatar.cc/400?img=21",
+    "descricao": "Impermeabilização de lajes e caixas d'água."
+  },
+  {
+    "categoria": "Marketing e Vendas",
+    "nome": "Bianca Oliveira",
+    "foto": "https://i.pravatar.cc/400?img=26",
+    "descricao": "Social media, gestão de redes sociais."
+  },
+  {
+    "categoria": "Marketing e Vendas",
+    "nome": "Rodrigo Mendes",
+    "foto": "https://i.pravatar.cc/400?img=30",
+    "descricao": "Consultor de vendas e negociação."
+  },
+  {
+    "categoria": "Marketing e Vendas",
+    "nome": "Carolina Tavares",
+    "foto": "https://i.pravatar.cc/400?img=35",
+    "descricao": "Gestora de tráfego pago."
+  },
+  {
+    "categoria": "Marketing e Vendas",
+    "nome": "Pedro Henrique Lima",
+    "foto": "https://i.pravatar.cc/400?img=40",
+    "descricao": "Fotógrafo de produtos para e-commerce."
+  },
+  {
+    "categoria": "Marketing e Vendas",
+    "nome": "Natália Souza",
+    "foto": "https://i.pravatar.cc/400?img=46",
+    "descricao": "Copywriter, textos para vendas e anúncios."
+  },
+  {
+    "categoria": "Marketing e Vendas",
+    "nome": "Felipe Andrade",
+    "foto": "https://i.pravatar.cc/400?img=52",
+    "descricao": "Representante comercial externo."
+  },
+  {
+    "categoria": "Marketing e Vendas",
+    "nome": "Camila Rangel",
+    "foto": "https://i.pravatar.cc/400?img=56",
+    "descricao": "Designer de identidade visual para marcas."
+  },
+  {
+    "categoria": "Marketing e Vendas",
+    "nome": "Rafael Costa",
+    "foto": "https://i.pravatar.cc/400?img=61",
+    "descricao": "Consultor de marketing digital."
+  },
+  {
+    "categoria": "Marketing e Vendas",
+    "nome": "Juliana Prado",
+    "foto": "https://i.pravatar.cc/400?img=65",
+    "descricao": "Assessoria de imprensa e relações públicas."
+  },
+  {
+    "categoria": "Marketing e Vendas",
+    "nome": "Vitor Hugo Martins",
+    "foto": "https://i.pravatar.cc/400?img=70",
+    "descricao": "Vendedor porta a porta e catálogo."
+  },
+  {
+    "categoria": "Marketing e Vendas",
+    "nome": "Marcela Duarte",
+    "foto": "https://i.pravatar.cc/400?img=1",
+    "descricao": "Gestora de e-commerce e marketplaces."
+  },
+  {
+    "categoria": "Marketing e Vendas",
+    "nome": "Otávio Ramos",
+    "foto": "https://i.pravatar.cc/400?img=66",
+    "descricao": "Consultor de branding e posicionamento."
+  },
+  {
+    "categoria": "Tecnologia e Design",
+    "nome": "Eduardo Lima",
+    "foto": "https://i.pravatar.cc/400?img=51",
+    "descricao": "Técnico em informática, formatação e redes domésticas."
+  },
+  {
+    "categoria": "Tecnologia e Design",
+    "nome": "Aline Ferreira",
+    "foto": "https://i.pravatar.cc/400?img=67",
+    "descricao": "Desenvolvedora e suporte técnico."
+  },
+  {
+    "categoria": "Tecnologia e Design",
+    "nome": "Rafaela Nogueira",
+    "foto": "https://i.pravatar.cc/400?img=5",
+    "descricao": "Designer gráfica, identidade visual e social media."
+  },
+  {
+    "categoria": "Tecnologia e Design",
+    "nome": "Bruno Salles",
+    "foto": "https://i.pravatar.cc/400?img=60",
+    "descricao": "Desenvolvedor front-end e sites."
+  },
+  {
+    "categoria": "Tecnologia e Design",
+    "nome": "Camila Prado",
+    "foto": "https://i.pravatar.cc/400?img=3",
+    "descricao": "UX/UI designer, protótipos e telas de app."
+  },
+  {
+    "categoria": "Tecnologia e Design",
+    "nome": "Thiago Barbosa",
+    "foto": "https://i.pravatar.cc/400?img=8",
+    "descricao": "Suporte técnico remoto e formatação."
+  },
+  {
+    "categoria": "Tecnologia e Design",
+    "nome": "Larissa Campos",
+    "foto": "https://i.pravatar.cc/400?img=14",
+    "descricao": "Social media e edição de vídeos curtos."
+  },
+  {
+    "categoria": "Tecnologia e Design",
+    "nome": "Vinícius Moraes",
+    "foto": "https://i.pravatar.cc/400?img=19",
+    "descricao": "Desenvolvedor de aplicativos mobile."
+  },
+  {
+    "categoria": "Tecnologia e Design",
+    "nome": "Patrícia Nogueira",
+    "foto": "https://i.pravatar.cc/400?img=25",
+    "descricao": "Designer de logotipos e branding."
+  },
+  {
+    "categoria": "Tecnologia e Design",
+    "nome": "Rodrigo Salgado",
+    "foto": "https://i.pravatar.cc/400?img=31",
+    "descricao": "Montagem e manutenção de computadores."
+  },
+  {
+    "categoria": "Tecnologia e Design",
+    "nome": "Fernanda Lacerda",
+    "foto": "https://i.pravatar.cc/400?img=39",
+    "descricao": "Social media e gestão de conteúdo."
+  },
+  {
+    "categoria": "Tecnologia e Design",
+    "nome": "Gustavo Prado",
+    "foto": "https://i.pravatar.cc/400?img=45",
+    "descricao": "Especialista em SEO e sites."
+  }
+]

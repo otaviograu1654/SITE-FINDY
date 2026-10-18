@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Findy - Minha conta</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="perfil.css">
+</head>
+<body class="perfil-contratante">
+<div class="wrap">
+  <header>
+    <a href="index.html" class="logo-block"><img class="logo-img" src="images/findy-logo.png" alt="Findy"></a>
+
+  <nav aria-label="Navegação principal"><a href="index.html">Início</a> 
+    <a href="admin.html" id="link-admin" hidden>Administração</a>
+    <a href="minha-conta.html" class="active">Minha conta</a><a href="perfil-prestador.html">Perfil profissional</a>
+  </nav>
+
+    <button class="btn-black" type="button" data-sair>Sair</button>
+  </header>
+  <main id="minha-conta">
+    <h1>Minha conta</h1>
+    <p id="conta-mensagem" class="mensagem" role="status" aria-live="polite">Carregando seus dados…</p>
+    <section class="profile-hero" aria-label="Seu perfil">
+      <div class="avatar-ring"><img id="conta-foto" src="images/chat-avatar.png" alt="Sua foto de perfil"></div>
+      <div class="profile-info"><h2 id="conta-nome">Seu perfil</h2><p id="conta-email"></p><span class="role-tag">Você pode contratar e oferecer serviços</span></div>
+    </section>
+    <section class="panel">
+      <h2>Dados pessoais</h2>
+      <form id="perfil-form" class="perfil-form">
+        <label>Nome completo<input name="nome" required maxlength="100" autocomplete="name"></label>
+        <label>Telefone<input name="telefone" type="tel" maxlength="20" autocomplete="tel"></label>
+        <label>Cidade<input name="cidade" maxlength="100" autocomplete="address-level2"></label>
+        <label>Estado (UF)<input name="estado" maxlength="2" pattern="[A-Z]{2}" placeholder="MG" autocomplete="address-level1"></label>
+        <label>Endereço da foto<input name="foto" type="url" maxlength="500" placeholder="https://exemplo.com/minha-foto.jpg"><small>Use o endereço de uma imagem. Deixe vazio para usar o avatar padrão.</small></label>
+        <button class="btn-black" type="submit" disabled>Salvar meus dados</button>
+      </form>
+    </section>
+    <section class="panel">
+      <h2>Quer oferecer serviços?</h2>
+      <p>Preencha sua apresentação e a região em que atende. Seu perfil será enviado para aprovação.</p>
+      <a href="perfil-prestador.html" class="btn-black perfil-link">Ativar ou editar perfil profissional</a>
+    </section>
+  </main>
+</div>
+<script src="api.js"></script>
+<script src="conta.js"></script>
+</body>
+</html>

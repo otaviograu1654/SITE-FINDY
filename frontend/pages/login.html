@@ -19,19 +19,20 @@
       <img src="images/findy-logo.png" alt="Findy" class="logo__image">
     </a>
 
-    <form class="login-form">
+    <form class="login-form" id="login-form">
       <div class="field">
-        <label for="login-email">Email ou telefone</label>
-        <input type="text" id="login-email" placeholder="Insira seu email">
+        <label for="login-email">E-mail</label>
+        <input type="email" id="login-email" placeholder="Insira seu email" required maxlength="100" autocomplete="username">
       </div>
 
       <div class="field">
         <label for="login-senha">Senha</label>
-        <input type="password" id="login-senha" placeholder="Insira sua senha">
+        <input type="password" id="login-senha" placeholder="Insira sua senha" required maxlength="72" autocomplete="current-password">
         <a href="#" class="field__link">Esqueceu a senha?</a>
       </div>
 
       <button type="submit" class="btn btn--dark">Login</button>
+      <p id="login-mensagem" role="status" aria-live="polite" hidden></p>
     </form>
   </section>
 
@@ -46,8 +47,8 @@
       <p class="signup__subtitle">Gratuitamente</p>
 
       <form class="signup-form" id="signup-form">
-        <input type="text" placeholder="Nome Completo">
-        <input type="text" placeholder="Email ou Telefone">
+        <input type="text" id="signup-nome" placeholder="Nome completo" aria-label="Nome completo" required maxlength="100" autocomplete="name">
+        <input type="email" id="signup-email" placeholder="E-mail" aria-label="E-mail de cadastro" required maxlength="100" autocomplete="email">
 
         <div class="password-field">
           <div class="password-input-wrap">
@@ -57,7 +58,10 @@
               class="password-input"
               placeholder="Crie uma senha"
               required
-              minlength="6"
+              minlength="8"
+              maxlength="72"
+              autocomplete="new-password"
+              aria-label="Crie uma senha"
             >
             <span class="password-status" id="password-status">
               <span class="password-status__icon" id="password-status-icon"></span>
@@ -66,16 +70,15 @@
           </div>
         </div>
 
-        <select class="signup-form__select" required>
-          <option value="" disabled selected hidden>Autônomo ou Contratante</option>
-          <option value="autonomo">Autônomo</option>
-          <option value="contratante">Contratante</option>
-        </select>
+        <p>Uma conta para contratar e oferecer serviços. Ative seu perfil profissional depois de entrar.</p>
         <button type="submit" class="btn btn--dark btn--full">Cadastrar</button>
+        <p id="signup-mensagem" role="status" aria-live="polite" hidden></p>
       </form>
     </div>
   </section>
 
   <script src="script.js"></script>
+  <script src="api.js"></script>
+  <script src="conta.js"></script>
 </body>
 </html>

@@ -63,9 +63,41 @@ O primeiro início pode precisar baixar o Maven e as dependências.
 Para encerrar, pressione Ctrl+C no terminal.
 
 Uma conexão bem-sucedida aparece no log como `HikariPool-1 - Start completed`;
-o servidor inicia normalmente na porta 8080. Ainda não há endpoints próprios:
-abrir essa porta no navegador pode retornar 404. As tabelas serão criadas por
-migrations na próxima etapa; `ddl-auto=validate` evita alterações automáticas do schema.
+O servidor inicia normalmente na porta 8080. As telas são copiadas de
+`frontend/pages` pelo Maven e servidas pelo próprio backend.
+Abra `http://localhost:8080/login.html`. Depois de alterar HTML/JavaScript,
+reinicie o backend para atualizar a cópia dos arquivos. `ddl-auto=validate`
+evita alterações automáticas da estrutura do banco.
+
+## Usar os perfis reais
+
+1. Crie sua conta em `/login.html` e entre com e-mail e senha.
+2. Em `/minha-conta.html`, salve nome, telefone, cidade, UF e endereço da foto.
+3. Abra "Perfil profissional", preencha descrição, experiência e região e envie.
+4. O perfil começa PENDENTE. Você pode editar, desativar, reativar e reenviar
+   após recusa. Alterações profissionais e reativação exigem nova análise.
+5. A página pública `/perfil-prestador.html?id=ID` só apresenta perfis aprovados,
+   ativos e de contas ativas. O dono acompanha a situação sem precisar publicar.
+
+Desativar o perfil profissional não desativa a conta. A mesma pessoa continua
+podendo contratar serviços. A foto usa um endereço de imagem;
+upload de arquivo e gestão de serviços são etapas separadas.
+
+Rotas novas: `GET/PUT /prestadores/me`, `PATCH /prestadores/me/ativacao`
+com corpo `{"ativo":true}` ou `{"ativo":false}`, e `GET /prestadores/{id}`.
+Permissões, aprovação e dono do perfil são conferidos no servidor.
+
+O Live Server é aceito em `http://localhost:5501` e `http://127.0.0.1:5501`,
+usando o mesmo hostname do backend para manter os cookies. A opção recomendada
+é abrir as telas na própria porta 8080. Não abra por `file://`.
+
+`PerfilPrestadorTests` testa as regras usando o PostgreSQL local e rollback
+automático, sem deixar contas e perfis temporários no banco. Para rodar `mvnw test`,
+configure as variáveis PostgreSQL do `.env` no ambiente do terminal ou da IDE.
+
+Se o VS Code continuar marcando `PerfilDTO.java` após uma compilação bem-sucedida,
+abra Ctrl+Shift+P, execute `Java: Clean Java Language Server Workspace` e permita
+reiniciar o servidor Java. Isso atualiza os diagnósticos do editor.
 
 Os dados ficam em um volume externo, preservado mesmo com `docker compose down`.
 Isso não substitui backup. Em um volume já inicializado, editar senha, usuário ou
@@ -74,3 +106,35 @@ feitas no PostgreSQL e depois refletidas na configuração.
 
 Referências: [imagem oficial](https://hub.docker.com/_/postgres) e
 [volumes no Compose](https://docs.docker.com/reference/compose-file/volumes/).
+
+## Dados de demonstração e painel administrativo
+
+O painel `/admin.html` permite analisar e editar cadastros. Entre com a sua conta
+ADMIN pelo login normal. A vitrine `/categoria.html` consulta `/servicos` no banco,
+com busca e paginação; os links abrem o perfil público pelo ID do prestador.
+
+`dados_demonstracao.sql` importa 84 profissionais e 84 serviços, distribuídos em
+sete categorias. Os exemplos ficam identificados como demonstração, sem avaliações
+inventadas e com preço a combinar. As contas fictícias usam e-mails terminados em
+`@example.invalid` e senhas aleatórias, sem uma senha padrão para entrar nelas.
+O administrador pode editar esses cadastros pelo painel.
+
+O SQL já foi executado nesta máquina. Para importar em outro banco, primeiro crie
+as seis tabelas, carregue `categorias.sql`, cadastre sua conta pelo site e promova
+somente essa conta a ADMIN. Depois, na raiz do projeto, com o Compose rodando:
+
+```powershell
+$OutputEncoding = [System.Text.UTF8Encoding]::new($false)
+Get-Content -Raw -Encoding UTF8 .\database\dados_demonstracao.sql | docker compose exec -T postgres psql -U postgres -d findy --set=ON_ERROR_STOP=1
+```
+
+O arquivo possui sua própria transação. Pode executá-lo novamente: registros já
+importados são preservados, sem duplicar os exemplos ou substituir contas reais.
+Se estiver usando apenas o container manual `findy-postgres`, substitua
+`docker compose exec -T postgres` por `docker exec -i findy-postgres`.
+Não inicie os dois containers simultaneamente.
+
+Os exemplos originais estão preservados em `profissionais_demonstracao.json`.
+Para regenerar o SQL após editar esse JSON, execute
+`node database/gerar_demonstracao.cjs` (requer Node.js). Isso só gera o arquivo;
+não atualiza registros que já foram importados. O frontend não usa esse JSON.

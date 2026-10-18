@@ -653,6 +653,8 @@ a {
    cartão inteiro mede "foto + rodapé". */
 .professional-card__photo {
   height: 200px;
+  display: block;
+  object-fit: cover;
   background-size: cover;     /* a foto preenche o espaço inteiro,
                                    cortando o excesso em vez de esticar */
   background-position: center top; /* prioriza o rosto da pessoa,
@@ -661,10 +663,7 @@ a {
   background-repeat: no-repeat;
 }
 
-/* A partir de agora cada cartão define sua própria foto via
-   "style=background-image" inline, gerado pelo script.js a partir da
-   lista PROFISSIONAIS_POR_CATEGORIA — por isso não há mais classes
-   --a/--b/--c/--d fixas aqui. */
+/* categoria.js cria as fotos a partir dos registros retornados pela API. */
 
 .professional-card__footer {
   flex: 0 0 auto;

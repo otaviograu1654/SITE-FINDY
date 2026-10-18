@@ -1,0 +1,26 @@
+/* Formularios das contas reais, mantendo as cores do projeto. */
+.wrap main { padding: 24px 0 48px; }
+.wrap main > h1 { margin-bottom: 12px; }
+.perfil-form { display: grid; gap: 18px; margin-top: 20px; }
+.perfil-form label { display: grid; gap: 7px; font-weight: 600; }
+.perfil-form input, .perfil-form textarea {
+  box-sizing: border-box; width: 100%; border: 1px solid #aeb5bf;
+  border-radius: 10px; padding: 12px; font: inherit; color: #18212c; background: #fff;
+}
+.perfil-form textarea { resize: vertical; min-height: 110px; }
+.perfil-form small { font-weight: 400; color: #4b5563; }
+.perfil-form button { justify-self: start; }
+.perfil-form input:focus-visible, .perfil-form textarea:focus-visible { outline: 3px solid #7dc8f4; }
+.mensagem { padding: 12px 0; line-height: 1.6; }
+.mensagem-erro { color: #b42318; }
+.perfil-acoes { display: flex; flex-wrap: wrap; align-items: center; gap: 14px; margin-top: 20px; }
+.perfil-link { display: inline-block; margin-top: 15px; text-decoration: none; }
+.perfil-status { font-weight: 600; }
+.perfil-texto { white-space: pre-wrap; overflow-wrap: anywhere; }
+button:disabled { opacity: .55; cursor: wait; }
+[hidden] { display: none !important; }
+@media (max-width: 640px) {
+  .wrap header { gap: 18px; flex-wrap: wrap; }
+  .wrap header nav { display: flex; flex-wrap: wrap; gap: 12px; }
+  .perfil-form button { width: 100%; }
+}

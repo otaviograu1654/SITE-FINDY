@@ -1,0 +1,18 @@
+# Envia ao build apenas as fontes usadas pelo Dockerfile.
+**
+!Dockerfile
+!.dockerignore
+!backend/
+!backend/plataformaservicos/
+!backend/plataformaservicos/pom.xml
+!backend/plataformaservicos/src/
+!backend/plataformaservicos/src/**
+!frontend/
+!frontend/pages/
+!frontend/pages/**
+**/.env
+**/.env.*
+**/target
+**/node_modules
+**/.git
+**/*.log
