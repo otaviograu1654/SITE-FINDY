@@ -296,7 +296,7 @@ a {
 }
 
 .signup__mascote-image {
-  width: clamp(120px, 22vw, 320px);
+  width: clamp(300px, 50vw, 550px);
   height: auto;
   display: block;
 }
