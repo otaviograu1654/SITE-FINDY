@@ -36,7 +36,7 @@ class PerfilPrestadorTests {
     MockHttpSession outraSessao;
     static final String DADOS = """
             {"descricaoProfissional":"Limpeza residencial", "experiencia":"Dois anos",
-             "regiaoAtendimento":"Patos de Minas"}
+             "regiaoAtendimento":"Patos de Minas", "iniciante":false, "habilidades":["Eventos: Fotografia"]}
             """;
 
     @BeforeEach
@@ -56,6 +56,9 @@ class PerfilPrestadorTests {
         usuario.setNome(nome);
         usuario.setEmail(UUID.randomUUID() + "@example.com");
         usuario.setSenhaHash("hash-apenas-para-teste-transacional");
+        usuario.setTelefone("34999999999"); usuario.setCidade("Patos de Minas");
+        usuario.setEstado("MG"); usuario.setBairro("Centro");
+        usuario.setFoto("https://example.invalid/foto.jpg");
         return usuarios.saveAndFlush(usuario);
     }
 

@@ -22,7 +22,9 @@ public record PerfilDTO(
     String estado,
 
     @Size(max = 500)
-    String foto
+    String foto,
+
+    @Size(max = 100) String bairro
 
 ) {
 }

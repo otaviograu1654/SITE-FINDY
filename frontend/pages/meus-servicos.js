@@ -43,6 +43,7 @@
     campo('descricao').value = servico.descricao || '';
     campo('categoriaId').value = String(servico.categoria_id);
     campo('preco').value = servico.preco ?? '';
+    campo('precoMaximo').value = servico.preco_maximo ?? '';
     campo('unidadeCobranca').value = servico.unidade_cobranca;
     campo('ativo').checked = servico.ativo;
 
@@ -69,6 +70,13 @@
 
   async function carregarLista() {
     const servicos = await api('/meus-servicos');
+    const perfil = await api('/prestadores/me');
+    const faltas = [];
+    if (perfil.statusAprovacao !== 'APROVADO') faltas.push('Seu perfil precisa de aprovação administrativa.');
+    if (!perfil.ativo) faltas.push('Seu perfil profissional está desativado.');
+    if (!servicos.some(s => s.ativo)) faltas.push('Cadastre ou ative um serviço na categoria desejada.');
+    document.getElementById('servicos-publicacao').textContent = faltas.length
+      ? faltas.join(' ') : 'Suas ofertas ativas estão publicadas nas categorias escolhidas.';
 
     lista.replaceChildren();
 
@@ -105,10 +113,12 @@
 
       const preco = servico.preco === null
         ? 'Preço a combinar'
-        : Number(servico.preco).toLocaleString('pt-BR', {
+        : 'Referência: ' + Number(servico.preco).toLocaleString('pt-BR', {
             style: 'currency',
             currency: 'BRL'
-          }) + ' ' + unidades[servico.unidade_cobranca];
+          }) + (servico.preco_maximo == null ? '' : ' a ' + Number(servico.preco_maximo)
+            .toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }))
+          + ' ' + unidades[servico.unidade_cobranca] + ' — valor final a combinar';
 
       adicionarTexto(item, 'p', preco);
 
@@ -140,12 +150,18 @@
     if (ocupado || !form.reportValidity()) return;
 
     const precoTexto = campo('preco').value.trim();
+    const maximoTexto = campo('precoMaximo').value.trim();
+    if (maximoTexto !== '' && (precoTexto === '' || Number(maximoTexto) < Number(precoTexto))) {
+      mensagem(aviso, 'Informe o preço mínimo e um máximo maior ou igual a ele.', true);
+      return;
+    }
 
     const dados = {
       titulo: campo('titulo').value.trim(),
       descricao: campo('descricao').value.trim(),
       categoriaId: Number(campo('categoriaId').value),
       preco: precoTexto === '' ? null : Number(precoTexto),
+      precoMaximo: maximoTexto === '' ? null : Number(maximoTexto),
       unidadeCobranca: campo('unidadeCobranca').value,
       ativo: campo('ativo').checked
     };

@@ -6,6 +6,7 @@ import br.com.projetointegrador.plataformaservicos.dto.AtivacaoPrestadorDTO;
 import br.com.projetointegrador.plataformaservicos.dto.PrestadorDTO;
 import br.com.projetointegrador.plataformaservicos.model.Usuario;
 import br.com.projetointegrador.plataformaservicos.service.SessaoUsuario;
+import br.com.projetointegrador.plataformaservicos.service.CadastroProfissionalService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -30,10 +31,12 @@ public class AdminController {
 
     private final JdbcTemplate banco;
     private final SessaoUsuario sessao;
+    private final CadastroProfissionalService cadastro;
 
-    public AdminController(JdbcTemplate banco, SessaoUsuario sessao) {
+    public AdminController(JdbcTemplate banco, SessaoUsuario sessao, CadastroProfissionalService cadastro) {
         this.banco = banco;
         this.sessao = sessao;
+        this.cadastro = cadastro;
     }
 
     public record EdicaoContaDTO(
@@ -42,13 +45,13 @@ public class AdminController {
             @Size(max = 20) String telefone,
             @Size(max = 100) String cidade,
             @Pattern(regexp = "[A-Z]{2}") String estado,
-            @Size(max = 500) String foto) {
+            @Size(max = 500) String foto,
+            @Size(max = 100) String bairro) {
     }
 
     public record AnaliseDTO(
-            @NotNull Boolean aprovado,
-            @Size(max = 1000) String motivo) {
-    }
+            @NotBlank @Pattern(regexp="APROVADO|CORRECAO_SOLICITADA|RECUSADO_DEFINITIVO") String decisao,
+            @Size(max=1000) String motivo) {}
 
     @GetMapping("/me")
     public Map<String, Object> minhaPermissao(HttpServletRequest request) {
@@ -64,11 +67,11 @@ public class AdminController {
                 SELECT
                     u.id AS usuario_id,
                     u.nome, u.email, u.telefone,
-                    u.cidade, u.estado, u.foto,
+                    u.cidade, u.estado, u.bairro, u.foto, u.data_cadastro,
                     u.papel, u.ativo,
                     p.id AS prestador_id,
                     p.descricao_profissional,
-                    p.experiencia,
+                    p.experiencia, p.iniciante,
                     p.regiao_atendimento,
                     p.status_aprovacao,
                     p.motivo_recusa,
@@ -77,6 +80,12 @@ public class AdminController {
                 LEFT JOIN prestadores p ON p.usuario_id = u.id
                 ORDER BY u.id
                 """);
+    }
+
+    @GetMapping("/prestadores/{id}/ficha")
+    public Map<String,Object> ficha(@PathVariable Long id,HttpServletRequest request) {
+        exigirAdmin(request);
+        return cadastro.perfil(id,false);
     }
 
     @PutMapping("/usuarios/{id}")
@@ -104,11 +113,11 @@ public class AdminController {
 
         conferirAlteracao(banco.update("""
                 UPDATE usuarios
-                SET nome=?, email=?, telefone=?, cidade=?, estado=?, foto=?
+                SET nome=?, email=?, telefone=?, cidade=?, estado=?, foto=?, bairro=?
                 WHERE id=?
                 """,
                 dados.nome().trim(), email, dados.telefone(),
-                dados.cidade(), dados.estado(), dados.foto(), id
+                dados.cidade(), dados.estado(), dados.foto(), dados.bairro(), id
         ));
     }
 
@@ -149,10 +158,14 @@ public class AdminController {
 
         exigirAdmin(request);
 
+        bloquearPerfil(id);
+        cadastro.validarHabilidades(dados.habilidades());
+        if (!dados.iniciante() && (dados.experiencia()==null || dados.experiencia().isBlank()))
+            throw CadastroProfissionalService.erro("Preencha experiência ou indique iniciante.");
         conferirAlteracao(banco.update("""
                 UPDATE prestadores
                 SET descricao_profissional=?,
-                    experiencia=?,
+                    experiencia=?, iniciante=?,
                     regiao_atendimento=?,
                     status_aprovacao='PENDENTE',
                     motivo_recusa=NULL,
@@ -161,42 +174,43 @@ public class AdminController {
                 WHERE id=?
                 """,
                 dados.descricaoProfissional().trim(),
-                dados.experiencia(),
+                dados.experiencia(), dados.iniciante(),
                 dados.regiaoAtendimento().trim(), id
         ));
+        banco.update("DELETE FROM prestador_habilidades WHERE prestador_id=?",id);
+        for(String habilidade:dados.habilidades())
+            banco.update("INSERT INTO prestador_habilidades VALUES (?,?)",id,habilidade);
     }
 
     @PatchMapping("/prestadores/{id}/analise")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void analisar(
-            @PathVariable Long id,
-            @Valid @RequestBody AnaliseDTO dados,
-            HttpServletRequest request) {
-
-        Usuario admin = exigirAdmin(request);
-
-        String motivo = dados.motivo() == null
-                ? "" : dados.motivo().trim();
-
-        if (!dados.aprovado() && motivo.isBlank()) {
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST,
-                    "Informe o motivo da recusa."
-            );
+    public void analisar(@PathVariable Long id,@Valid @RequestBody AnaliseDTO dados,
+                         HttpServletRequest request) {
+        Usuario admin=exigirAdmin(request);
+        bloquearPerfil(id);
+        String motivo=dados.motivo()==null?"":dados.motivo().trim();
+        if (!"APROVADO".equals(dados.decisao()) && motivo.isBlank())
+            throw CadastroProfissionalService.erro("Informe o motivo da decisão.");
+        List<Long> ids=banco.queryForList("SELECT usuario_id FROM prestadores WHERE id=? AND ativo",Long.class,id);
+        if (ids.isEmpty()) throw CadastroProfissionalService.erro("Perfil desativado. Reative antes da análise.");
+        if ("APROVADO".equals(dados.decisao())) {
+            cadastro.exigirCompleto(ids.getFirst());
+            cadastro.validarHabilidades(banco.queryForList("SELECT habilidade FROM prestador_habilidades WHERE prestador_id=?",String.class,id));
         }
+        banco.update("""
+            UPDATE prestadores SET status_aprovacao=?,motivo_recusa=?,analisado_por=?,data_analise=CURRENT_TIMESTAMP
+            WHERE id=?
+            """,dados.decisao(),motivo.isBlank()?null:motivo,admin.getId(),id);
+        banco.update("""
+            INSERT INTO analises_prestadores(prestador_id,administrador_id,decisao,motivo)
+            VALUES (?,?,?,?)
+            """,id,admin.getId(),dados.decisao(),motivo.isBlank()?null:motivo);
+    }
 
-        conferirAlteracao(banco.update("""
-                UPDATE prestadores
-                SET status_aprovacao=?,
-                    motivo_recusa=?,
-                    analisado_por=?,
-                    data_analise=CURRENT_TIMESTAMP
-                WHERE id=?
-                """,
-                dados.aprovado() ? "APROVADO" : "RECUSADO",
-                dados.aprovado() ? null : motivo,
-                admin.getId(), id
-        ));
+    private void bloquearPerfil(Long id) {
+        List<Long> ids=banco.queryForList("SELECT id FROM prestadores WHERE id=? FOR UPDATE",Long.class,id);
+        if(ids.isEmpty()) throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Perfil não encontrado.");
+        cadastro.impedirRecusaDefinitiva(id);
     }
 
     @PatchMapping("/prestadores/{id}/ativacao")
@@ -208,10 +222,12 @@ public class AdminController {
 
         exigirAdmin(request);
 
-        conferirAlteracao(banco.update(
-                "UPDATE prestadores SET ativo=? WHERE id=?",
-                dados.ativo(), id
-        ));
+        bloquearPerfil(id);
+        conferirAlteracao(banco.update("""
+            UPDATE prestadores SET ativo=?,
+            status_aprovacao=CASE WHEN ? AND NOT ativo THEN 'PENDENTE' ELSE status_aprovacao END
+            WHERE id=?
+            """,dados.ativo(),dados.ativo(),id));
     }
 
     private Usuario exigirAdmin(HttpServletRequest request) {

@@ -115,8 +115,7 @@ WHERE LOWER(email) = LOWER('seu-email@exemplo.com');
    ela continua como USUARIO. Não compartilhe sua senha de administrador.
 
 O banco novo não recebe sua conta ADMIN local automaticamente. Categorias podem
-ficar sem cards até existir um prestador aprovado com serviço ativo: o formulário
-para cadastrar/editar serviços ainda é uma etapa pendente do projeto.
+ficar sem cards até existir um prestador aprovado com serviço ativo: cadastre ofertas em Meus serviços para que apareçam no catálogo.
 
 ## 6. Conferir juntos
 
@@ -154,3 +153,11 @@ Referências: [Render Docker](https://render.com/docs/docker),
 [Blueprint](https://render.com/docs/blueprint-spec),
 [limites Free](https://render.com/docs/free),
 [conexão Neon](https://neon.com/docs/get-started/connect-neon).
+
+## Atualização: cadastro profissional guiado
+
+Antes de publicar esta versão, execute `database/cadastro_profissional.sql` no
+Neon conectado à aplicação. Ele preserva os dados e acrescenta bairro,
+habilidades, opção de iniciante e histórico de análise. Veja
+[documentação da entrega](CADASTRO_PROFISSIONAL.md). Configure também
+BREVO_API_KEY, EMAIL_FROM e APP_URL no Render para recuperação de senha.

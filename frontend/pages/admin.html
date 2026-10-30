@@ -9,19 +9,14 @@
   <link rel="icon" type="image/x-icon" href="images/findy-logo.png">
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="perfil.css">
+  <link rel="stylesheet" href="cabecalho.css">
+  <script src="api.js" defer></script>
+  <script src="cabecalho.js" defer></script>
 </head>
 <body class="perfil-contratante">
+  <header id="cabecalho-findy"><a href="index.html">Findy — Início</a></header>
 <div class="wrap">
-  <header>
-    <a href="index.html" class="logo-block">
-      <img class="logo-img" src="images/findy-logo.png" alt="Findy">
-    </a>
-    <nav>
-      <a href="minha-conta.html">Minha conta</a>
-      <a href="admin.html">Administração</a>
-    </nav>
-    <button class="btn-black" type="button" data-sair>Sair</button>
-  </header>
+
 
   <main>
     <h1>Administração</h1>
@@ -34,16 +29,16 @@
         <option value="">Todos os cadastros</option>
         <option value="PENDENTE">Pendentes</option>
         <option value="APROVADO">Aprovados</option>
-        <option value="RECUSADO">Recusados</option>
+        <option value="CORRECAO_SOLICITADA">Correção solicitada</option>
+        <option value="RECUSADO_DEFINITIVO">Recusados definitivamente</option>
+        <option value="RECUSADO">Recusas anteriores</option>
       </select>
     </label>
 
     <div id="admin-lista"></div>
   </main>
 </div>
-
-<script src="api.js"></script>
-<script src="conta.js"></script>
-<script src="admin.js"></script>
+<script src="conta.js" defer></script>
+<script src="admin.js" defer></script>
 </body>
 </html>

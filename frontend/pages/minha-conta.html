@@ -9,21 +9,14 @@
   <link rel="icon" type="image/x-icon" href="images/findy-logo.png">
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="perfil.css">
+  <link rel="stylesheet" href="cabecalho.css">
+  <script src="api.js" defer></script>
+  <script src="cabecalho.js" defer></script>
 </head>
 <body class="perfil-contratante">
+  <header id="cabecalho-findy"><a href="index.html">Findy — Início</a></header>
 <div class="wrap">
-  <header>
-    <a href="index.html" class="logo-block"><img class="logo-img" src="images/findy-logo.png" alt="Findy"></a>
 
-  <nav aria-label="Navegação principal"><a href="index.html">Início</a> 
-    <a href="admin.html" id="link-admin" hidden>Administração</a>
-    <a href="minha-conta.html" class="active">Minha conta</a>
-    <a href="perfil-prestador.html">Perfil profissional</a>
-    <a href="meus-servicos.html">Meus serviços</a>
-  </nav>
-
-    <button class="btn-black" type="button" data-sair>Sair</button>
-  </header>
   <main id="minha-conta">
     <h1>Minha conta</h1>
     <p id="conta-mensagem" class="mensagem" role="status" aria-live="polite">Carregando seus dados…</p>
@@ -36,6 +29,7 @@
       <form id="perfil-form" class="perfil-form">
         <label>Nome completo<input name="nome" required maxlength="100" autocomplete="name"></label>
         <label>Telefone<input name="telefone" type="tel" maxlength="20" autocomplete="tel"></label>
+        <label>Bairro<input name="bairro" maxlength="100" autocomplete="address-level3"></label>
         <label>Cidade<input name="cidade" maxlength="100" autocomplete="address-level2"></label>
         <label>Estado (UF)<input name="estado" maxlength="2" pattern="[A-Z]{2}" placeholder="MG" autocomplete="address-level1"></label>
         <label>Escolher foto<input id="foto-arquivo" type="file" accept="image/jpeg,image/png" disabled><small>Selecione do computador ou da galeria: JPG ou PNG de até 2 MB e até 4096 pixels em cada lado. Confira a prévia acima e clique em Salvar meus dados.</small></label>
@@ -45,12 +39,13 @@
     </section>
     <section class="panel">
       <h2>Quer oferecer serviços?</h2>
-      <p>Preencha sua apresentação e a região em que atende. Seu perfil será enviado para aprovação.</p>
+      <p>Preencha seu perfil e envie para aprovação. Depois, cadastre uma oferta em Meus serviços e escolha a categoria em que deseja aparecer. Marcar habilidades não cria uma oferta automaticamente.</p>
+      <p id="conta-publicacao" class="perfil-texto"></p>
       <a href="perfil-prestador.html" class="btn-black perfil-link">Ativar ou editar perfil profissional</a>
+      <a href="meus-servicos.html" class="btn-black perfil-link">Cadastrar meus serviços</a>
     </section>
   </main>
 </div>
-<script src="api.js"></script>
-<script src="conta.js"></script>
+<script src="conta.js" defer></script>
 </body>
 </html>

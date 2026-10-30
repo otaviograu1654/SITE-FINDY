@@ -1,7 +1,7 @@
 // Carrega os cadastros e envia as alterações e decisões do administrador à API.
 
 (() => {
-  const { api, mensagem, enviar } = Findy;
+  const { api, mensagem, enviar, foto } = Findy;
   const lista = document.getElementById('admin-lista');
   const aviso = document.getElementById('admin-mensagem');
   const filtro = document.getElementById('admin-filtro');
@@ -55,7 +55,7 @@
     return elemento;
   }
 
-  function formulario(titulo, campos, destino) {
+  function formulario(titulo, campos, destino, extras = {}) {
     const bloco = document.createElement('section');
     bloco.className = 'panel';
 
@@ -79,7 +79,7 @@
 
       enviar(salvar, async () => {
         try {
-          await api(destino, { method: 'PUT', body: valores(form) });
+          await api(destino, { method: 'PUT', body: { ...extras, ...valores(form) } });
           await carregar();
           mensagem(aviso, 'Alterações salvas.');
         } catch (erro) {
@@ -117,12 +117,16 @@
       situacao.textContent =
         `${usuario.papel} — conta ${usuario.ativo ? 'ativa' : 'desativada'}`;
 
-      card.append(titulo, situacao);
+      const imagem = document.createElement('img'); imagem.className = 'cadastro-avatar';
+      imagem.src = foto(usuario.foto); imagem.alt = `Foto de ${usuario.nome}`;
+      card.append(imagem, titulo, situacao);
+      const cadastro = document.createElement('p'); cadastro.textContent = `Cadastro: ${new Date(usuario.data_cadastro).toLocaleString('pt-BR')}`; card.append(cadastro);
 
       card.append(formulario('Dados da conta', [
         ['nome', 'Nome', usuario.nome],
         ['email', 'E-mail', usuario.email],
         ['telefone', 'Telefone', usuario.telefone],
+        ['bairro', 'Bairro', usuario.bairro],
         ['cidade', 'Cidade', usuario.cidade],
         ['estado', 'UF em maiúsculas', usuario.estado],
         ['foto', 'Endereço da foto', usuario.foto],
@@ -151,48 +155,57 @@
           card.append(motivo);
         }
 
-        card.append(formulario('Apresentação profissional', [
-          ['descricaoProfissional', 'Descrição',
-            usuario.descricao_profissional, true],
-          ['experiencia', 'Experiência', usuario.experiencia, true],
-          ['regiaoAtendimento', 'Região', usuario.regiao_atendimento],
-        ], `/admin/prestadores/${usuario.prestador_id}`));
+        const ficha = document.createElement('div'); ficha.className = 'admin-ficha';
+        const abrir = document.createElement('button'); abrir.className = 'btn-black'; abrir.type = 'button'; abrir.textContent = 'Abrir ficha completa e analisar';
+        abrir.addEventListener('click', () => enviar(abrir, async () => {
+          try {
+            const dados = await api(`/admin/prestadores/${usuario.prestador_id}/ficha`);
+            ficha.replaceChildren();
+            const linha = texto => { const p = document.createElement('p'); p.textContent = texto; ficha.append(p); };
+            linha(`Contato reservado: ${usuario.email} | ${usuario.telefone || 'Telefone não informado'}`);
+            linha(`Localização: ${[usuario.bairro, usuario.cidade, usuario.estado].filter(Boolean).join(', ')}`);
+            linha(`Experiência: ${dados.iniciante ? 'Estou começando agora. ' : ''}${dados.experiencia || 'Não informada'}`);
+            linha(`Região atendida (reservada): ${dados.regiaoAtendimento || 'Não informada'}`);
+            linha(`Habilidades: ${dados.habilidades.join('; ') || 'Não informadas'}`);
+            linha('Serviços cadastrados:');
+            if (!dados.servicos.length) linha('Nenhum serviço cadastrado.');
+            for (const servico of dados.servicos) {
+              const moeda = v => Number(v).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+              const valor = servico.preco == null ? 'A combinar' : `Referência: ${moeda(servico.preco)}${servico.preco_maximo == null ? '' : ` a ${moeda(servico.preco_maximo)}`} — valor final a combinar`;
+              linha(`${servico.titulo} — ${servico.categoria} — ${valor} / ${servico.unidade_cobranca} — ${servico.ativo ? 'ativo' : 'desativado'}\n${servico.descricao || ''}`);
+            }
+            linha('Histórico de análise:');
+            if (!dados.historico.length) linha('Nenhuma decisão registrada.');
+            for (const h of dados.historico) linha(`${new Date(h.data_analise).toLocaleString('pt-BR')} — ${h.decisao} — ${h.administrador}${h.motivo ? ': ' + h.motivo : ''}`);
+            if (usuario.status_aprovacao === 'RECUSADO_DEFINITIVO') {
+              linha('Recusa definitiva. O perfil não pode ser reenviado ou reativado; a conta permanece independente.'); return;
+            }
+            // Edição administrativa preserva as habilidades e a opção de iniciante.
+            ficha.append(formulario('Apresentação profissional', [
+              ['descricaoProfissional', 'Descrição', usuario.descricao_profissional, true],
+              ['experiencia', 'Experiência', usuario.experiencia, true],
+              ['regiaoAtendimento', 'Região (reservada)', usuario.regiao_atendimento],
+            ], `/admin/prestadores/${usuario.prestador_id}`, { habilidades: dados.habilidades, iniciante: dados.iniciante }));
+            const analise = document.createElement('form'); analise.className = 'perfil-form';
+            const label = document.createElement('label'); label.textContent = 'Motivo ou orientação (obrigatório para correção e recusa)';
+            const motivo = document.createElement('textarea'); motivo.maxLength = 1000; label.append(motivo); analise.append(label);
+            const acoes = document.createElement('div'); acoes.className = 'perfil-acoes';
+            for (const [decisao, rotulo] of [['APROVADO','Aprovar'],['CORRECAO_SOLICITADA','Solicitar correção'],['RECUSADO_DEFINITIVO','Recusar definitivamente']]) {
+              const btn = document.createElement('button'); btn.type = 'button'; btn.className = 'btn-black'; btn.textContent = rotulo;
+              btn.addEventListener('click', async () => {
+                if (decisao !== 'APROVADO' && !motivo.value.trim()) { motivo.setCustomValidity('Informe o motivo.'); motivo.reportValidity(); motivo.setCustomValidity(''); return; }
+                if (decisao === 'RECUSADO_DEFINITIVO' && !confirm('Recusar definitivamente impede novos envios deste perfil profissional. A conta continuará podendo contratar. Confirmar?')) return;
+                const botoes = [...acoes.querySelectorAll('button')]; botoes.forEach(b => { b.disabled = true; });
+                try { await api(`/admin/prestadores/${usuario.prestador_id}/analise`, { method: 'PATCH', body: { decisao, motivo: motivo.value.trim() } }); await carregar(); mensagem(aviso, 'Decisão registrada no histórico.'); }
+                catch (e) { mensagem(aviso, e.message, true); } finally { botoes.forEach(b => { b.disabled = false; }); }
+              }); acoes.append(btn);
+            }
+            analise.append(acoes); ficha.append(analise);
+            ficha.append(botao(usuario.ativo_profissional ? 'Desativar perfil profissional' : 'Reativar perfil para análise', () => api(`/admin/prestadores/${usuario.prestador_id}/ativacao`, { method: 'PATCH', body: { ativo: !usuario.ativo_profissional } })));
+          } catch (e) { mensagem(aviso, e.message, true); }
+        }));
+        card.append(abrir, ficha);
 
-        const acoes = document.createElement('div');
-        acoes.className = 'perfil-acoes';
-
-        acoes.append(
-          botao('Aprovar perfil', () =>
-            api(`/admin/prestadores/${usuario.prestador_id}/analise`, {
-              method: 'PATCH',
-              body: { aprovado: true },
-            })
-          ),
-          botao('Recusar perfil', async () => {
-            const motivo = prompt('Qual é o motivo da recusa?');
-            if (motivo === null) return false;
-
-            return api(
-              `/admin/prestadores/${usuario.prestador_id}/analise`, {
-                method: 'PATCH',
-                body: { aprovado: false, motivo },
-              }
-            );
-          }),
-          botao(
-            usuario.ativo_profissional
-              ? 'Desativar perfil profissional'
-              : 'Ativar perfil profissional',
-            () => api(
-              `/admin/prestadores/${usuario.prestador_id}/ativacao`, {
-                method: 'PATCH',
-                body: { ativo: !usuario.ativo_profissional },
-              }
-            )
-          )
-        );
-
-        card.append(acoes);
       }
 
       lista.append(card);

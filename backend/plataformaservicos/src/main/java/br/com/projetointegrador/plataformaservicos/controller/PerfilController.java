@@ -42,6 +42,7 @@ public class PerfilController {
         usuario.setCidade(dados.cidade());
         usuario.setEstado(dados.estado());
         usuario.setFoto(dados.foto());
+        usuario.setBairro(dados.bairro());
 
         usuario = repository.saveAndFlush(usuario);
 
@@ -83,7 +84,7 @@ public class PerfilController {
                 usuario.getTelefone(),
                 usuario.getCidade(),
                 usuario.getEstado(),
-                usuario.getFoto()
+                usuario.getFoto(), usuario.getBairro()
         );
     }
 }

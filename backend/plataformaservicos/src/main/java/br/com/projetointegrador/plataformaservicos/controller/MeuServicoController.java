@@ -39,10 +39,16 @@ public class MeuServicoController {
             @NotNull @Positive Long categoriaId,
             @DecimalMin("0.00")
             @Digits(integer = 8, fraction = 2) BigDecimal preco,
+            @DecimalMin("0.00")
+            @Digits(integer = 8, fraction = 2) BigDecimal precoMaximo,
             @NotNull
             @Pattern(regexp = "HORA|DIARIA|SERVICO")
             String unidadeCobranca,
             @NotNull Boolean ativo) {
+        @AssertTrue(message = "Informe o preço mínimo e um máximo maior ou igual a ele.")
+        public boolean isFaixaValida() {
+            return precoMaximo == null || (preco != null && precoMaximo.compareTo(preco) >= 0);
+        }
     }
 
     @GetMapping("/categorias")
@@ -70,6 +76,7 @@ public class MeuServicoController {
                     s.categoria_id,
                     c.nome AS categoria,
                     s.preco,
+                    s.preco_maximo,
                     s.unidade_cobranca,
                     s.ativo
                 FROM servicos s
@@ -95,10 +102,11 @@ public class MeuServicoController {
                     titulo,
                     descricao,
                     preco,
+                    preco_maximo,
                     unidade_cobranca,
                     ativo
                 )
-                VALUES (?, ?, ?, ?, ?, ?, ?)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
                 RETURNING id
                 """,
                 Long.class,
@@ -108,6 +116,7 @@ public class MeuServicoController {
                 dados.descricao() == null
                         ? null : dados.descricao().trim(),
                 dados.preco(),
+                dados.precoMaximo(),
                 dados.unidadeCobranca(),
                 dados.ativo()
         );
@@ -131,6 +140,7 @@ public class MeuServicoController {
                     titulo = ?,
                     descricao = ?,
                     preco = ?,
+                    preco_maximo = ?,
                     unidade_cobranca = ?,
                     ativo = ?
                 WHERE id = ?
@@ -141,6 +151,7 @@ public class MeuServicoController {
                 dados.descricao() == null
                         ? null : dados.descricao().trim(),
                 dados.preco(),
+                dados.precoMaximo(),
                 dados.unidadeCobranca(),
                 dados.ativo(),
                 id,

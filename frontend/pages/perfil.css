@@ -66,3 +66,16 @@ button:disabled { opacity: .55; cursor: wait; }
 .servico-item p {
   margin: 10px 0;
 }
+
+/* Cadastro guiado e ficha administrativa. */
+.cadastro-progresso {display:flex;flex-wrap:wrap;gap:12px;padding:0;list-style:none;margin:20px 0;}
+.cadastro-progresso li {padding:10px 16px;background:#eef2f5;border-radius:12px;}
+.cadastro-progresso [aria-current] {background:#18212c;color:white;font-weight:700;}
+.perfil-form fieldset {border:0;min-width:0;padding:0;display:grid;gap:18px;}
+.perfil-form legend {font-size:1.3rem;font-weight:700;margin-bottom:15px;}
+.cadastro-avatar {width:110px;height:110px;object-fit:cover;border-radius:50%;}
+#cadastro-habilidades details,.admin-ficha details {border:1px solid #d7dce2;border-radius:10px;padding:14px;margin:10px 0;}
+#cadastro-habilidades summary {cursor:pointer;font-weight:600;margin-bottom:10px;}
+#cadastro-habilidades label {padding:7px 0;}
+.cadastro-revisao,.admin-ficha {overflow-wrap:anywhere;}
+.cadastro-revisao p,.admin-ficha p {margin:12px 0;white-space:pre-wrap;}

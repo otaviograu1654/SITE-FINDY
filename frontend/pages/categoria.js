@@ -1,10 +1,10 @@
-// Busca serviços no banco pela API e monta os cards e a paginação da categoria.
+// Busca profissionais pela API e monta os cards e a paginação da categoria.
 
 (() => {
   const { api, mensagem, foto } = Findy;
   const grade = document.getElementById('professional-grid');
   const navegacao = document.querySelector('.pagination');
-  const busca = document.querySelector('.search-form');
+  const busca = document.getElementById('cabecalho-busca');
 
   const parametros = new URLSearchParams(location.search);
   const categoria = parametros.get('categoria') || '';
@@ -42,6 +42,7 @@
     imagem.loading = 'lazy';
     imagem.style.objectFit = 'cover';
     imagem.style.width = '100%';
+
     imagem.addEventListener('error', () => {
       imagem.src = 'images/chat-avatar.png';
     }, { once: true });
@@ -51,31 +52,49 @@
 
     rodape.append(
       texto('h2', 'professional-card__name', item.nome),
-      texto('p', 'professional-card__desc', item.descricao),
-      texto('p', 'professional-card__category', item.categoria)
+      texto(
+        'p',
+        'professional-card__desc',
+        item.descricao || 'Conheça os serviços deste profissional.'
+      )
     );
+
+    if (categoria) {
+      rodape.append(
+        texto('p', 'professional-card__category', categoria)
+      );
+    }
+
+    const local = [
+      item.bairro,
+      item.cidade,
+      item.estado
+    ].filter(Boolean).join(', ');
+
+    if (local) {
+      rodape.append(texto('p', '', local));
+    }
 
     if (item.demonstracao) {
       rodape.append(texto('p', '', 'Perfil de demonstração'));
     }
-
-    const valor = item.preco === null
-      ? 'Orçamento a combinar'
-      : Number(item.preco).toLocaleString('pt-BR', {
-          style: 'currency', currency: 'BRL',
-        });
 
     const link = document.createElement('a');
     link.className = 'card__arrow professional-card__arrow';
     link.href = `perfil-prestador.html?id=${item.prestador_id}`;
     link.textContent = '→';
     link.setAttribute('aria-label', `Ver perfil de ${item.nome}`);
+
     const linha = document.createElement('div');
     linha.className = 'professional-card__row';
-    linha.append(texto('p', '', valor), link);
-    rodape.append(linha);
+    linha.append(
+      texto('p', '', 'Ver serviços e orçamentos'),
+      link
+    );
 
+    rodape.append(linha);
     artigo.append(imagem, rodape);
+
     return artigo;
   }
 

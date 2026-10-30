@@ -7,15 +7,14 @@
 <title>Findy - Perfil profissional</title>
 <link rel="icon" type="image/x-icon" href="images/findy-logo.png">
 <link rel="stylesheet" href="style.css"><link rel="stylesheet" href="perfil.css">
+  <link rel="stylesheet" href="cabecalho.css">
+  <script src="api.js" defer></script>
+  <script src="cabecalho.js" defer></script>
 </head>
 <body class="perfil-prestador">
+  <header id="cabecalho-findy"><a href="index.html">Findy — Início</a></header>
 <div class="wrap">
-<header>
-  <a href="index.html" class="logo-block"><img class="logo-img" src="images/findy-logo.png" alt="Findy"></a>
-  <nav aria-label="Navegação principal"><a href="index.html">Início</a><a href="minha-conta.html">Minha conta</a><a href="perfil-prestador.html" class="active">Perfil profissional</a></nav>
-  <a href="login.html" class="btn-black" id="entrar-perfil">Entrar</a>
-  <button class="btn-black" type="button" data-sair hidden>Sair</button>
-</header>
+
 <main>
 <h1>Perfil profissional</h1>
 <p id="prestador-mensagem" class="mensagem" role="status" aria-live="polite">Carregando perfil…</p>
@@ -31,12 +30,15 @@
     <section class="panel">
       <h2>Sobre o profissional</h2>
       <h3>Experiência</h3><p id="prestador-experiencia" class="perfil-texto"></p>
-      <h3>Região de atendimento</h3><p id="prestador-regiao" class="perfil-texto"></p>
+      <h3>Habilidades</h3><ul id="prestador-habilidades"></ul>
+      <h3>Serviços</h3><div id="prestador-servicos"></div>
     </section>
     <section class="panel" id="prestador-situacao" hidden>
       <h2>Situação do perfil</h2><p id="prestador-status" class="perfil-status"></p>
       <p id="prestador-motivo" class="perfil-texto" hidden></p>
       <p>Você continua podendo contratar serviços com a mesma conta.</p>
+      <p id="prestador-publicacao" class="perfil-texto"></p>
+      <p>Habilidades descrevem o que você sabe fazer. Para aparecer em uma categoria, <a href="meus-servicos.html">cadastre uma oferta em Meus serviços</a> e aguarde a aprovação do perfil.</p>
       <div class="perfil-acoes">
         <button id="prestador-ativacao" class="btn-black" type="button" hidden></button>
         <a id="prestador-publico" href="#" hidden>Ver perfil público</a>
@@ -44,18 +46,51 @@
     </section>
   </div>
   <section class="panel" id="prestador-editor" hidden>
-    <h2>Editar apresentação profissional</h2>
-    <p>Ao ativar ou alterar sua apresentação, o perfil segue para análise. Ele fica público depois da aprovação.</p>
-    <form id="prestador-form" class="perfil-form">
-      <label>Descrição profissional<textarea name="descricaoProfissional" required maxlength="5000" placeholder="Conte quais serviços você oferece."></textarea></label>
-      <label>Experiência<textarea name="experiencia" maxlength="2000" placeholder="Conte sua experiência e formação."></textarea></label>
-      <label>Região de atendimento<input name="regiaoAtendimento" required maxlength="255" placeholder="Ex.: Patos de Minas e região"></label>
-      <button class="btn-black" type="submit" disabled>Ativar e enviar para aprovação</button>
+    <h2>Seu cadastro profissional</h2>
+    <p>Preencha em três etapas. Ao enviar, seu perfil segue para análise. A conta continua disponível para contratar.</p>
+    <ol class="cadastro-progresso" aria-label="Etapas do cadastro">
+      <li aria-current="step">1. Sobre você</li><li>2. Seu trabalho</li><li>3. Revisão</li>
+    </ol>
+    <form id="prestador-form" class="perfil-form" novalidate>
+      <fieldset data-etapa="0">
+        <legend>Sobre você</legend>
+        <p>Somente bairro, cidade e UF aparecem como localização pública. Telefone e e-mail ficam restritos à sua conta e à administração. Não informe endereço ou contato nos textos públicos.</p>
+        <label>Nome completo<input name="nome" required maxlength="100" autocomplete="name"></label>
+        <label>E-mail da conta<input name="email" type="email" readonly></label>
+        <label>Telefone para contato<input name="telefone" type="tel" required maxlength="20" autocomplete="tel" placeholder="(34) 99999-9999"></label>
+        <label>Bairro<input name="bairro" required maxlength="100" autocomplete="address-level3"></label>
+        <label>Cidade<input name="cidade" required maxlength="100" autocomplete="address-level2"></label>
+        <label>UF<input name="estado" required maxlength="2" pattern="[A-Z]{2}" autocomplete="address-level1" placeholder="MG"></label>
+        <label>Foto de perfil (obrigatória)<input id="cadastro-foto" type="file" accept="image/jpeg,image/png"><small>JPG ou PNG, até 2 MB e 4096 pixels por lado. Se você já tem foto, não precisa selecionar novamente.</small></label>
+        <img id="cadastro-foto-previa" class="cadastro-avatar" src="images/chat-avatar.png" alt="Prévia da sua foto">
+      </fieldset>
+      <fieldset data-etapa="1" hidden>
+        <legend>Seu trabalho</legend>
+        <p>Abra as categorias e marque as habilidades que você oferece. Pode escolher mais de uma categoria.</p>
+        <div id="cadastro-habilidades"></div>
+        <label class="servico-checkbox"><input name="iniciante" type="checkbox">Estou começando agora</label>
+        <label>Conte um pouco sobre seu trabalho<textarea name="descricaoProfissional" required maxlength="5000" placeholder="Quais serviços você faz e quais cuidados considera importantes?"></textarea></label>
+        <p id="cadastro-exemplo">Exemplo: Trabalho como pedreiro há dois anos. Faço reboco, assento pisos e procuro manter o ambiente organizado.</p>
+        <label>Experiência ou formação<textarea name="experiencia" maxlength="2000" placeholder="Conte onde aprendeu, trabalhos que já fez ou cursos. Experiências com a família também contam."></textarea></label>
+        <label>Região em que atende (para análise administrativa)<input name="regiaoAtendimento" required maxlength="255" placeholder="Ex.: Patos de Minas e bairros próximos"></label>
+        <p>Os serviços e preços cadastrados aparecem na revisão. Após enviar seu perfil, use <a href="meus-servicos.html" target="_blank" rel="noopener">Meus serviços (nova aba)</a> para cadastrar ou editar suas ofertas. Habilidades não criam serviços automaticamente.</p>
+      </fieldset>
+      <fieldset data-etapa="2" hidden>
+        <legend>Revise antes de enviar</legend>
+        <h3>Prévia pública do perfil</h3><div id="cadastro-revisao" class="cadastro-revisao"></div>
+        <h3>Informações reservadas para análise</h3><div id="cadastro-reservado"></div>
+        <p>Confira tudo. Voltar permite corrigir sem perder o preenchimento. As etapas ficam mantidas enquanto esta página estiver aberta; o cadastro é salvo no envio final.</p>
+      </fieldset>
+      <div class="perfil-acoes">
+        <button id="cadastro-voltar" class="btn-black" type="button" hidden>Voltar</button>
+        <button id="cadastro-avancar" class="btn-black" type="button" disabled>Continuar</button>
+        <button class="btn-black" type="submit" hidden disabled>Enviar para análise</button>
+      </div>
     </form>
+    <h3>Histórico de análise</h3><div id="prestador-historico"></div>
   </section>
 </div>
 </main>
-</div>
-<script src="api.js"></script><script src="conta.js"></script><script src="prestador.js"></script>
+</div><script src="conta.js" defer></script><script src="prestador.js" defer></script>
 </body>
 </html>

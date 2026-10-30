@@ -1,4 +1,4 @@
-# Define quais arquivos entram no build Docker, deixando de fora credenciais e arquivos gerados.
+ # Define quais arquivos entram no build Docker, deixando de fora credenciais e arquivos gerados.
 
 # Envia ao build apenas as fontes usadas pelo Dockerfile.
 **

@@ -1,9 +1,11 @@
-// Busca e pagina os serviços públicos de prestadores aprovados e ativos.
+// Lista profissionais com ofertas ativas e consulta um serviço público pelo ID.
 
 package br.com.projetointegrador.plataformaservicos.controller;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Arrays;
 import java.util.List;
@@ -27,6 +29,23 @@ public class ServicoConsultaController {
             long total) {
     }
 
+    @GetMapping("/{id}")
+    public Map<String, Object> consultar(@PathVariable Long id) {
+        var ofertas = banco.queryForList("""
+                SELECT s.id AS servico_id, p.id AS prestador_id, u.nome, u.foto,
+                    s.titulo, s.descricao, s.preco, s.preco_maximo, s.unidade_cobranca,
+                    c.nome AS categoria, u.bairro, u.cidade, u.estado,
+                    u.email LIKE 'demo.%@example.invalid' AS demonstracao
+                FROM servicos s JOIN prestadores p ON p.id=s.prestador_id
+                JOIN usuarios u ON u.id=p.usuario_id JOIN categorias c ON c.id=s.categoria_id
+                WHERE s.id=? AND s.ativo AND p.ativo AND u.ativo
+                  AND p.status_aprovacao='APROVADO'
+                """, id);
+        if (ofertas.isEmpty()) throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+                "Serviço indisponível para contratação.");
+        return ofertas.getFirst();
+    }
+
     @GetMapping
     public Pagina listar(
             @RequestParam(defaultValue = "") String categoria,
@@ -39,24 +58,30 @@ public class ServicoConsultaController {
         String busca = "%" + termo + "%";
 
         String origem = """
-                FROM servicos s
-                JOIN categorias c ON c.id=s.categoria_id
-                JOIN prestadores p ON p.id=s.prestador_id
+                FROM prestadores p
                 JOIN usuarios u ON u.id=p.usuario_id
-                WHERE s.ativo AND p.ativo AND u.ativo
+                WHERE p.ativo AND u.ativo
                   AND p.status_aprovacao='APROVADO'
-                  AND (?='' OR c.nome=?)
-                  AND (
-                      ?=''
-                      OR LOWER(u.nome) LIKE ?
-                      OR LOWER(s.titulo) LIKE ?
-                      OR LOWER(s.descricao) LIKE ?
+                  AND EXISTS (
+                      SELECT 1
+                      FROM servicos s
+                      JOIN categorias c ON c.id=s.categoria_id
+                      WHERE s.prestador_id=p.id
+                        AND s.ativo
+                        AND (?='' OR c.nome=?)
+                        AND (
+                            ?=''
+                            OR LOWER(u.nome) LIKE ?
+                            OR LOWER(p.descricao_profissional) LIKE ?
+                            OR LOWER(s.titulo) LIKE ?
+                            OR LOWER(s.descricao) LIKE ?
+                        )
                   )
                 """;
 
         Object[] filtros = {
                 categoria.trim(), categoria.trim(),
-                termo, busca, busca, busca
+                termo, busca, busca, busca, busca
         };
 
         Long quantidade = banco.queryForObject(
@@ -75,23 +100,24 @@ public class ServicoConsultaController {
 
         List<Map<String, Object>> itens = banco.queryForList("""
                 SELECT
-                    s.id AS servico_id,
                     p.id AS prestador_id,
                     u.nome,
                     u.foto,
-                    s.titulo,
-                    s.descricao,
-                    s.preco,
-                    s.unidade_cobranca,
-                    c.nome AS categoria,
+                    u.bairro,
+                    u.cidade,
+                    u.estado,
+                    p.descricao_profissional AS descricao,
                     u.email LIKE 'demo.%@example.invalid' AS demonstracao
                 """ + origem + """
-                ORDER BY u.nome, s.id
+                ORDER BY u.nome, p.id
                 LIMIT ? OFFSET ?
                 """, parametros);
 
         return new Pagina(
-                itens, pagina, Math.max(1, (total + 11) / 12), total
+                itens,
+                pagina,
+                Math.max(1, (total + 11) / 12),
+                total
         );
     }
 }

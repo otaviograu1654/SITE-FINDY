@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<!-- Mostra as solicitações enviadas e recebidas pela conta conectada. -->
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Findy - Meus pedidos</title>
+  <link rel="icon" href="images/findy-logo.png"><link rel="stylesheet" href="style.css"><link rel="stylesheet" href="pedidos.css">
+  <link rel="stylesheet" href="cabecalho.css">
+  <script src="api.js" defer></script>
+  <script src="cabecalho.js" defer></script>
+</head>
+<body>
+  <header id="cabecalho-findy"><a href="index.html">Findy — Início</a></header>
+
+  <main class="hire-page">
+    <h1 class="hire-page__title">Meus pedidos</h1>
+    <p>Acompanhe as solicitações que enviou e os pedidos recebidos como profissional.</p>
+    <div class="pedido-filtros">
+      <label for="pedidos-tipo">Quero ver</label>
+      <select id="pedidos-tipo"><option value="ENVIADAS">Pedidos enviados</option><option value="RECEBIDAS">Pedidos recebidos</option></select>
+      <button type="button" class="btn btn--dark" id="pedidos-atualizar">Atualizar lista</button>
+    </div>
+    <p id="pedidos-mensagem" class="pedido-mensagem" role="status" aria-live="polite">Carregando pedidos…</p>
+    <div id="pedidos-lista" class="pedido-lista"></div>
+    <nav id="pedidos-paginacao" class="pedido-acoes" aria-label="Paginação de pedidos" hidden>
+      <button type="button" class="btn btn--dark" id="pedidos-anterior">Anterior</button>
+      <span id="pedidos-pagina"></span><button type="button" class="btn btn--dark" id="pedidos-proxima">Próxima</button>
+    </nav>
+  </main><script src="pedidos-comum.js" defer></script><script src="pedidos.js" defer></script>
+</body>
+</html>

@@ -1,143 +1,560 @@
-﻿PLANO DE EXECUÇÃO - FINDY
+PLANO DE EXECUÇÃO - FINDY
+Atualizado em 30/10/2026
 
-OBJETIVO
-Transformar o protótipo em uma plataforma real para contratar e oferecer serviços,
-reutilizando o visual atual e substituindo dados fixos por informações do banco.
-
-ESTADO ATUAL
-- Frontend HTML/CSS/JavaScript com sete telas: início, login/cadastro, categorias,
-  perfis de contratante/prestador, contratação e status do atendimento.
-- Logo, imagens, estilos e interações de demonstração já existem.
-- Categorias e perfis públicos consultam o banco; contratação/status/avaliações
-  ainda possuem comportamento de demonstração no frontend.
-- Backend Spring Boot/Maven, Java 21, com JPA, Validation e driver PostgreSQL.
-- PostgreSQL no Docker e conexão com Spring Boot configurados e testados.
-- As seis tabelas e sete categorias foram criadas. Cadastro, login/logout,
-  dados pessoais e ativação/edição de prestador já possuem API.
-- Login, Minha Conta e perfil profissional estão integrados ao banco.
-- Minha Conta permite selecionar foto do computador/galeria, visualizar e salvar.
-  Fotos JPG/PNG ficam no PostgreSQL. Para publicar, executar database/fotos_usuarios.sql no Neon.
-- Perfil profissional permite desativar/reativar e reenviar para análise;
-  somente perfis aprovados e ativos ficam públicos. Onze testes passaram.
-- Painel administrativo integrado: edição, aprovação/recusa e ativação de cadastros.
-- 84 profissionais e 84 serviços de demonstração importados, sem notas fictícias.
-  Lista fixa removida; busca, paginação e links por ID integrados à API.
-- Validada a importação sem duplicações, a busca e os 84 perfis públicos pela API.
-- Próximo bloco: formulário para o prestador cadastrar e editar seus serviços.
-
-DECISÕES TOMADAS
-- Uma única conta permite contratar e também oferecer serviços.
-- Dados pessoais ficam em USUARIOS; perfil profissional opcional em PRESTADORES.
-- Pessoas preenchem e editam seus próprios dados e fotos.
-- Começar com um administrador para editar, aprovar/recusar e desativar cadastros.
-- Login único: backend identifica USUARIO ou ADMIN e libera as funções permitidas.
-- Exemplos estão identificados no banco como demonstração, acessados por ID.
-
-PRIMEIRA ENTREGA - CONCLUÍDO
-- Tabelas criadas com arquivos SQL; cadastro, login/logout e senhas com hash.
-- Minha Conta, perfil profissional e painel de cadastros com autorização no backend.
-- Conta ADMIN inicial promovida pelo banco; análise com motivo, responsável e data.
-- Aprovação, reenvio, ativação e perfis públicos integrados; exemplos migrados.
-
-MODELO DO BANCO PROPOSTO
-- USUARIOS: identificação, contato, localização, foto, senha_hash, papel e ativo.
-- PRESTADORES: usuario_id único, descrição, experiência e região de atendimento.
-- CATEGORIAS e SERVICOS: categoria, prestador, descrição, preço e unidade de cobrança.
-- SOLICITACOES: cliente, serviço, status, agendamento, endereço e valores acordados.
-- AVALIACOES: solicitação, participantes, nota 1 a 5 e comentário; uma por solicitação.
-- Aprovação fica no cadastro escolhido para análise, separada de papel e ativo.
-
-ENTREGAS SEGUINTES
-- Cadastro/edição de serviços pelo prestador (a busca/filtro já consulta o banco).
-- Solicitação, aceite/recusa, agendamento, conclusão, avaliação e histórico.
-- Recuperação de senha, revisão de responsividade, testes, documentação e publicação.
-
-DÚVIDAS PARA DISCUTIR COM O GPT
-- Já decidido: login/edição liberados; aprovação obrigatória para publicar prestadores.
-- Login por e-mail ou também telefone?
-- Contratação direta ou orçamento? Preço por hora/diária e qual regra de taxa?
-- Como confirmar conclusão, liberar avaliação e tratar contestação?
-- Já implementado: mudanças profissionais e reativação exigem nova análise.
-- Chat entre usuários, pagamento online, portfólio e agenda real entram em qual etapa?
-  Hoje o chat é FAQ, pagamento é seleção visual e Google Agenda é link de criação de evento.
-
-CRITÉRIO DA PRIMEIRA ENTREGA
-Usuário cria conta, entra, salva dados, solicita ativação profissional e acompanha
-aprovação. Administrador gerencia cadastros. Perfil aprovado exibe dados do banco.
-Usuários comuns só editam seus dados; permissões são verificadas no servidor.
-Dados de demonstração ficam identificados, sem notas/históricos fictícios em contas reais.
-
-TUTORIAL - ABRIR O PROJETO NESTA MÁQUINA (WINDOWS/POWERSHELL)
-Não é preciso reinstalar nem recriar o banco a cada vez. Apenas iniciar o que
-estiver parado. Para ver somente as telas de exemplo, basta abrir o frontend.
-
-1. Abra o Docker Desktop e espere o motor terminar de iniciar.
-2. Abra a pasta SITE_FINDY no VS Code e um terminal PowerShell na raiz
-   (a pasta que contém compose.yaml e planoexecucao.txt).
-3. Inicie/confira o banco:
+LEMBRETE - COMO ABRIR O PROJETO LOCAL NO DIA A DIA
+Este lembrete vale para um computador JÁ CONFIGURADO, com .env, volume e tabelas.
+Em outro computador, fazer primeiro a instalação descrita logo abaixo.
+Depois de reiniciar o computador ou encerrar os serviços:
+1. Abrir o Docker Desktop e aguardar a inicialização.
+2. Abrir um terminal PowerShell na raiz do projeto e executar:
    docker compose up -d --wait
    docker compose ps
-   O serviço postgres deve aparecer como healthy. Se já estiver rodando,
-   o comando reaproveita o banco; não recria seus dados.
-   Nesta sessão, o container manual findy-postgres está em uso. Enquanto usar
-   esse container, confira com docker ps e inicie com docker start findy-postgres
-   se necessário; não inicie o Compose ao mesmo tempo.
-4. No mesmo terminal, inicie o backend:
+   O primeiro comando inicia/confere o banco; pode ser repetido sem recriar dados.
+   O segundo apenas mostra a situação e é opcional para conferência.
+   Não iniciar o container manual antigo findy-postgres junto com o Compose.
+3. Iniciar o backend, se não estiver rodando:
    .\backend\plataformaservicos\start-local.ps1
-   O script lê o .env e executa o Maven. Deixe esse terminal aberto.
-   Aguarde "Started PlataformaservicosApplication"; o backend usa a porta 8080.
-   Abra http://localhost:8080/login.html para usar cadastro, login e perfis reais.
-5. Abra http://localhost:8080/index.html para navegar no site.
-   Com a conta ADMIN, abra http://localhost:8080/admin.html para gerenciar cadastros.
-   Categorias, busca e perfis usam o banco. A contratação ainda será integrada.
+   Deixar o terminal aberto e aguardar Started PlataformaservicosApplication.
+4. Abrir http://localhost:8080/index.html.
+   Não precisa de Live Server nem repetir os testes a cada início.
+5. Ao terminar: Ctrl+C no backend e docker compose stop para parar o banco.
+Não reinstalar ferramentas, recriar volume, substituir .env ou repetir SQL
+para o uso diário. Os dados permanecem no volume existente.
+Para acessar apenas o site publicado, não é necessário iniciar o Docker local.
 
-AO TERMINAR
-- Ctrl+C no terminal do backend para encerrá-lo.
-- Para parar o banco, execute na raiz:
-  docker compose stop
-- Se estiver usando o container manual, use docker stop findy-postgres.
-- Os dados permanecem no volume. Não inicie o container manual antigo
-  findy-postgres junto com o Compose: ambos usam o mesmo armazenamento.
+COMO UM COLEGA ACESSA O FINDY E CONFERE O BANCO
 
-TUTORIAL - PRIMEIRA VEZ EM OUTRA MÁQUINA (WINDOWS)
-1. Instale Git, JDK 21, Docker Desktop e VS Code. Abra o Docker Desktop.
-   Confira no PowerShell: java -version e docker info (Client e Server sem erro).
-2. Leve a versão atual do projeto para a outra máquina.
-   Se usar GitHub, as mudanças locais precisam ser commitadas e enviadas antes;
-   os arquivos de configuração recém-criados ainda estão pendentes no Git.
-   Para baixar a versão publicada:
-   git clone https://github.com/otaviograu1654/SITE-FINDY.git SITE_FINDY
-   cd SITE_FINDY
-   Abra essa pasta no VS Code. Também é possível transferir os arquivos diretamente.
-3. Na raiz, prepare a configuração local (somente se ainda não existir .env):
-   Copy-Item .env.example .env
-   Abra o .env e substitua POSTGRES_PASSWORD pela senha local desejada.
-   Mantenha POSTGRES_DB=findy, POSTGRES_USER=postgres, POSTGRES_PORT=5433
-   e POSTGRES_VOLUME=findy_postgres_data para seguir estes comandos.
-   O .env não vai para o Git. Não copie o nome de volume específico desta máquina.
-4. Crie o volume externo, necessário somente na preparação inicial:
-   docker volume create findy_postgres_data
-5. Execute os passos 3 a 5 do tutorial acima para iniciar banco, backend e telas.
-   Na primeira vez, é necessária internet para baixar a imagem e dependências.
-   Não precisa instalar Maven separado: o projeto possui Maven Wrapper.
-6. Nas próximas vezes, siga apenas o tutorial de abertura normal.
+1. ACESSAR O SITE PUBLICADO PELA INTERNET
+- Endereço registrado do projeto: https://site-findy.onrender.com/index.html.
+- O colega abre o endereço no navegador, cria sua própria conta e entra no site.
+  Não precisa de Live Server, Java, Docker ou PostgreSQL no computador dele.
+- Nesse caso, o backend roda no Render e grava no banco Neon. Os usuários do
+  mesmo site publicado usam esse mesmo banco, conforme suas permissões.
+- Acesso ao site não dá acesso ao painel do Neon nem às credenciais do banco.
+  Para conferir tabelas diretamente, é necessário acesso separado concedido pelo
+  responsável, preferencialmente somente leitura. Não compartilhar sua conta
+  ADMIN do site, sua senha pessoal nem o .env para permitir uma visita ao site.
+- ATENÇÃO: a disponibilidade e a versão online não foram verificadas nesta
+  atualização. As entregas locais de cadastro/pedidos não foram publicadas nesta
+  conversa; o site online pode ter uma versão anterior. Para disponibilizar a
+  versão nova, revisar/enviar o código, aplicar os SQL incrementais necessários
+  no Neon e fazer deploy conforme PUBLICACAO.md. Nada disso foi executado aqui.
 
-IMPORTANTE SOBRE OUTRA MÁQUINA
-- O banco novo começa vazio; Git/cópia do projeto não transfere o volume Docker.
-  Para levar dados existentes, será necessário fazer backup e restaurar o banco.
-- Em banco já criado, mudar a senha no .env não altera a senha no PostgreSQL.
-- Se a porta 5433 estiver ocupada, escolha outra em POSTGRES_PORT no .env;
-  Compose e script do backend usam essa configuração.
+2. RODAR O PROJETO NO COMPUTADOR DO COLEGA (WINDOWS / POWERSHELL)
+Este caminho cria um banco LOCAL PRÓPRIO, separado do seu banco e do Neon.
+Pré-requisitos: Git, Java/JDK 21 e Docker Desktop instalados e funcionando.
+Maven Wrapper já está no projeto; o primeiro início precisa de internet para
+baixar o Maven/dependências, caso ainda não estejam no computador.
 
-PRÓXIMO PASSO: criar formulário e API de cadastro/edição de serviços pelo prestador.
-PUBLICAÇÃO: arquivos para Render + Neon preparados; seguir PUBLICACAO.md para
-configurar credenciais, publicar e criar a conta ADMIN no banco online.
-O banco local permanece separado. Hospedagem online ainda depende desses passos.
-VALIDAÇÃO DA PUBLICAÇÃO: imagem Docker compilada; inicialização em container
-com 512 MB, telas e consulta da API ao PostgreSQL local verificadas.
-A conexão com o Neon ainda depende das credenciais cadastradas no Render.
-Os exemplos já foram importados. Instruções para outro banco: database/README.md.
-Para usar os perfis reais: iniciar o backend e abrir http://localhost:8080/login.html.
-Não é necessário Live Server para esse fluxo. Após alterar as telas, reinicie o backend.
-REGRA DE TRABALHO: alterações de arquivos somente com permissão explícita.
-Última autorização: preparar arquivos de publicação no Render com banco Neon.
+2.1 - Obter a versão correta do código
+Na pasta em que deseja guardar o projeto:
+  git clone --branch bancofuncional https://github.com/otaviograu1654/SITE-FINDY.git
+  cd SITE-FINDY
+O nome da pasta criada pelo clone é SITE-FINDY (com hífen).
+Se o repositório exigir autenticação, o colega precisa de acesso próprio.
+Mudanças que só existem no seu computador, sem commit/push, NÃO chegam no clone.
+Antes de testar a versão nova juntos, disponibilizar os arquivos atuais por Git
+ou por uma cópia do projeto sem .env/credenciais. Não foi feito commit/push nesta
+atualização. Se a branch mudar no futuro, usar a branch combinada pela equipe.
+
+2.2 - Preparar o banco novo (somente na primeira instalação)
+Na raiz do projeto, com Docker Desktop aberto:
+  Copy-Item .env.example .env
+Editar o NOVO .env e escolher sua própria POSTGRES_PASSWORD. Não copiar a senha
+do banco de outra pessoa. O exemplo usa banco findy, usuário postgres, porta
+5433 e volume findy_postgres_data. Manter esses nomes nos comandos abaixo ou
+ajustá-los de acordo com a configuração escolhida. Não substituir um .env já
+configurado nem reaproveitar um banco com dados sem revisar antes.
+  docker volume create findy_postgres_data
+  docker compose up -d --wait
+  docker compose ps
+O Compose usa volume externo e NÃO cria as tabelas do Findy automaticamente.
+O volume precisa existir; criar o volume não importa registros de outro PC.
+
+2.3 - Criar as tabelas e categorias (SOMENTE BANCO NOVO E VAZIO)
+Executar uma vez na raiz, na ordem abaixo. O Hibernate apenas valida o esquema.
+Não usar este bloco no banco local já pronto, no Neon ou para atualizar dados.
+Os scripts antigos de criação não são incrementais e não devem ser repetidos.
+
+  $OutputEncoding = [System.Text.UTF8Encoding]::new($false)
+  $findyScripts = @(
+    'usuario_e_prestadores.sql',
+    'categorias.sql',
+    'servicos.sql',
+    'solicitacoes.sql',
+    'avaliacoes.sql',
+    'recuperacao_senha.sql',
+    'fotos_usuarios.sql',
+    'cadastro_profissional.sql',
+    'contratacao_real.sql'
+  )
+  foreach ($findyScript in $findyScripts) {
+    Get-Content -Raw -Encoding UTF8 (Join-Path database $findyScript) | docker compose exec -T postgres psql -U postgres -d findy --set=ON_ERROR_STOP=1
+    if ($LASTEXITCODE -ne 0) { throw "Falha em $findyScript. Pare e confira o erro antes de continuar." }
+  }
+
+Esse bloco cria a estrutura e as sete categorias, sem importar profissionais
+fictícios ou contas reais. dados_demonstracao.sql é opcional e está documentado
+em database/README.md; não é necessário para a aplicação funcionar.
+Em uma instalação existente, aplicar apenas os incrementos ainda necessários,
+conforme CADASTRO_PROFISSIONAL.md e CONTRATACAO_REAL.md, sem recriar tabelas.
+
+2.4 - Iniciar a aplicação completa
+Na raiz, depois do banco estar saudável e das tabelas existirem:
+  .\backend\plataformaservicos\start-local.ps1
+Aguardar Started PlataformaservicosApplication e abrir:
+  http://localhost:8080/index.html
+O backend serve HTML/CSS/JavaScript e a API no mesmo endereço. Não é preciso
+Live Server. O terminal do backend e o Docker precisam continuar funcionando.
+Depois da primeira instalação, usar somente o lembrete do início deste arquivo.
+As funções de e-mail exigem configuração própria de Brevo/remetente/APP_URL;
+somente configurar PostgreSQL não habilita o envio real de recuperação de senha.
+
+2.5 - Criar contas para demonstrar o fluxo
+- Cadastrar contas pelo login.html; elas começam como USUARIO.
+- Para administrar o banco LOCAL NOVO, cadastrar uma conta própria e promover
+  somente essa conta. Substituir o e-mail abaixo pelo que acabou de cadastrar:
+  docker compose exec postgres psql -U postgres -d findy -c "UPDATE usuarios SET papel='ADMIN' WHERE LOWER(email)=LOWER('email-da-conta@exemplo.com');"
+- Conferir que somente uma linha foi atualizada. Sair/entrar e abrir admin.html.
+  A conta ADMIN do site é diferente do usuário postgres que administra o banco.
+- Na conta profissional, preencher o perfil, selecionar habilidades e cadastrar
+  pelo menos um serviço ativo na categoria desejada em Meus serviços.
+- Aprovar esse perfil no painel administrativo. Perfil/conta também devem estar
+  ativos. Sem isso, é normal a categoria não exibir o profissional.
+- Em outra conta, com telefone preenchido, solicitar um serviço. Conferir Meus
+  pedidos > Enviados no cliente e Meus pedidos > Recebidos no profissional.
+- Aceitar/recusar na conta profissional e atualizar o pedido na conta cliente.
+  Esse roteiro verifica o fluxo real, sem depender dos registros fictícios.
+
+2.6 - Consultar as tabelas e provar a persistência
+Sem instalar um gerenciador gráfico, abrir outro terminal na raiz:
+  docker compose exec postgres psql -U postgres -d findy
+Dentro do psql, executar:
+  \dt
+  SELECT id, nome, papel, ativo FROM usuarios ORDER BY id;
+  SELECT id, usuario_id, status_aprovacao, ativo FROM prestadores ORDER BY id;
+  SELECT id, titulo, categoria_id, preco, preco_maximo, ativo FROM servicos ORDER BY id;
+  SELECT id, cliente_id, servico_id, status, data_solicitacao FROM solicitacoes ORDER BY id;
+  \q
+Os SELECTs consultam os registros salvos; não alteram dados. Não é necessário
+mostrar senhas, hashes, tokens ou outros dados privados para demonstrar o banco.
+Depois, atualizar as páginas ou reiniciar somente o backend e consultar o pedido
+de novo: o registro e sua situação devem continuar salvos no PostgreSQL.
+
+Se preferir um gerenciador PostgreSQL já instalado, configurar a conexão LOCAL:
+host localhost; porta 5433; banco findy; usuário postgres; senha do próprio .env.
+Ao terminar: Ctrl+C no backend e docker compose stop. Não apagar o volume.
+
+3. ACESSAR O BACKEND DO SEU PC PELA MESMA REDE (OPCIONAL)
+- Deixar Docker e backend rodando no seu computador.
+- Descobrir seu endereço IPv4 da rede pelo ipconfig; o colega abre, por exemplo,
+  http://IP-DO-SEU-PC:8080/index.html, substituindo IP-DO-SEU-PC pelo IPv4 correto.
+- Precisa estar na mesma rede e a rede/firewall deve permitir essa conexão na
+  porta 8080. Não desativar o firewall nem abrir a porta do banco na internet.
+- Nesse cenário, os dois usam o banco do SEU computador por meio da API.
+  O colega não precisa de Live Server ou banco local. Não precisa expor a porta
+  5433: ela fica restrita ao próprio PC, como configurado no Compose.
+- localhost sempre aponta para o computador de quem abre o navegador; enviar
+  http://localhost:8080 para um amigo não aponta para o seu computador.
+- Esse acesso termina se seu PC/backend parar ou se o endereço da rede mudar.
+  Para pessoas em redes diferentes, o caminho previsto é a publicação no Render.
+
+RESUMO SOBRE LIVE SERVER E DADOS
+Live Server serve arquivos do frontend, mas não inicia o Java nem o PostgreSQL.
+As APIs são necessárias para cadastro, login, catálogo e pedidos. O uso padrão
+é abrir tudo na porta 8080. O suporte alternativo atual a Live Server é local,
+na porta 5501; não serve como compartilhamento automático do seu backend/banco.
+Git transmite código/SQL, não os registros de um banco que já está funcionando.
+Cada instalação local começa com dados próprios; no site publicado os dados
+são os do Neon. Copiar dados entre ambientes exige exportação/importação
+combinada separadamente, sem compartilhar credenciais para isso.
+
+VALIDAÇÃO CONFIRMADA PELO USUÁRIO
+O usuário informou que todos os testes manuais solicitados funcionaram.
+Conferência funcional da fase 3 concluída conforme esse relato; não representa
+nova execução dos testes automatizados pelo assistente ou verificação do deploy.
+Limpeza de pastas continua opcional. FASE 4 implementada, com conferência visual
+pendente. FASE 5 com backend e telas conectadas em 30/10: conferir o fluxo visual
+entre duas contas e depois seguir para a FASE 6 quando solicitado.
+
+OBJETIVO E ESCOPO
+Projeto de faculdade para conectar clientes a prestadores de serviços.
+Uma conta permite contratar e também oferecer serviços; o perfil profissional
+precisa de aprovação administrativa para aparecer publicamente.
+Manter HTML, CSS, JavaScript, Java/Spring Boot e PostgreSQL, com Docker local
+e Render/Neon já previstos. Não adicionar ferramentas ou frameworks nesta etapa.
+Prioridade: conferir o que existe antes de desenvolver funções novas.
+
+COMO LER ESTE PLANO
+IMPLEMENTADO: há código para a função; não significa que foi testada hoje.
+A CONFERIR: precisa de validação no ambiente local e, se necessário, no publicado.
+PLANEJADO: ainda será desenvolvido, após concluir a conferência atual.
+Os registros anteriores de testes, importação e publicação foram preservados
+como histórico; não foram reexecutados nesta atualização do plano.
+
+FASE 1 - BASE DA APLICAÇÃO [IMPLEMENTADA / A CONFERIR]
+- Backend Java 21, Spring Boot/Maven, JPA, Validation e PostgreSQL.
+- Frontend servido pelo próprio backend; não depende de Live Server.
+- Banco com scripts para oito tabelas: usuarios, prestadores, categorias,
+  servicos, solicitacoes, avaliacoes, recuperacoes_senha e fotos_usuarios.
+- Sete categorias iniciais; fotos armazenadas no PostgreSQL.
+- Docker Compose para o banco e script PowerShell para iniciar o backend.
+- Configurações de publicação Docker/Render e conexão ao Neon.
+Histórico do plano anterior: banco local configurado e site publicado em
+https://site-findy.onrender.com. Disponibilidade e versão online a conferir.
+
+FASE 2 - CONTAS, PROFISSIONAIS E CATÁLOGO [IMPLEMENTADA / A CONFERIR]
+- Cadastro, login/logout e senhas com BCrypt.
+- Minha Conta: nome, telefone, cidade, UF e foto JPG/PNG do computador/galeria.
+- Perfil profissional: descrição, experiência, região e situação da análise.
+- Edição, desativação, reativação e reenvio após recusa.
+- Mudanças profissionais e reativação pelo prestador exigem nova análise.
+- Administrador: edição, aprovação/recusa com motivo e ativação de cadastros.
+- Perfil público disponível somente para prestador aprovado e ativo,
+  vinculado a uma conta ativa.
+- Meus Serviços: cadastrar, editar e ativar/desativar os próprios serviços.
+- Catálogo consultando a API, com busca, paginação e perfis por ID.
+- Recuperação de senha por Brevo, com token temporário e uso único;
+  redefinir a senha impede continuar usando sessões antigas.
+- Dados de demonstração preservados em JSON e SQL, identificados no catálogo.
+Histórico anterior: 84 profissionais e 84 serviços importados localmente;
+32 testes do backend e quatro do cliente da API aprovados; envio real de e-mail
+confirmado. Quantidades e resultados não foram conferidos novamente hoje.
+
+FASE 3 - ORGANIZAR E VALIDAR O QUE JÁ EXISTE [VALIDAÇÃO MANUAL CONFIRMADA]
+Roteiro conferido pelo usuário. Manter como referência para futuras alterações.
+Remoção das pastas e conferência da publicação são independentes e opcionais.
+
+3.1 - LIMPEZA OPCIONAL DAS PASTAS VAZIAS
+Pastas verificadas: contêm somente .gitkeep, sem código ou recursos utilizados.
+- frontend/assets/ (inclui icons/ e images/ vazios)
+- frontend/css/
+- frontend/js/
+- docs/
+Podem ser removidas sem mover os arquivos atuais. Nenhuma foi removida agora.
+Os arquivos usados estão em frontend/pages/, inclusive pages/images/.
+Manter frontend/tests/, database/, backend/plataformaservicos/src/ e .mvn/.
+Manter .git/ para o histórico; .vscode/ contém configurações úteis do editor.
+backend/plataformaservicos/target/ é gerada pelo Maven: pode ser recriada,
+mas não é uma pasta abandonada e não precisa ser removida para funcionar.
+
+3.2 - INICIAR NESTA MÁQUINA
+1. Abrir Docker Desktop e aguardar sua inicialização.
+2. Abrir um terminal PowerShell na raiz do projeto.
+3. Conferir se existe .env com as configurações do PostgreSQL.
+   Não substituir o arquivo existente nem trocar a senha sem necessidade.
+   Mudar a senha no .env não muda a senha de um banco já criado.
+4. Usar preferencialmente o Compose, conforme database/README.md:
+   docker compose up -d --wait
+   docker compose ps
+   Se o container manual antigo findy-postgres estiver rodando, parar esse
+   container antes de iniciar o Compose. Nunca usar ambos ao mesmo tempo:
+   o registro anterior informa que compartilham o armazenamento.
+5. Iniciar o backend, mantendo o terminal aberto:
+   .\backend\plataformaservicos\start-local.ps1
+   É necessário Java 21. O Maven Wrapper já faz parte do projeto.
+6. Aguardar a mensagem Started PlataformaservicosApplication.
+7. Abrir http://localhost:8080/index.html e /login.html.
+   Usar a porta 8080 também para as outras telas, sem abrir HTML por file://.
+   Ao alterar as telas no futuro, reiniciar o backend para atualizar os recursos.
+
+3.3 - CONFERIR BANCO E CONFIGURAÇÃO
+- Se o servidor iniciar, seguir com a conferência funcional abaixo.
+- Se houver erro de tabela/coluna ausente, identificar o SQL faltante antes
+  de executar qualquer criação. Não repetir scripts de criação em banco existente.
+- Banco novo: criar volume/configuração conforme database/README.md e executar
+  uma vez, nesta ordem: usuario_e_prestadores.sql, categorias.sql, servicos.sql,
+  solicitacoes.sql, avaliacoes.sql, recuperacao_senha.sql, fotos_usuarios.sql.
+- A aplicação valida mapeamentos JPA, mas não cria as tabelas automaticamente.
+- Demonstrações são opcionais; não reimportar exemplos só para iniciar o site.
+- Para recuperação de senha, conferir BREVO_API_KEY, EMAIL_FROM e APP_URL.
+  Usar credenciais já existentes; não colocar valores secretos no plano ou Git.
+  Local: APP_URL=http://localhost:8080.
+  A falta do envio de e-mail não impede validar cadastro, login e catálogo.
+
+3.4 - ROTEIRO MANUAL DO QUE JÁ DEVE FUNCIONAR
+[ ] Criar uma conta de teste e fazer login.
+[ ] Salvar dados pessoais e foto; atualizar a página e conferir persistência.
+[ ] Criar o perfil profissional e conferir situação PENDENTE.
+[ ] Cadastrar um serviço em Meus Serviços, escolhendo categoria e preço/unidade.
+[ ] Entrar com uma conta ADMIN já configurada e abrir /admin.html.
+    Se o banco novo não tiver ADMIN, cadastrar uma conta e promover somente
+    essa conta pelo SQL descrito em PUBLICACAO.md. Não promover contas comuns.
+[ ] Aprovar o prestador e conferir seu perfil público e serviço no catálogo.
+[ ] Buscar por nome/serviço e conferir navegação das categorias.
+[ ] Editar/desativar/reativar o serviço e conferir o efeito no catálogo.
+[ ] Alterar o perfil profissional e conferir a nova análise administrativa.
+[ ] Verificar que outra conta não consegue editar dados/serviços alheios.
+[ ] Fazer logout e conferir bloqueio das operações protegidas.
+[ ] Pedir recuperação de senha, abrir o e-mail e redefinir a senha.
+[ ] Conferir que senha antiga e link já utilizado não funcionam novamente.
+[ ] Registrar o que passou e o que falhou; corrigir somente falhas do escopo atual.
+
+Não considerar contratação/status/avaliação como funcionamento real nesta fase:
+o formulário mostra confirmação visual e o acompanhamento usa localStorage.
+Não existe pagamento online; a agenda abre um link para criar evento e o chat
+atual é FAQ. Esses recursos não devem ser apresentados como integrações prontas.
+
+3.5 - CONFERIR A VERSÃO PUBLICADA, SE FOR USADA NA APRESENTAÇÃO
+- Local e Neon são bancos separados; dados não são copiados automaticamente.
+- Conferir tabelas, inclusive fotos_usuarios e recuperacoes_senha, no Neon.
+- No Render, conferir JDBC_DATABASE_URL, POSTGRES_USER, POSTGRES_PASSWORD,
+  BREVO_API_KEY, EMAIL_FROM e APP_URL com o endereço HTTPS público.
+- O manifesto render.yaml enumera somente parte dessas variáveis;
+  as demais precisam ser configuradas no ambiente para o e-mail funcionar.
+- Conferir se a versão online corresponde ao código atual; alterações locais
+  só chegam à hospedagem após envio e deploy, quando isso for solicitado.
+- Repetir o roteiro essencial: login, foto, serviço, aprovação e recuperação.
+- Usar PUBLICACAO.md como apoio, lembrando que o trecho que diz que o formulário
+  de serviços está pendente está desatualizado: ele já foi implementado.
+
+CRITÉRIO PARA CONCLUIR A FASE 3
+Contas, fotos, perfis, aprovação, serviços, busca e recuperação conferidos;
+falhas existentes corrigidas ou limitações claramente registradas. Só então
+iniciar funcionalidades novas. Não é necessário implantar ferramentas novas.
+Para encerrar: Ctrl+C no backend e docker compose stop; preservar o volume.
+
+FASE 4 - CADASTRO PROFISSIONAL GUIADO [IMPLEMENTADA / CONFERIR TELAS]
+Implementada em 28/10/2026, sem novas ferramentas ou dependências.
+Documentação completa: CADASTRO_PROFISSIONAL.md.
+- Cadastro em três etapas, revisão e manutenção dos valores ao avançar/voltar.
+- Habilidades para marcar nas sete categorias, validadas pelo backend.
+- Exemplo de pedreiro: tirar nível, assentar piso, levantar paredes, reboco, encanamento.
+- Foto obrigatória, telefone com DDD, bairro, cidade e UF para enviar à análise.
+- Opção Estou começando agora; exemplos orientam sem preencher respostas.
+- Prévia pública e resumo reservado antes do envio.
+- Serviços/preços continuam em Meus Serviços; habilidades não criam ofertas.
+- Ficha administrativa completa, com histórico persistido de decisões.
+- Aprovar, solicitar correção com motivo ou recusar definitivamente.
+- Recusa definitiva bloqueia edição/reenvio/reativação do perfil, preservando conta.
+- SQL incremental: database/cadastro_profissional.sql, já aplicado ao banco local.
+- Atualização local preservou 86 contas, 85 perfis e 84 serviços;
+  85 últimas decisões antigas disponíveis foram copiadas ao histórico.
+- Testes: 40 do backend passaram (oito novos), em banco separado;
+  quatro testes existentes do cliente da API passaram e scripts novos passaram
+  na checagem de sintaxe. Não foi possível conferir visualmente no navegador.
+- Banco separado de testes: findy_cadastro_test_20261028, mantido localmente.
+- Não foi realizado deploy nem alteração no Neon.
+
+PARA USAR AGORA
+1. Banco local já atualizado: não precisa repetir o SQL nesta máquina.
+2. Se o backend estiver aberto, encerrar com Ctrl+C e iniciar novamente:
+   .\backend\plataformaservicos\start-local.ps1
+3. Abrir http://localhost:8080/perfil-prestador.html e atualizar com Ctrl+F5.
+4. Conferir as três etapas, revisão, envio e persistência após recarregar.
+5. No admin, abrir ficha completa, pedir correção e testar reenvio/aprovação.
+6. Usar outra conta de teste para recusa definitiva, que impede novo envio.
+7. Conferir o perfil público e ausência de contato/região livre na API pública.
+8. Para atualizar o online futuramente: executar o SQL incremental no Neon
+   antes do deploy, conforme CADASTRO_PROFISSIONAL.md.
+
+ESCOPO DA FASE 4 IMPLEMENTADO
+- Organizar o cadastro em três etapas: Sobre você; Seu trabalho; Revisão.
+- Manter o preenchimento ao avançar/voltar e mostrar progresso simples.
+- Sobre você: foto, nome, cidade, UF, bairro e conferência do contato.
+- Exigir foto e dados necessários ao enviar para análise, inclusive no backend;
+  isso não deve impedir criar a conta básica.
+- Seu trabalho: categorias/serviços, apresentação, experiência e região.
+- Incluir orientações e opção Estou começando agora, sem gravar exemplos
+  automaticamente como se fossem respostas da pessoa.
+- Revisão: mostrar os dados e uma prévia antes do envio.
+- Administrador: ficha com foto, contato, localização, serviços, apresentação,
+  situação, data do cadastro e informações de análise disponíveis.
+- Distinguir aprovação, solicitação de correção e recusa definitiva;
+  solicitar correção exige motivo e permite corrigir e reenviar.
+- Ajustar SQL/API para bairro e novas situações, com scripts pequenos e documentados.
+- Localização pública limitada a bairro, cidade e UF; contato e região livre
+  reservados à conta/admin. Não são coletados rua e número neste cadastro.
+- Documento de identidade continua fora do escopo.
+- Histórico simples de cada decisão, administrador, data e motivo; a importação
+  de dados antigos recupera somente a última decisão disponível.
+Critério: prestador envia os dados, administrador analisa e prestador entende
+como corrigir; somente o perfil aprovado e ativo aparece publicamente.
+
+Exemplo experiente: Trabalho com limpeza residencial há dois anos. Faço limpeza
+geral e organização. Atendo em Patos de Minas durante a semana.
+Exemplo iniciante: Estou começando a oferecer jardinagem. Cuido dos jardins da
+família e faço corte de grama e manutenção de canteiros.
+
+FASE 5 - CONTRATAÇÃO E ACOMPANHAMENTO REAIS [IMPLEMENTADA / CONFERIR TELAS]
+Primeira entrega em 30/10/2026: pedidos diretos com faixa de referência e negociação,
+sem cobrança por contatos. Regras e API documentadas em CONTRATACAO_REAL.md.
+Telas de contratação, Meus pedidos e status conectadas à API, sem status simulado.
+- Escolher o serviço pelo ID e exigir login do cliente.
+- Salvar solicitação, participantes, endereço, horário e valores no banco.
+- Calcular estimativas no backend usando faixa/unidade/quantidade do serviço;
+  não confiar em preço recebido por URL ou no cálculo do navegador. Valor final
+  a combinar: total/subtotal nulos, sem pagamento e com taxa zero.
+- Não usar a taxa de 10% do protótipo. Máximo opcional no cadastro de serviços;
+  preços anteriores preservados como referência, sem exigir editar anúncios antigos.
+- Cliente consulta seus pedidos; prestador consulta os recebidos.
+- Prestador aceita/recusa; participantes acompanham a situação por atualização
+  normal da página, sem necessidade de tempo real.
+- Proteger as operações para que somente os participantes possam agir.
+- Reaproveitar tabelas e telas existentes, adaptando apenas o necessário.
+Critério: pedido criado por uma conta aparece para a outra e permanece salvo
+após atualizar a página ou reiniciar a aplicação.
+
+FASE 6 - CONCLUSÃO, AVALIAÇÃO E HISTÓRICO [PLANEJADA]
+- Definir quem marca a conclusão e quem confirma, reaproveitando o protótipo.
+- Persistir mudanças de situação no banco, removendo a simulação desse fluxo.
+- Permitir avaliação de 1 a 5 e comentário pelo cliente após conclusão.
+- Impedir avaliação de pedido alheio e avaliação duplicada.
+- Mostrar histórico simples das contratações e avaliações reais do prestador.
+- Contestação, se necessária à faculdade: definir uma regra simples antes
+  de implementar; não criar mediação ou sistema financeiro complexo.
+Critério: cada participante vê o mesmo atendimento e a avaliação fica persistida.
+
+FASE 7 - REVISÃO PARA ENTREGA ACADÊMICA [PLANEJADA]
+- Corrigir erros encontrados e conferir permissões no backend.
+- Conferir celular, navegação, mensagens e campos obrigatórios.
+- Executar os testes existentes com configuração local; não usar o banco online
+  compartilhado para testes que gravam dados.
+- Testar o ciclo completo com duas contas e um administrador.
+- Atualizar instruções de execução e, se solicitado, publicar a versão final.
+- Remover logs do versionamento e manter credenciais fora do Git.
+- Melhoria pequena pendente: impedir redefinir senha para a mesma senha atual.
+
+FORA DO ESCOPO ATUAL
+- Novos frameworks de frontend, microsserviços e troca de banco.
+- Redis, filas externas, WebSocket, novas ferramentas de migração e CI complexo.
+- Pagamento online, chat entre usuários, verificação documental e agenda integrada.
+- Refatoração geral do projeto antes de validar as funcionalidades existentes.
+Podemos atender ao trabalho com a estrutura atual, SQL documentado e testes
+proporcionais às mudanças, sem ampliar a infraestrutura.
+
+REGRAS DE TRABALHO
+- Alterações de arquivos somente quando autorizadas pelo usuário.
+- Autorização desta etapa: atualizar este plano e indicar pastas sem uso.
+- Nenhuma pasta deve ser considerada removida com base nesta atualização.
+- Atualização autorizada nesta conversa: lembrete inicial de execução e registro
+  da validação manual confirmada pelo usuário.
+- Autorização posterior: implementar a FASE 4 e documentar as alterações.
+- Atualização autorizada em 29/10/2026: registrar os sete passos de melhorias
+  e conferir o backend atual. Priorizar o backend antes da estilização.
+- Autorização em 30/10/2026: começar a contratação real pelo backend. Escolhas do
+  usuário: faixa de preço, negociação, pedido direto e nenhuma cobrança por contato.
+- Autorização posterior: conectar as telas à API e verificar o perfil de design
+  que não aparecia. Encontrado perfil PENDENTE e nenhum serviço; não alterar
+  aprovação ou criar oferta automaticamente.
+- Próxima ação: conferir visualmente o fluxo da FASE 5 e corrigir a reutilização
+  de senha ainda pendente. FASE 6 e melhorias visuais ficam depois.
+
+REVISÃO DO BACKEND E PRIORIDADE DE TRABALHO - 29/10/2026
+- PostgreSQL local via Compose saudável na porta 5433.
+- Executados novamente 40 testes existentes do backend: zero falhas, zero erros
+  e nenhum teste ignorado. Build Maven concluído com sucesso.
+- Usado somente o banco separado findy_cadastro_test_20261028 para os testes
+  que gravam dados; recuperação de senha com serviço de e-mail simulado.
+- Cobertura existente: oito testes de cadastro profissional, nove de fotos,
+  dez de perfil/permissões, um de inicialização e doze de recuperação de senha.
+- Conferência HTTP local: /servicos e /prestadores/habilidades retornaram 200;
+  /auth/me, /perfil, /prestadores/me, /meus-servicos, /admin/me e /admin/cadastros
+  retornaram 401 sem login, conforme esperado.
+- Esses resultados validam os cenários testados; não significam que o backend
+  inteiro ou as funcionalidades planejadas estejam concluídos.
+- Pendência confirmada: recuperação ainda permite reutilizar a senha atual.
+  Próxima correção: comparar a nova senha com o hash atual; rejeitar a repetição
+  sem consumir o token válido e testar que uma senha diferente continua aceita.
+- Área de atuação: a API já oferece habilidades em sete categorias. A conta
+  básica não vira anúncio público automaticamente; é necessário perfil ativo
+  e aprovado, conta ativa e serviço ativo cadastrado na categoria desejada.
+- A consulta administrativa usa todas as contas, inclusive sem perfil
+  profissional. Ainda conferir o caso específico das contas relatadas pelo
+  usuário; não foi identificada qual conta estaria ausente.
+- Depois das correções, seguir FASE 5: solicitação, aceite/recusa e acompanhamento;
+  antes de implementar, definir preço, aceite e cancelamento. FASE 6 acrescenta
+  conclusão, avaliação e histórico. Estes fluxos ainda não são backend pronto.
+- Não houve alteração de código do backend, deploy, atualização do Neon ou
+  envio real de e-mail nesta conferência. Inspeção visual continua pendente.
+
+ENTREGA DO BACKEND DE PEDIDOS - 30/10/2026
+- API autenticada para criar, listar enviados/recebidos, consultar detalhes,
+  aceitar, recusar e cancelar. Transações e permissões por participante.
+- Faixa opcional disponível em Meus serviços, cards, perfil público e ficha admin.
+- Referências copiadas para cada pedido; endereço/telefone não são públicos.
+- SQL incremental: database/contratacao_real.sql. Não remover dados fictícios
+  agora. Planejar a limpeza seletiva antes da entrega, preservando contas reais
+  e considerando dependências de solicitações e avaliações.
+- Não foi criada branch nem commit; preservar as alterações já preparadas no Git.
+- Regras e próximos passos de integração: CONTRATACAO_REAL.md.
+- Validação: 59 testes do backend passaram, incluindo 19 novos; quatro testes
+  do cliente da API passaram e scripts alterados passaram na checagem de sintaxe.
+- Testes em findy_cadastro_test_20261028, com e-mail simulado. SQL aplicado ao
+  banco local findy e repetido para conferir idempotência: registros anteriores
+  preservados (86 contas, 85 perfis, 84 serviços e zero pedidos existentes).
+- Reiniciar o backend para carregar a API nova e os campos mínimo/máximo.
+  Não houve inspeção visual, publicação no Render nem atualização do Neon.
+
+INTEGRAÇÃO DAS TELAS DE PEDIDOS - 30/10/2026
+- Perfil público abre solicitação pelo ID do serviço. Formulário consulta oferta
+  real, mostra estimativa e só confirma após POST salvo, preservando campos se falhar.
+- Meus pedidos: enviados/recebidos, paginação, atualização e links de acompanhamento.
+- Status usa a conta da sessão: profissional aceita/recusa e cliente cancela
+  antes do horário; backend continua conferindo cada permissão e transição.
+- Removidos do fluxo os papéis simulados, localStorage, valores fictícios e taxa
+  de 10%. Conclusão e avaliação permanecem FASE 6, sem ações fictícias nas telas.
+- Requisitos de publicação destacados em Minha conta, perfil e Meus serviços.
+  A categoria vem da oferta cadastrada; marcar habilidades não publica um anúncio.
+- Validação atual: 60 testes backend e 13 JavaScript passaram; 22 verificações HTTP
+  com duas contas temporárias em banco separado passaram, preservando dados prévios.
+- Conferência visual pendente: integração do navegador indisponível nesta sessão.
+- Instância de testes encerrada, sem mudanças de dados nas contas reais e sem deploy.
+
+CABEÇALHO COMPARTILHADO - 30/10/2026
+- Criados frontend/pages/cabecalho.js e frontend/pages/cabecalho.css.
+- As 12 páginas usam o mesmo componente, fora dos contêineres de conteúdo.
+  Cada HTML inclui o CSS, um header com id cabecalho-findy e os scripts api.js
+  e cabecalho.js com defer, antes dos scripts específicos. Não há PHP/include.
+- Menu fixo de opções: Início, Minha conta, Perfil profissional, Meus serviços
+  e Meus pedidos; somente o destaque atual muda ao navegar. Administração é
+  mostrada após confirmação de permissão na API. Entrar/Sair dependem da sessão.
+- Cabeçalho com fundo branco, borda, cantos arredondados e links destacados;
+  categorias e busca compartilhadas. Fonte e dimensões próprias evitam diferenças
+  causadas pelo CSS antigo das páginas. No celular, itens se reorganizam.
+- Busca da categoria adaptada ao formulário comum; controles antigos de menu,
+  administração e logout retirados dos scripts das páginas para evitar duplicação.
+- Validação: 23 testes JavaScript passaram, incluindo dez do cabeçalho/integração;
+  sintaxe dos scripts e inclusão/ordem do componente nos 12 HTML conferidas.
+  Não houve conferência visual no navegador nesta entrega.
+- Reiniciar o backend e atualizar com Ctrl+F5 para carregar os arquivos novos.
+  Não houve alteração de backend/banco, commit ou publicação nesta etapa.
+- Próximas mudanças do topo devem ser feitas nos dois arquivos compartilhados;
+  não copiar novamente a navegação para cada página. Gaveta móvel ainda planejada.
+
+MELHORIAS DA ESTILIZAÇÃO [EM ANDAMENTO / UMA ETAPA POR VEZ]
+Executar aos poucos, uma etapa por vez. Os itens 6 e 7 incluem conferências
+funcionais e podem exigir ajustes além do CSS. Não implementar os sete de uma vez.
+
+1. PADRONIZAR OS CABEÇALHOS [IMPLEMENTADO / CONFERIR VISUAL]
+   Manter os mesmos links e a mesma ordem entre as páginas: Início, Minha conta,
+   Perfil profissional, Meus serviços e Meus pedidos. Alterar somente o destaque da página
+   atual; Administração aparece adicionalmente para administradores.
+
+2. MELHORAR O VISUAL DA NAVEGAÇÃO [IMPLEMENTADO / CONFERIR VISUAL]
+   Organizar os links em uma barra definida, com fundo, espaçamento e botões
+   com cantos arredondados, evitando a aparência de itens soltos na tela.
+
+3. ADAPTAR O CABEÇALHO PARA CELULAR
+   Usar os mesmos links em uma gaveta com botão de abrir/fechar; prever toque
+   fora, tecla Esc, navegação pelo teclado e retorno do foco ao botão.
+
+4. REVISAR O ESTILO DAS PÁGINAS
+   Começar pelo painel administrativo mostrado no print: organizar formulários,
+   textos, botões e espaçamentos. Conferir o carregamento e os conflitos de CSS
+   antes de concluir que faltam estilos; depois revisar as demais páginas.
+
+5. MELHORAR OS CARDS DOS PROFISSIONAIS
+   Nas listagens de categorias, tornar o card inteiro clicável para abrir o
+   perfil. Adicionar pequena elevação e sombra ao passar o mouse, foco visível
+   pelo teclado e respeito à preferência por movimento reduzido.
+
+6. CONFERIR AS CONTAS CRIADAS
+   Verificar as contas normal e administrativa relatadas pelo usuário,
+   distinguindo a listagem administrativa da exibição pública de profissionais.
+   Conferir cadastro, ambiente/banco, filtros, aprovação e serviços publicados.
+
+7. CONFERIR A ESCOLHA DA ÁREA DE ATUAÇÃO
+   Tornar claro o caminho para preencher o perfil e selecionar habilidades por
+   categoria. Conferir a relação com a categoria escolhida em Meus serviços e
+   os requisitos para aparecer publicamente, sem confundir habilidade com oferta.

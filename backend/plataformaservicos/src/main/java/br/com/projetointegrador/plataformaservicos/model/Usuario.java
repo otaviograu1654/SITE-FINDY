@@ -84,6 +84,11 @@ public class Usuario {
     @Column(nullable = false)
     private boolean ativo = true;
 
+    @Column(length = 100)
+    private String bairro;
+    public String getBairro() { return bairro; }
+    public void setBairro(String valor) { bairro = valor; }
+
     @Column(length = 20)
     private String telefone;
 
@@ -124,7 +129,7 @@ public class Usuario {
 
     @Column(length = 2)
     private String estado;
-    
+
     @Column(length = 500)
     private String foto;
 

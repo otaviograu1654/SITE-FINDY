@@ -156,3 +156,21 @@ Os exemplos originais estão preservados em `profissionais_demonstracao.json`.
 Para regenerar o SQL após editar esse JSON, execute
 `node database/gerar_demonstracao.cjs` (requer Node.js). Isso só gera o arquivo;
 não atualiza registros que já foram importados. O frontend não usa esse JSON.
+
+## Cadastro guiado e histórico de análise
+
+Antes de iniciar a versão com cadastro guiado, execute `cadastro_profissional.sql`
+no banco existente. Em banco novo, execute após os demais scripts de criação.
+Veja [documentação da entrega](../CADASTRO_PROFISSIONAL.md) para regras, comandos
+locais, privacidade e roteiro de conferência. Não recrie as tabelas existentes.
+
+## Pedidos e faixa de preço
+
+Depois de `cadastro_profissional.sql`, aplicar `contratacao_real.sql`. O incremento
+acrescenta preço máximo de referência e quantidade do pedido, com validação da faixa.
+Não apaga registros nem importa dados fictícios. Pode ser repetido.
+
+Ver [CONTRATACAO_REAL.md](../CONTRATACAO_REAL.md) para a API, regras e limitações.
+As telas de contratação/status e Meus pedidos estão conectadas à API, usando IDs
+de ofertas e solicitações. Os valores são estimativas a combinar,
+sem taxa de 10%, cobrança ou desbloqueio pago de contatos.

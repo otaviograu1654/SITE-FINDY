@@ -17,7 +17,9 @@
           email: document.getElementById('login-email').value.trim(),
           senha: document.getElementById('login-senha').value,
         }});
-        location.assign('minha-conta.html');
+        const retorno = new URLSearchParams(location.search).get('retorno') || '';
+        location.assign(/^(contratacao|status-atendimento|meus-pedidos)\.html(?:\?[^#]*)?$/.test(retorno)
+          ? retorno : 'minha-conta.html');
       } catch (erro) { mensagem(aviso, erro.message, true); }
     });
   });
@@ -41,16 +43,6 @@
       } catch (erro) { mensagem(aviso, erro.message, true); }
     });
   });
-
-  document.querySelectorAll('[data-sair]').forEach(botao => botao.addEventListener('click', async () => {
-    await enviar(botao, async () => {
-      try { await api('/auth/logout', { method: 'POST' }); location.assign('login.html'); }
-      catch (erro) {
-        const aviso = document.querySelector('[role="status"]');
-        if (aviso) mensagem(aviso, erro.message, true);
-      }
-    });
-  }));
 
   if (!conta) return;
   const formulario = document.getElementById('perfil-form');
@@ -95,7 +87,7 @@
   function mostrar(dados) {
     document.getElementById('conta-nome').textContent = dados.nome;
     document.getElementById('conta-foto').src = foto(dados.foto);
-    for (const campo of ['nome', 'telefone', 'cidade', 'estado', 'foto']) {
+    for (const campo of ['nome', 'telefone', 'cidade', 'estado', 'foto', 'bairro']) {
       formulario.elements.namedItem(campo).value = dados[campo] || '';
     }
   }
@@ -119,7 +111,7 @@
           arquivoFoto.value = '';
           liberarPrevia();
         }
-        const dados = Object.fromEntries(['nome', 'telefone', 'cidade', 'estado', 'foto'].map(campo =>
+        const dados = Object.fromEntries(['nome', 'telefone', 'cidade', 'estado', 'foto', 'bairro'].map(campo =>
           [campo, formulario.elements.namedItem(campo).value.trim() || null]));
         mostrar(await api('/perfil', { method: 'PUT', body: dados }));
         mensagem(aviso, 'Seus dados foram salvos.');
@@ -136,12 +128,18 @@
       const [usuario, perfil] = await Promise.all([api('/auth/me'), api('/perfil')]);
       document.getElementById('conta-email').textContent = usuario.email;
       mostrar(perfil);
-        try {
-        await api('/admin/me');
-        document.getElementById('link-admin').hidden = false;
+      try {
+        const profissional = await api('/prestadores/me');
+        const faltas = [];
+        if (profissional.statusAprovacao !== 'APROVADO') faltas.push('Perfil profissional ainda não aprovado.');
+        if (!profissional.ativo) faltas.push('Perfil profissional desativado.');
+        if (!profissional.servicos?.some(s => s.ativo)) faltas.push('Você ainda não tem serviço ativo cadastrado.');
+        document.getElementById('conta-publicacao').textContent = faltas.length
+          ? faltas.join(' ') : 'Seu perfil tem ofertas ativas publicadas nas categorias cadastradas.';
       } catch (erro) {
-        if (erro.status !== 403) throw erro;
-}
+        if (erro.status !== 404) throw erro;
+        document.getElementById('conta-publicacao').textContent = 'Seu perfil profissional ainda não foi criado.';
+      }
       botao.disabled = false;
       arquivoFoto.disabled = false;
       mensagem(aviso, '');

@@ -1,0 +1,27 @@
+/* Organiza formulários, listas e detalhes das solicitações reais. */
+[hidden] { display: none !important; }
+.pedido-nav { display: flex; flex-wrap: wrap; align-items: center; gap: 14px; }
+.pedido-nav a { color: inherit; font-weight: 600; }
+.pedido-nav a:focus-visible, .pedido-card a:focus-visible { outline: 3px solid #1687be; outline-offset: 4px; }
+.pedido-filtros, .pedido-acoes { display: flex; align-items: center; flex-wrap: wrap; gap: 14px; }
+.pedido-filtros select { padding: 10px; border: 1px solid #aeb5bf; border-radius: 10px; font: inherit; }
+.pedido-lista { display: grid; gap: 18px; }
+.pedido-card, .pedido-painel { background: #fff; border: 1px solid #d7dce2; border-radius: 18px; padding: 24px; overflow-wrap: anywhere; }
+.pedido-card h2 { font-size: 1.1rem; }
+.pedido-card p, .pedido-painel p { margin: 12px 0; }
+.pedido-situacao { font-weight: 700; }
+.pedido-detalhes { display: grid; grid-template-columns: minmax(130px, 1fr) 3fr; gap: 12px 20px; margin: 20px 0; }
+.pedido-detalhes dt { font-weight: 700; }
+.pedido-detalhes dd { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; min-width: 0; }
+.pedido-aviso { background: #eaf4fa; border-left: 4px solid #167ba8; padding: 16px; line-height: 1.6; }
+.mensagem-erro { color: #a32018; }
+.pedido-mensagem { line-height: 1.6; padding: 10px 0; }
+.hire-form fieldset { border: 0; padding: 0; margin: 0; min-width: 0; display: grid; gap: 20px; }
+.hire-form fieldset:disabled { opacity: .6; }
+.hire-form input[readonly] { background: #f0f3f5; }
+@media (max-width: 640px) {
+  .pedido-detalhes { grid-template-columns: 1fr; gap: 6px; }
+  .pedido-detalhes dd { margin-bottom: 12px; }
+  .pedido-filtros, .pedido-acoes { align-items: stretch; }
+  .pedido-acoes button, .pedido-filtros select { width: 100%; }
+}

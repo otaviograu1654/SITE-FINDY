@@ -12,6 +12,7 @@ CREATE TABLE usuarios (
     ativo BOOLEAN NOT NULL DEFAULT TRUE,
     data_cadastro TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
+    data_de_nascimento DATE,
     telefone VARCHAR(20),
     cidade VARCHAR(100),
     estado VARCHAR(2),

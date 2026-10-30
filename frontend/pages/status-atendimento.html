@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Apresenta a tela de demonstração do acompanhamento e avaliação do atendimento. -->
+<!-- Consulta o pedido real e permite aceitar, recusar ou cancelar conforme a conta. -->
 
 <html lang="pt-BR">
 <head>
@@ -11,203 +11,36 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
   <link rel="icon" type="image/x-icon" href="images/findy-logo.png">
   <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="pedidos.css">
+  <link rel="stylesheet" href="cabecalho.css">
+  <script src="api.js" defer></script>
+  <script src="cabecalho.js" defer></script>
 </head>
 <body>
+  <header id="cabecalho-findy"><a href="index.html">Findy — Início</a></header>
 
   <!-- ===================== BARRA DE NAVEGAÇÃO (mesma de categoria.html) ===================== -->
-  <header class="app-nav">
-    <a href="index.html" class="logo logo--on-blue">
-      <img src="images/findy-logo.png" alt="Findy" class="logo__image">
-    </a>
 
-    <div class="categories-dropdown" id="categories-dropdown">
-      <button
-        type="button"
-        class="categories-dropdown__toggle"
-        id="categories-toggle"
-        aria-haspopup="true"
-        aria-expanded="false"
-        aria-controls="categories-menu"
-      >
-        Categorias
-        <span class="categories-dropdown__chevron" aria-hidden="true">&#9662;</span>
-      </button>
-
-      <ul class="categories-dropdown__menu" id="categories-menu" hidden>
-        <li><a href="categoria.html?categoria=Servi%C3%A7os%20Dom%C3%A9sticos" class="categories-dropdown__option">Serviços Domésticos</a></li>
-        <li><a href="categoria.html?categoria=Eventos" class="categories-dropdown__option">Eventos</a></li>
-        <li><a href="categoria.html?categoria=Infantil" class="categories-dropdown__option">Infantil</a></li>
-        <li><a href="categoria.html?categoria=Servi%C3%A7os%20Gerais" class="categories-dropdown__option">Serviços Gerais</a></li>
-        <li><a href="categoria.html?categoria=Constru%C3%A7%C3%A3o%20Civil" class="categories-dropdown__option">Construção Civil</a></li>
-        <li><a href="categoria.html?categoria=Marketing%20e%20Vendas" class="categories-dropdown__option">Marketing e Vendas</a></li>
-        <li><a href="categoria.html?categoria=Tecnologia%20e%20Design" class="categories-dropdown__option">Tecnologia e Design</a></li>
-      </ul>
-    </div>
-
-    <form class="search-form" role="search">
-      <input type="text" class="search-form__input" placeholder="Busque por um autônomo ou serviço">
-      <button type="submit" class="search-form__button" aria-label="Buscar">
-        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-          <circle cx="11" cy="11" r="6" stroke="currentColor" stroke-width="2"/>
-          <line x1="16" y1="16" x2="21" y2="21" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-        </svg>
-      </button>
-    </form>
-
-    <a href="perfil.html" class="btn btn--dark app-nav__profile">
-      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-        <circle cx="12" cy="8" r="4" fill="currentColor"/>
-        <path d="M4 20c0-4.4 3.6-7 8-7s8 2.6 8 7" fill="currentColor"/>
-      </svg>
-      Perfil
-    </a>
-  </header>
 
   <!-- ===================== PÁGINA DE STATUS DO ATENDIMENTO ===================== -->
   <main class="hire-page status-page">
-    <a href="contratacao.html" class="hire-page__back">&larr; Voltar</a>
-    <h1 class="hire-page__title">Status do atendimento</h1>
-
-    <!-- Este site não tem login de verdade, então não há como saber sozinho
-         se quem está vendo a tela é o contratante ou o prestador. Esse
-         seletor simula os dois pontos de vista no mesmo protótipo — na
-         Findy de verdade, cada um veria só o lado que lhe cabe, sem essa
-         escolha manual. -->
-    <div class="status-role-switch">
-      <span class="status-role-switch__label">Ver como:</span>
-      <button type="button" class="status-role-switch__btn" id="btn-ver-contratante" data-papel="contratante">Contratante</button>
-      <button type="button" class="status-role-switch__btn" id="btn-ver-prestador" data-papel="prestador">Prestador</button>
-    </div>
-
-    <!-- Resumo do atendimento (reaproveita o mesmo cartão visual da
-         página de contratação) -->
-    <section class="hire-summary status-summary">
-      <img class="hire-summary__photo" id="status-prestador-foto" src="https://i.pravatar.cc/300?img=32" alt="">
-      <div class="hire-summary__info">
-        <h2 id="status-prestador-nome">Camila Duarte</h2>
-        <span class="hire-summary__categoria" id="status-prestador-categoria">Serviços Domésticos</span>
-        <div class="hire-summary__meta">
-          <span id="status-prestador-local">&#128205; Patos de Minas, MG</span>
-          <span>Contratante: <strong id="status-contratante-nome">Marcos Vinícius</strong></span>
-        </div>
+    <a href="meus-pedidos.html" class="hire-page__back">&larr; Meus pedidos</a>
+    <h1 class="hire-page__title" id="status-titulo">Acompanhar pedido</h1>
+    <button type="button" class="btn btn--dark" id="status-atualizar">Atualizar pedido</button>
+    <p id="status-mensagem" class="pedido-mensagem" role="status" aria-live="polite">Carregando pedido…</p>
+    <section id="status-conteudo" class="pedido-painel" hidden>
+      <h2 id="status-badge" class="status-badge"></h2>
+      <p id="status-aviso" class="pedido-aviso"></p>
+      <dl id="status-detalhes" class="pedido-detalhes"></dl>
+      <p>Os valores são uma referência, sem cobrança pela Findy. Combinem o valor final diretamente.</p>
+      <div class="pedido-acoes">
+        <button type="button" class="btn btn--dark" data-acao="ACEITAR" hidden>Aceitar pedido</button>
+        <button type="button" class="btn hire-btn-outline" data-acao="RECUSAR" hidden>Recusar pedido</button>
+        <button type="button" class="btn hire-btn-outline" data-acao="CANCELAR" hidden>Cancelar pedido</button>
       </div>
     </section>
-
-    <!-- Selo com o status atual do atendimento -->
-    <div class="status-badge" id="status-badge">Em andamento</div>
-
-    <!-- Linha do tempo das duas confirmações -->
-    <ol class="status-steps" id="status-steps">
-      <li class="status-steps__item status-steps__item--concluido" id="passo-1">
-        <span class="status-steps__marker">&#10003;</span>
-        <div>
-          <p class="status-steps__title">Serviço combinado</p>
-          <p class="status-steps__desc">Contratação confirmada pelo contratante.</p>
-        </div>
-      </li>
-      <li class="status-steps__item" id="passo-2">
-        <span class="status-steps__marker">2</span>
-        <div>
-          <p class="status-steps__title">Contratante avalia e marca como concluído</p>
-          <p class="status-steps__desc" id="passo-2-desc">Aguardando avaliação do contratante.</p>
-        </div>
-      </li>
-      <li class="status-steps__item" id="passo-3">
-        <span class="status-steps__marker">3</span>
-        <div>
-          <p class="status-steps__title">Prestador confirma a conclusão</p>
-          <p class="status-steps__desc" id="passo-3-desc">Só libera depois que o contratante avaliar.</p>
-        </div>
-      </li>
-    </ol>
-
-    <!-- ===================== PAINEL DO CONTRATANTE ===================== -->
-    <section class="status-panel" id="painel-contratante">
-
-      <!-- Estado 1: ainda não avaliou -->
-      <div id="contratante-form-avaliar">
-        <h3>Como foi o atendimento?</h3>
-        <p class="status-panel__hint">Sua avaliação fica visível pro prestador, mas o atendimento só vira "Concluído" depois que ele confirmar também.</p>
-
-        <fieldset class="status-rating" id="status-rating">
-          <legend class="sr-only">Nota de 1 a 5 estrelas</legend>
-          <div class="status-rating__stars">
-            <input type="radio" id="nota-5" name="nota" value="5"><label for="nota-5" title="5 estrelas">&#9733;</label>
-            <input type="radio" id="nota-4" name="nota" value="4"><label for="nota-4" title="4 estrelas">&#9733;</label>
-            <input type="radio" id="nota-3" name="nota" value="3"><label for="nota-3" title="3 estrelas">&#9733;</label>
-            <input type="radio" id="nota-2" name="nota" value="2"><label for="nota-2" title="2 estrelas">&#9733;</label>
-            <input type="radio" id="nota-1" name="nota" value="1"><label for="nota-1" title="1 estrela">&#9733;</label>
-          </div>
-        </fieldset>
-
-        <div class="field">
-          <label for="status-comentario">Comentário (opcional)</label>
-          <textarea id="status-comentario" rows="3" placeholder="Conte como foi o serviço..."></textarea>
-        </div>
-
-        <p class="status-panel__erro" id="status-erro-nota" hidden>Escolha uma nota antes de marcar como concluído.</p>
-
-        <button type="button" class="btn btn--dark" id="btn-marcar-concluido">Marcar como concluído</button>
-      </div>
-
-      <!-- Estado 2: já avaliou, esperando o prestador -->
-      <div id="contratante-aguardando" hidden>
-        <h3>Avaliação enviada &#128077;</h3>
-        <p class="status-panel__hint">Assim que <strong id="contratante-aguardando-nome">o prestador</strong> confirmar, o atendimento vira "Concluído" pros dois lados.</p>
-        <div class="status-panel__resumo-avaliacao">
-          <span class="status-panel__resumo-nota" id="resumo-nota">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
-          <p id="resumo-comentario"></p>
-        </div>
-      </div>
-
-      <!-- Estado 3: concluído de vez -->
-      <div id="contratante-concluido" hidden>
-        <h3>Atendimento concluído &#9989;</h3>
-        <p class="status-panel__hint">Sua avaliação já está no perfil do prestador.</p>
-        <div class="status-panel__resumo-avaliacao">
-          <span class="status-panel__resumo-nota" id="resumo-nota-final">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
-          <p id="resumo-comentario-final"></p>
-        </div>
-      </div>
-    </section>
-
-    <!-- ===================== PAINEL DO PRESTADOR ===================== -->
-    <section class="status-panel" id="painel-prestador" hidden>
-
-      <!-- Estado 1: contratante ainda não avaliou -->
-      <div id="prestador-aguardando-contratante">
-        <h3>Aguardando o contratante</h3>
-        <p class="status-panel__hint">Você só pode confirmar a conclusão depois que <strong id="prestador-aguardando-nome">o contratante</strong> marcar o serviço como concluído e avaliar o atendimento.</p>
-      </div>
-
-      <!-- Estado 2: contratante já avaliou, prestador decide -->
-      <div id="prestador-decidir" hidden>
-        <h3>O contratante marcou como concluído</h3>
-        <div class="status-panel__resumo-avaliacao">
-          <span class="status-panel__resumo-nota" id="resumo-nota-prestador">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
-          <p id="resumo-comentario-prestador"></p>
-        </div>
-        <p class="status-panel__hint">Confirme se o serviço foi mesmo realizado como descrito. Se algo não bate, você pode contestar e o contratante avalia de novo.</p>
-        <div class="status-panel__acoes">
-          <button type="button" class="btn btn--dark" id="btn-confirmar-conclusao">Confirmar conclusão do serviço</button>
-          <button type="button" class="btn hire-btn-outline" id="btn-contestar">Contestar avaliação</button>
-        </div>
-      </div>
-
-      <!-- Estado 3: concluído de vez -->
-      <div id="prestador-concluido" hidden>
-        <h3>Atendimento concluído &#9989;</h3>
-        <p class="status-panel__hint">Você confirmou a conclusão — a avaliação do contratante já está publicada no seu perfil.</p>
-        <div class="status-panel__resumo-avaliacao">
-          <span class="status-panel__resumo-nota" id="resumo-nota-prestador-final">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
-          <p id="resumo-comentario-prestador-final"></p>
-        </div>
-      </div>
-    </section>
-
-    <button type="button" class="status-reset" id="btn-reiniciar-simulacao">Reiniciar esta simulação</button>
   </main>
-
   <script src="script.js" defer></script>
+  <script src="pedidos-comum.js" defer></script><script src="atendimento.js" defer></script>
 </body>
 </html>
