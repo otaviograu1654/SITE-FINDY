@@ -86,6 +86,7 @@
   window.addEventListener('pagehide', liberarPrevia);
   function mostrar(dados) {
     document.getElementById('conta-nome').textContent = dados.nome;
+    document.dispatchEvent(new CustomEvent('findy:perfil-atualizado', { detail: dados }));
     document.getElementById('conta-foto').src = foto(dados.foto);
     for (const campo of ['nome', 'telefone', 'cidade', 'estado', 'foto', 'bairro']) {
       formulario.elements.namedItem(campo).value = dados[campo] || '';

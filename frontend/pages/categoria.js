@@ -32,8 +32,10 @@
   }
 
   function card(item) {
-    const artigo = document.createElement('article');
+    const artigo = document.createElement('a');
     artigo.className = 'professional-card';
+    artigo.href = `perfil-prestador.html?id=${item.prestador_id}`;
+    artigo.setAttribute('aria-label', `Ver perfil e serviços de ${item.nome}`);
 
     const imagem = document.createElement('img');
     imagem.className = 'professional-card__photo';
@@ -79,11 +81,10 @@
       rodape.append(texto('p', '', 'Perfil de demonstração'));
     }
 
-    const link = document.createElement('a');
+    const link = document.createElement('span');
     link.className = 'card__arrow professional-card__arrow';
-    link.href = `perfil-prestador.html?id=${item.prestador_id}`;
     link.textContent = '→';
-    link.setAttribute('aria-label', `Ver perfil de ${item.nome}`);
+    link.setAttribute('aria-hidden', 'true');
 
     const linha = document.createElement('div');
     linha.className = 'professional-card__row';

@@ -3,7 +3,7 @@
   const host = document.getElementById('cabecalho-findy');
   if (!host || host.dataset.pronto) return;
   host.dataset.pronto = 'true';
-  const { api } = Findy;
+  const { api, foto } = Findy;
   const pagina = decodeURIComponent(location.pathname.split('/').pop() || 'index.html');
   const atual = {
     'contratacao.html': 'meus-pedidos.html', 'status-atendimento.html': 'meus-pedidos.html',
@@ -41,7 +41,25 @@
   }
   const sair = elemento('button', 'findy-topo__botao', 'Sair');
   sair.id = 'cabecalho-sair'; sair.type = 'button'; sair.hidden = true;
-  acoes.append(entrar, sair); linha.append(logo, nav, acoes);
+  const conta = elemento('details', 'findy-topo__conta'); conta.id = 'cabecalho-conta'; conta.hidden = true;
+  const resumoConta = elemento('summary', 'findy-topo__conta-resumo');
+  const avatar = elemento('img', 'findy-topo__avatar'); avatar.id = 'cabecalho-foto';
+  avatar.src = 'images/chat-avatar.png'; avatar.alt = '';
+  avatar.addEventListener('error', () => {
+    if (!avatar.src.endsWith('/images/chat-avatar.png')) avatar.src = 'images/chat-avatar.png';
+  });
+  const nomeConta = elemento('span', 'findy-topo__nome', 'Minha conta'); nomeConta.id = 'cabecalho-nome';
+  const seta = elemento('span', 'findy-topo__seta', '▾'); seta.setAttribute('aria-hidden', 'true');
+  resumoConta.append(avatar, nomeConta, seta);
+  const opcoesConta = elemento('nav', 'findy-topo__conta-opcoes'); opcoesConta.setAttribute('aria-label', 'Opções da conta');
+  for (const [rotulo, destino] of [
+    ['Minha conta', 'minha-conta.html'],
+    ['Pedidos enviados', 'meus-pedidos.html?tipo=ENVIADAS'],
+    ['Pedidos recebidos', 'meus-pedidos.html?tipo=RECEBIDAS'],
+    ['Meus serviços', 'meus-servicos.html'],
+  ]) opcoesConta.append(link(rotulo, destino));
+  opcoesConta.append(sair); conta.append(resumoConta, opcoesConta);
+  acoes.append(entrar, conta); linha.append(logo, nav, acoes);
 
   const ferramentas = elemento('div', 'findy-topo__ferramentas');
   const categorias = elemento('details', 'findy-topo__categorias');
@@ -66,9 +84,27 @@
   aviso.id = 'cabecalho-mensagem'; aviso.hidden = true; aviso.setAttribute('role', 'status'); aviso.setAttribute('aria-live', 'polite');
   host.replaceChildren(linha, ferramentas, aviso);
 
-  document.addEventListener('click', evento => { if (!categorias.contains(evento.target)) categorias.open = false; });
+  document.addEventListener('click', evento => {
+    if (!categorias.contains(evento.target)) categorias.open = false;
+    if (!conta.contains(evento.target)) conta.open = false;
+  });
   document.addEventListener('keydown', evento => {
     if (evento.key === 'Escape' && categorias.open) { categorias.open = false; resumo.focus(); }
+    if (evento.key === 'Escape' && conta.open) { conta.open = false; resumoConta.focus(); }
+  });
+  conta.addEventListener('toggle', () => { if (conta.open) categorias.open = false; });
+  categorias.addEventListener('toggle', () => { if (categorias.open) conta.open = false; });
+  function visitante() {
+    entrar.hidden = false; sair.hidden = true; conta.hidden = true; conta.open = false; admin.hidden = true;
+  }
+  function mostrarPerfil(perfil) {
+    nomeConta.textContent = perfil.nome || 'Minha conta';
+    nomeConta.title = nomeConta.textContent;
+    resumoConta.setAttribute('aria-label', `Opções da conta de ${nomeConta.textContent}`);
+    avatar.src = foto(perfil.foto);
+  }
+  document.addEventListener('findy:perfil-atualizado', evento => {
+    if (!conta.hidden) mostrarPerfil(evento.detail);
   });
   sair.addEventListener('click', async () => {
     if (sair.disabled) return;
@@ -79,10 +115,13 @@
   });
   (async () => {
     try {
-      await api('/auth/me'); entrar.hidden = true; sair.hidden = false;
+      const usuario = await api('/auth/me');
+      mostrarPerfil(usuario); entrar.hidden = true; sair.hidden = false; conta.hidden = false;
+      try { mostrarPerfil(await api('/perfil')); }
+      catch (erro) { if (erro.status === 401) { visitante(); return; } }
       try { await api('/admin/me'); admin.hidden = false; }
       catch (erro) {
-        if (erro.status === 401) { entrar.hidden = false; sair.hidden = true; }
+        if (erro.status === 401) visitante();
         else if (erro.status !== 403) { aviso.textContent = 'Não foi possível conferir o acesso administrativo.'; aviso.hidden = false; }
       }
     } catch (erro) {

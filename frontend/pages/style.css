@@ -648,6 +648,28 @@ a {
   flex-direction: column;
   border-radius: var(--radius);
   overflow: hidden;
+  color: inherit;
+  text-decoration: none;
+  background: var(--color-blue-dark);
+  box-shadow: 0 3px 12px rgb(21 41 56 / 10%);
+  transition: transform 180ms ease, box-shadow 180ms ease;
+}
+
+.professional-card:focus-visible {
+  outline: 3px solid #1687be;
+  outline-offset: 4px;
+}
+
+@media (hover: hover) {
+  .professional-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 24px rgb(21 41 56 / 20%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .professional-card { transition: none; }
+  .professional-card:hover { transform: none; }
 }
 
 /* Cada foto ocupa uma altura fixa dentro do cartão — o rodapé azul

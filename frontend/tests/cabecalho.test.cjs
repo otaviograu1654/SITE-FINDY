@@ -36,7 +36,10 @@ async function ambiente({ pagina = 'index.html', search = '', responder = () => 
       createElement: tag => new Elemento(tag),
       addEventListener: (nome, handler) => { eventos[nome] = handler; },
     },
-    Findy: { api: async (rota, opcoes) => { chamadas.push({ rota, opcoes }); return responder(rota, opcoes); } },
+    Findy: {
+      api: async (rota, opcoes) => { chamadas.push({ rota, opcoes }); return responder(rota, opcoes); },
+      foto: valor => valor || 'images/chat-avatar.png',
+    },
   };
   vm.createContext(contexto); vm.runInContext(codigo, contexto);
   await new Promise(resolve => setImmediate(resolve));
@@ -53,6 +56,7 @@ test('visitante mantém os cinco links principais, categorias e entrada, sem adm
     ['Início', 'Minha conta', 'Perfil profissional', 'Meus serviços', 'Meus pedidos']);
   assert.equal(a.el('cabecalho-entrar').hidden, false); assert.equal(a.el('cabecalho-sair').hidden, true);
   assert.equal(a.el('cabecalho-admin').hidden, true);
+  assert.equal(a.el('cabecalho-conta').hidden, true);
   assert.equal(todos(a.host).filter(el => el.tag === 'li').length, 7);
   assert.equal(a.chamadas.length, 1);
 });
@@ -72,6 +76,47 @@ test('somente resposta positiva da API administrativa revela o acesso', async ()
   assert.equal(a.el('cabecalho-admin').attributes['aria-current'], 'page');
   const b = await ambiente({ responder: rota => { if (rota === '/admin/me') throw erro(500); return { id: 1 }; } });
   assert.equal(b.el('cabecalho-admin').hidden, true); assert.equal(b.el('cabecalho-mensagem').hidden, false);
+});
+
+test('menu mostra nome e foto do perfil para usuário e administrador e fecha por Escape ou fora', async () => {
+  for (const admin of [false, true]) {
+    const a = await ambiente({ responder: rota => {
+      if (rota === '/auth/me') return { id: 2, nome: 'Nome da sessão' };
+      if (rota === '/perfil') return { nome: 'Otávio', foto: '/fotos/2?v=atual' };
+      if (!admin) throw erro(403);
+      return { id: 2 };
+    } });
+    assert.equal(a.el('cabecalho-conta').hidden, false);
+    assert.equal(a.el('cabecalho-nome').textContent, 'Otávio');
+    assert.equal(a.el('cabecalho-foto').src, '/fotos/2?v=atual');
+    assert.equal(a.el('cabecalho-admin').hidden, !admin);
+    const menu = a.el('cabecalho-conta');
+    assert.ok(todos(menu).some(el => el.href === 'meus-pedidos.html?tipo=RECEBIDAS'));
+    menu.open = true; a.eventos.keydown({ key: 'Escape' });
+    assert.equal(menu.open, false); assert.equal(menu.children[0].focused, true);
+    menu.open = true; a.eventos.click({ target: a.el('cabecalho-nome') });
+    assert.equal(menu.open, true);
+    a.eventos.click({ target: new Elemento('main') }); assert.equal(menu.open, false);
+    a.eventos['findy:perfil-atualizado']({ detail: { nome: 'Nome atualizado', foto: '/fotos/2?v=nova' } });
+    assert.equal(a.el('cabecalho-nome').textContent, 'Nome atualizado');
+    assert.equal(a.el('cabecalho-foto').src, '/fotos/2?v=nova');
+  }
+});
+
+test('falha ao carregar foto mantém conta acessível; sessão expirada esconde o menu', async () => {
+  const a = await ambiente({ responder: rota => {
+    if (rota === '/auth/me') return { id: 2, nome: 'Nome da sessão' };
+    throw erro(rota === '/perfil' ? 503 : 403);
+  } });
+  assert.equal(a.el('cabecalho-nome').textContent, 'Nome da sessão');
+  assert.equal(a.el('cabecalho-foto').src, 'images/chat-avatar.png');
+  assert.equal(a.el('cabecalho-conta').hidden, false);
+  const b = await ambiente({ responder: rota => {
+    if (rota === '/auth/me') return { id: 2, nome: 'Sessão encerrada' };
+    throw erro(401);
+  } });
+  assert.equal(b.el('cabecalho-conta').hidden, true);
+  assert.equal(b.el('cabecalho-entrar').hidden, false);
 });
 
 test('status destaca Meus pedidos e entrada mantém o pedido selecionado', async () => {
@@ -137,6 +182,9 @@ test('a busca da categoria usa o formulário compartilhado e mantém o filtro ao
   assert.equal(todos(grade).find(el => el.tag === 'h2').textContent, 'Profissional de teste');
   assert.equal(todos(grade).find(el => el.className === 'professional-card__desc').textContent, 'Apresentação pública');
   assert.equal(todos(grade).find(el => el.href === 'perfil-prestador.html?id=15').tag, 'a');
+  assert.equal(grade.children[0].href, 'perfil-prestador.html?id=15');
+  assert.equal(grade.children[0].attributes['aria-label'], 'Ver perfil e serviços de Profissional de teste');
+  assert.equal(todos(grade).filter(el => el.tag === 'a').length, 1);
   assert.equal(todos(grade).some(el => el.textContent.includes('NaN')), false);
   const form = a.el('cabecalho-busca'); form.children[0].value = 'pintor';
   form.handlers.submit({ preventDefault() {} });
@@ -146,10 +194,17 @@ test('a busca da categoria usa o formulário compartilhado e mantém o filtro ao
   assert.equal(consulta.get('pagina'), '1');
 });
 
-test('todas as páginas incluem um cabeçalho e carregam API/componente antes dos outros scripts', () => {
+test('páginas usam o cabeçalho compartilhado, exceto login que mantém sua barra própria', () => {
   const arquivos = fs.readdirSync(pages).filter(nome => nome.endsWith('.html'));
   for (const nome of arquivos) {
     const html = fs.readFileSync(path.join(pages, nome), 'utf8');
+    if (nome === 'login.html') {
+      assert.equal(/cabecalho-findy|cabecalho\.css|cabecalho\.js/.test(html), false);
+      assert.equal((html.match(/class="login-bar"/g) || []).length, 1);
+      assert.match(html, /<script src="api\.js" defer>/);
+      assert.match(html, /<script src="conta\.js" defer>/);
+      continue;
+    }
     assert.equal((html.match(/id="cabecalho-findy"/g) || []).length, 1, nome);
     assert.equal((html.match(/href="cabecalho.css"/g) || []).length, 1, nome);
     const scripts = [...html.matchAll(/<script\b([^>]+)>/g)];

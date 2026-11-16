@@ -437,8 +437,9 @@ REGRAS DE TRABALHO
 - Autorização posterior: conectar as telas à API e verificar o perfil de design
   que não aparecia. Encontrado perfil PENDENTE e nenhum serviço; não alterar
   aprovação ou criar oferta automaticamente.
-- Próxima ação: conferir visualmente o fluxo da FASE 5 e corrigir a reutilização
-  de senha ainda pendente. FASE 6 e melhorias visuais ficam depois.
+- Prioridade atual autorizada: facilitar o acesso aos pedidos recebidos na FASE 5
+  e registrar a sequência acordada ao final deste plano. A correção de reutilização
+  de senha continua pendente; FASE 6 aguarda a validação do fluxo atual.
 
 REVISÃO DO BACKEND E PRIORIDADE DE TRABALHO - 29/10/2026
 - PostgreSQL local via Compose saudável na porta 5433.
@@ -544,7 +545,7 @@ funcionais e podem exigir ajustes além do CSS. Não implementar os sete de uma 
    textos, botões e espaçamentos. Conferir o carregamento e os conflitos de CSS
    antes de concluir que faltam estilos; depois revisar as demais páginas.
 
-5. MELHORAR OS CARDS DOS PROFISSIONAIS
+5. MELHORAR OS CARDS DOS PROFISSIONAIS [IMPLEMENTADO LOCALMENTE / CONFERIR VISUAL]
    Nas listagens de categorias, tornar o card inteiro clicável para abrir o
    perfil. Adicionar pequena elevação e sombra ao passar o mouse, foco visível
    pelo teclado e respeito à preferência por movimento reduzido.
@@ -558,3 +559,98 @@ funcionais e podem exigir ajustes além do CSS. Não implementar os sete de uma 
    Tornar claro o caminho para preencher o perfil e selecionar habilidades por
    categoria. Conferir a relação com a categoria escolhida em Meus serviços e
    os requisitos para aparecer publicamente, sem confundir habilidade com oferta.
+
+PRIORIDADE ATUAL - PEDIDOS RECEBIDOS E PRÓXIMAS MELHORIAS - 30/10/2026
+Decisão do usuário: corrigir e validar o que já existe antes de criar funções novas.
+Esta sequência complementa as etapas anteriores; não executar tudo de uma vez.
+
+4. FACILITAR PEDIDOS RECEBIDOS PELO PRESTADOR [IMPLEMENTADO LOCALMENTE / VALIDAR NO RENDER]
+   A API e a página já listavam recebidos, mas o acesso ficava em um seletor e
+   a lista inicial mostrava enviados. Agora há duas opções visíveis em Meus pedidos:
+   Enviados como cliente e Recebidos como prestador, com destaque da lista aberta.
+   Minha conta e Meus serviços têm atalhos diretos para os recebidos.
+   Cada pedido recebido pendente tem o link Ver pedido e responder; os detalhes
+   existentes mostram a mensagem e permitem aceitar ou recusar conforme a sessão.
+   Mensagens de lista vazia e instruções distinguem cliente e prestador.
+   Atualização manual e paginação preservam a lista escolhida; não há chat,
+   contador de notificações, atualização automática ou novas regras de backend.
+   Validação local: 25 testes JavaScript passaram, incluindo filtro de recebidos,
+   paginação, atualização, retorno ao login e ações por participante.
+   Conferência visual e teste autenticado no Render ainda pendentes. Nenhum deploy
+   nem alteração de dados de produção foi feito nesta etapa.
+   Teste após publicar: cliente solicita serviço de outra conta; prestador abre
+   Meus serviços > Ver pedidos recebidos > Ver pedido e responder, lê a mensagem
+   e aceita ou recusa; cliente atualiza seu pedido e confere a mesma situação.
+
+EM SEGUIDA, UMA ETAPA POR VEZ [ESTADO ATUAL INDICADO EM CADA ITEM]
+1. Conta no canto superior direito [IMPLEMENTADO LOCALMENTE]: nome, foto e seta
+   quando houver sessão ativa. Incluído na autorização posterior do item 3.
+2. Menu da conta ao clicar na seta [IMPLEMENTADO LOCALMENTE]: Minha conta,
+   pedidos enviados/recebidos, Meus serviços e Sair. Incluído no item 3 autorizado.
+   Configurações continuam planejadas; definir depois opções, campos e destino.
+3. Reutilizar esse componente [IMPLEMENTADO LOCALMENTE] em todas as páginas para usuários e administradores,
+   preservando a conferência de permissões no servidor e o cabeçalho compartilhado.
+5. Aviso de novo pedido [PLANEJADO]: definir indicador visível de solicitações recebidas,
+   como contador no cabeçalho. Definir o que conta como novo antes de implementar;
+   não confundir pendência de resposta com leitura, nem criar chat nesta etapa.
+6. Revisão visual [PLANEJADA]: alinhamentos, espaçamentos, tamanhos e adaptação ao celular.
+   Conferir no navegador quando disponível; não tratar consultas HTTP como teste visual.
+7. Card inteiro do profissional clicável [IMPLEMENTADO LOCALMENTE]: abrir perfil em qualquer parte do card,
+   pequena elevação ao passar o mouse, foco de teclado e movimento reduzido.
+   Este item corresponde ao passo 5 das melhorias de estilização; não duplicar trabalho.
+
+CONFERÊNCIA DO AMBIENTE PUBLICADO - 30/10/2026
+- Resultado SQL fornecido pelo usuário no Neon: conta 1 ADMIN ativa sem perfil
+  profissional; conta 2 USUARIO ativa, perfil 1 aprovado e ativo, três serviços ativos.
+- Consultas públicas ao Render confirmaram um profissional em Eventos e um em
+  Tecnologia e Design, sem duplicação por serviço. Perfil público retornou três
+  serviços; foto e scripts api.js/cabecalho.js responderam corretamente.
+- Usuário confirmou que a listagem apareceu após Ctrl+F5, compatível com arquivos
+  antigos no cache do navegador. Melhorar a atualização dos arquivos estáticos
+  permanece uma pendência técnica; não foi implementada nesta etapa.
+
+MENU DA CONTA E CARDS CLICÁVEIS - 30/10/2026
+- Usuário autorizou itens 3 e 7 e confirmou que o item 3 é o menu da conta em
+  todas as páginas, incluindo criar nome, foto, seta e opções dos itens 1 e 2.
+  A gaveta do menu no celular continua planejada, não foi implementada nesta etapa.
+- cabecalho.js usa a sessão existente e consulta /perfil para mostrar nome e foto.
+  Foto ausente ou indisponível usa imagem padrão. Visitantes continuam com Entrar;
+  acesso administrativo depende da API e não é concedido pelo componente visual.
+- Menu usa details/summary nativo, abre por teclado e fecha com Esc ou clique fora.
+  Opções: Minha conta, pedidos enviados, pedidos recebidos, Meus serviços e Sair.
+  Salvar dados em Minha conta atualiza também nome e foto do cabeçalho.
+- As 12 páginas já incluem o componente compartilhado; mudança aplicada no arquivo
+  comum, sem duplicar cabeçalho e sem criar uma tela de configurações fictícia.
+- Cada card de profissional agora é um único link real envolvendo foto e textos,
+  permitindo clique em toda a área, teclado e abertura em nova aba. Seta decorativa,
+  sem links aninhados. CSS adiciona elevação/sombra no hover, foco visível e respeita
+  a preferência por movimento reduzido.
+- Validação: 27 testes JavaScript passaram. Cobrem menu de usuário/admin, visitante,
+  sessão expirada, dados de perfil indisponíveis, fechamento, atualização do nome/foto,
+  logout e card com um único link ao perfil. Sintaxe e diff conferidos.
+- Conferência visual pendente. Alterações locais, sem mudanças de banco, commit,
+  push ou deploy. Após publicar, conferir desktop/celular com usuário e admin,
+  testar foto ausente, menu/Sair e abertura do perfil ao clicar em foto ou texto.
+
+AJUSTE DA PÁGINA DE LOGIN - 30/10/2026
+- Login/cadastro é exceção ao cabeçalho compartilhado: mantém apenas a barra
+  própria de login e o logo que volta ao início. Retirados header cabecalho-findy,
+  cabecalho.css e cabecalho.js desse HTML para evitar dois cabeçalhos na mesma tela.
+- Ao solicitar sem sessão, o redirecionamento ao login continua esperado e o
+  retorno ao serviço escolhido após entrar permanece preservado pelo conta.js.
+- Demais 11 páginas mantêm o componente comum. Testes JavaScript: 27 passaram;
+  teste de integração ajustado para reconhecer a exceção do login.
+- Mudança local, sem publicação. Conferir visualmente o acesso direto ao login
+  e o caminho perfil público > serviço > login > retorno à solicitação.
+
+PRESERVAÇÃO DOS DADOS DE TESTES - PREFERÊNCIA DO USUÁRIO - 30/10/2026
+- Nas próximas execuções no banco findy_cadastro_test_20261028, preservar os
+  registros gerados para consulta posterior, tanto em cenários aprovados quanto
+  em execuções com falhas. Não realizar limpeza automática de dados de teste.
+- Antes de executar novamente testes que gravam nesse banco, revisar e adaptar
+  rollback automático e rotinas de limpeza para atender a esta preferência,
+  identificando os dados por execução para evitar conflitos entre rodadas.
+- Preservar a atomicidade das operações da aplicação: uma operação rejeitada
+  pode não gerar registro; guardar também resultados e erros da execução para
+  permitir análise, sem forçar persistência de transações inválidas.
+- Esta atualização registra a orientação; a suíte ainda não foi adaptada.

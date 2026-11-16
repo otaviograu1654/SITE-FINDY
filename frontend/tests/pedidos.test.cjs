@@ -15,6 +15,7 @@ class Elemento {
   append(...itens) { this.children.push(...itens); }
   replaceChildren(...itens) { this.children = itens; }
   addEventListener(tipo, handler) { this.handlers[tipo] = handler; }
+  setAttribute(nome, valor) { this[nome] = valor; }
   async emitir(tipo) { return this.handlers[tipo]?.({ preventDefault() {} }); }
   reportValidity() { return true; }
   focus() { this.focused = true; }
@@ -156,15 +157,40 @@ test('pedido alheio não exibe detalhes e conflito exige releitura', async () =>
   assert.match(b.el('status-mensagem').textContent, /Atualizar pedido/);
 });
 
-test('trocar enviados por recebidos consulta o filtro correto sem mostrar contatos', async () => {
+test('listas enviadas e recebidas usam a rota correta e permitem abrir o pedido para responder', async () => {
   const a = await ambiente('meus-pedidos.html', 'pedidos.js', '', () => ({ itens: [pedido()], totalPaginas: 1, pagina: 1 }));
   assert.equal(a.el('pedidos-mensagem').textContent, '');
   assert.equal(a.chamadas[0].rota, '/solicitacoes?tipo=ENVIADAS&pagina=1');
-  a.el('pedidos-tipo').value = 'RECEBIDAS'; await a.el('pedidos-tipo').emitir('change');
+  assert.equal(a.el('pedidos-enviadas')['aria-current'], 'page');
+  const b = await ambiente('meus-pedidos.html', 'pedidos.js', '?tipo=RECEBIDAS', () => ({ itens: [pedido()], totalPaginas: 1, pagina: 1 }));
+  assert.equal(b.chamadas[0].rota, '/solicitacoes?tipo=RECEBIDAS&pagina=1');
+  assert.equal(b.el('pedidos-recebidas')['aria-current'], 'page');
+  assert.match(b.el('pedidos-orientacao').textContent, /aceitar ou recusar/);
+  const card = b.el('pedidos-lista').children[0];
+  assert.equal(card.children[2].textContent, 'Cliente: Cliente');
+  assert.equal(card.children.at(-1).href, 'status-atendimento.html?id=20');
+  assert.equal(card.children.at(-1).textContent, 'Ver pedido e responder');
+  assert.ok(card.children.every(el => !/telefone|endereco/i.test(el.textContent)));
+});
+
+test('recebidos mantém filtro ao paginar e atualizar, e explica quando não há pedidos', async () => {
+  const a = await ambiente('meus-pedidos.html', 'pedidos.js', '?tipo=RECEBIDAS', rota => ({
+    itens: [], totalPaginas: 2, pagina: Number(new URLSearchParams(rota.split('?')[1]).get('pagina')),
+  }));
+  assert.match(a.el('pedidos-mensagem').textContent, /ainda não recebeu/);
+  await a.el('pedidos-proxima').emitir('click');
   await new Promise(resolve => setImmediate(resolve));
-  assert.equal(a.el('pedidos-mensagem').textContent, '');
-  assert.equal(a.chamadas.at(-1).rota, '/solicitacoes?tipo=RECEBIDAS&pagina=1');
-  assert.equal(a.el('pedidos-lista').children[0].children[0].href, 'status-atendimento.html?id=20');
+  assert.equal(a.chamadas.at(-1).rota, '/solicitacoes?tipo=RECEBIDAS&pagina=2');
+  await a.el('pedidos-atualizar').emitir('click');
+  assert.equal(a.chamadas.at(-1).rota, '/solicitacoes?tipo=RECEBIDAS&pagina=2');
+  assert.equal(a.el('pedidos-proxima').disabled, true);
+});
+
+test('recebidos exige login e preserva a lista no retorno', async () => {
+  const a = await ambiente('meus-pedidos.html', 'pedidos.js', '?tipo=RECEBIDAS', () => {
+    throw Object.assign(new Error('Entre'), { status: 401 });
+  });
+  assert.equal(a.redirecionamentos[0], 'login.html?retorno=meus-pedidos.html%3Ftipo%3DRECEBIDAS');
 });
 
 test('login retoma somente uma rota interna de pedidos e bloqueia destino externo', async () => {

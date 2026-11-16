@@ -32,6 +32,26 @@
 #cabecalho-findy .findy-topo__link:hover { background: #edf6fb; color: #075d89; }
 #cabecalho-findy .findy-topo__link[aria-current='page'] { background: #e0f1fa; color: #075d89; }
 #cabecalho-findy .findy-topo__acoes { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+#cabecalho-findy .findy-topo__conta { position: relative; margin: 0; padding: 0; border: 0; }
+#cabecalho-findy .findy-topo__conta-resumo {
+  display: flex; align-items: center; gap: 10px; padding: 7px 10px;
+  border: 1px solid #c5d6e0; border-radius: 14px; background: #f5f9fc;
+  color: #152938; cursor: pointer; list-style: none; font: inherit;
+}
+#cabecalho-findy .findy-topo__conta-resumo::-webkit-details-marker { display: none; }
+#cabecalho-findy .findy-topo__avatar { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; flex-shrink: 0; }
+#cabecalho-findy .findy-topo__nome { max-width: 160px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: 600; }
+#cabecalho-findy .findy-topo__seta { font-size: 16px; }
+#cabecalho-findy .findy-topo__conta[open] .findy-topo__seta { transform: rotate(180deg); }
+#cabecalho-findy .findy-topo__conta-opcoes {
+  position: absolute; top: calc(100% + 8px); right: 0; z-index: 2;
+  display: flex; flex-direction: column; gap: 4px; width: 240px;
+  max-width: calc(100vw - 44px); margin: 0; padding: 8px;
+  border: 1px solid #d9e5ec; border-radius: 14px; background: #fff;
+  box-shadow: 0 10px 24px rgb(28 62 82 / 14%);
+}
+#cabecalho-findy .findy-topo__conta-opcoes .findy-topo__link { justify-content: flex-start; white-space: normal; }
+#cabecalho-findy .findy-topo__conta-opcoes .findy-topo__botao { width: 100%; margin-top: 4px; }
 #cabecalho-findy .findy-topo__botao, #cabecalho-findy .findy-topo__buscar {
   display: inline-flex; align-items: center; justify-content: center;
   border: 1px solid #125e83; border-radius: 10px; padding: 10px 16px;
@@ -56,6 +76,7 @@
 @media (max-width: 560px) {
   #cabecalho-findy { width: calc(100% - 20px); margin-top: 10px; padding: 12px; border-radius: 16px; }
   #cabecalho-findy .findy-topo__imagem { width: 48px; height: 48px; }
+  #cabecalho-findy .findy-topo__nome { max-width: min(120px, 27vw); }
   #cabecalho-findy .findy-topo__link { padding: 10px; font-size: 12px; }
   #cabecalho-findy .findy-topo__ferramentas { flex-wrap: wrap; gap: 10px; }
   #cabecalho-findy .findy-topo__busca { flex-basis: 100%; }

@@ -14,10 +14,13 @@
 
   <main class="hire-page">
     <h1 class="hire-page__title">Meus pedidos</h1>
-    <p>Acompanhe as solicitações que enviou e os pedidos recebidos como profissional.</p>
+    <p id="pedidos-orientacao">Acompanhe as solicitações que enviou e os pedidos recebidos como profissional.</p>
+    <nav class="pedido-abas" aria-label="Listas de pedidos">
+      <a id="pedidos-enviadas" href="meus-pedidos.html?tipo=ENVIADAS">Enviados como cliente</a>
+      <a id="pedidos-recebidas" href="meus-pedidos.html?tipo=RECEBIDAS">Recebidos como prestador</a>
+    </nav>
     <div class="pedido-filtros">
-      <label for="pedidos-tipo">Quero ver</label>
-      <select id="pedidos-tipo"><option value="ENVIADAS">Pedidos enviados</option><option value="RECEBIDAS">Pedidos recebidos</option></select>
+      <h2 id="pedidos-titulo">Pedidos enviados</h2>
       <button type="button" class="btn btn--dark" id="pedidos-atualizar">Atualizar lista</button>
     </div>
     <p id="pedidos-mensagem" class="pedido-mensagem" role="status" aria-live="polite">Carregando pedidos…</p>
