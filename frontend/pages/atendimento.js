@@ -32,14 +32,21 @@
     for (const botao of botoes) {
       botao.hidden = botao.dataset.acao === 'CANCELAR'
         ? !(conta.id === pedido.clienteId && ['PENDENTE', 'ACEITA'].includes(pedido.status) && futuro)
-        : !(conta.id === pedido.profissionalId && pedido.status === 'PENDENTE'
-            && (botao.dataset.acao === 'RECUSAR' || futuro));
+        : !(conta.id === pedido.profissionalId && pedido.status === 'PENDENTE');
+      botao.disabled = botao.dataset.acao === 'ACEITAR' && !futuro;
+      if (botao.disabled) botao.setAttribute('aria-describedby', 'status-aviso');
+      else botao.removeAttribute('aria-describedby');
     }
     $('status-aviso').textContent = pedido.status === 'ACEITA'
       ? 'O profissional confirmou a disponibilidade para o horário solicitado. O aceite não confirma o preço: cliente e prestador devem combinar o valor final e os detalhes pelo contato informado.'
       : pedido.status === 'PENDENTE' ? 'Aguardando resposta do profissional. O horário e o valor ainda precisam ser combinados.'
       : pedido.status === 'RECUSADA' ? 'O profissional recusou este pedido. Você pode escolher outro serviço.'
       : pedido.status === 'CANCELADA' ? 'Este pedido foi cancelado.' : 'Consulte a situação deste atendimento.';
+    if (pedido.status === 'PENDENTE' && !futuro) {
+      $('status-aviso').textContent = Number.isNaN(new Date(pedido.dataInicio).getTime())
+        ? 'Não foi possível conferir o horário deste pedido. Atualize a página antes de aceitar.'
+        : 'O horário solicitado já passou. O pedido não pode mais ser aceito; solicite ao cliente um novo pedido com data futura. Você ainda pode recusar este pedido.';
+    }
     $('status-conteudo').hidden = false;
   }
   async function carregar() {

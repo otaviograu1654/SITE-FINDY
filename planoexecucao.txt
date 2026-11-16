@@ -745,3 +745,13 @@ TRÊS RODADAS DO FLUXO DO MVP - 16/11/2026
   Resumo durável em docs/validacao-mvp-2026-11-16.md.
 - Limite: ferramenta de navegador indisponível. Frontend testado com DOM/API
   simulados; visual, cliques reais, celular e envio real de e-mail não conferidos.
+
+BOTÃO DE ACEITE DO PEDIDO - 16/11/2026
+- Corrigida a ocultação silenciosa de Aceitar pedido quando a data já passou:
+  prestador agora vê Aceitar e Recusar nos pedidos pendentes. Aceitar fica
+  habilitado para data futura; para pedido vencido fica desabilitado com motivo
+  e orientação para novo pedido. Mantida a validação do horário no backend.
+- Cliente continua sem ações exclusivas do prestador. Versão do script de
+  atendimento atualizada no HTML para evitar carregar o arquivo antigo em cache.
+- 32 testes JavaScript passaram, incluindo pedido vencido e releitura com data
+  futura habilitando o aceite. Mudanças locais, sem deploy ou alteração de dados.

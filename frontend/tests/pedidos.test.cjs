@@ -16,6 +16,7 @@ class Elemento {
   replaceChildren(...itens) { this.children = itens; }
   addEventListener(tipo, handler) { this.handlers[tipo] = handler; }
   setAttribute(nome, valor) { this[nome] = valor; }
+  removeAttribute(nome) { delete this[nome]; }
   async emitir(tipo) { return this.handlers[tipo]?.({ preventDefault() {} }); }
   reportValidity() { return true; }
   focus() { this.focused = true; }
@@ -142,6 +143,21 @@ test('cliente vê cancelamento e profissional vê aceite/recusa; atualização u
       assert.deepEqual(visiveis(), []);
     }
   }
+});
+
+test('prestador sempre encontra aceite e recusa no pedido pendente, com motivo se o horário passou', async () => {
+  let atual = { ...pedido(), dataInicio: new Date(Date.now() - 86400000).toISOString() };
+  const a = await ambiente('status-atendimento.html', 'atendimento.js', '?id=20', rota =>
+    rota === '/auth/me' ? { id: 2 } : atual);
+  const aceitar = a.acoes.find(b => b.dataset.acao === 'ACEITAR');
+  const recusar = a.acoes.find(b => b.dataset.acao === 'RECUSAR');
+  assert.equal(aceitar.hidden, false); assert.equal(aceitar.disabled, true);
+  assert.equal(recusar.hidden, false); assert.equal(recusar.disabled, false);
+  assert.match(a.el('status-aviso').textContent, /horário solicitado já passou/);
+  atual = { ...atual, dataInicio: futuro() };
+  await a.el('status-atualizar').emitir('click');
+  assert.equal(aceitar.hidden, false); assert.equal(aceitar.disabled, false);
+  assert.equal(aceitar['aria-describedby'], undefined);
 });
 
 test('detalhes mostram contatos apenas quando servidor libera após aceite e retiram ao cancelar', async () => {
