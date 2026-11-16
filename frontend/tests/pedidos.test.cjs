@@ -38,7 +38,10 @@ async function ambiente(pagina, script, search, responder) {
     window: {}, URLSearchParams, Date, Number,
     location: { search, pathname: '/' + pagina, assign: url => redirecionamentos.push(url) },
     document: {
-      getElementById: id => { assert.ok(elementos.has(id), `ID existente no HTML: ${id}`); return elementos.get(id); },
+      getElementById: id => {
+        if (['login-form', 'signup-form', 'dados-pessoais'].includes(id) && !elementos.has(id)) return null;
+        assert.ok(elementos.has(id), `ID existente no HTML: ${id}`); return elementos.get(id);
+      },
       querySelectorAll: seletor => { assert.equal(seletor, '[data-acao]'); return acoes; },
       createElement: tag => new Elemento(tag),
     },
@@ -141,6 +144,24 @@ test('cliente vê cancelamento e profissional vê aceite/recusa; atualização u
   }
 });
 
+test('detalhes mostram contatos apenas quando servidor libera após aceite e retiram ao cancelar', async () => {
+  let atual = { ...pedido(), telefoneCliente: '34911112222', telefoneProfissional: '34933334444',
+    endereco: 'Rua privada, 10', bairro: 'Centro', cidade: 'Patos de Minas', estado: 'MG', contatosLiberados: false };
+  const a = await ambiente('status-atendimento.html', 'atendimento.js', '?id=20', rota =>
+    rota === '/auth/me' ? { id: 1 } : atual);
+  const detalhes = () => a.el('status-detalhes').children.map(el => el.textContent).join(' ');
+  assert.doesNotMatch(detalhes(), /34911112222|34933334444|Rua privada/);
+  assert.match(detalhes(), /Centro/);
+  assert.match(a.el('status-privacidade').textContent, /após o aceite/);
+  atual = { ...atual, status: 'ACEITA', contatosLiberados: true };
+  await a.el('status-atualizar').emitir('click');
+  assert.match(detalhes(), /34911112222/); assert.match(detalhes(), /Rua privada/);
+  assert.match(a.el('status-aviso').textContent, /não confirma o preço/);
+  atual = { ...atual, status: 'CANCELADA', contatosLiberados: false };
+  await a.el('status-atualizar').emitir('click');
+  assert.doesNotMatch(detalhes(), /34911112222|34933334444|Rua privada/);
+});
+
 test('pedido alheio não exibe detalhes e conflito exige releitura', async () => {
   const a = await ambiente('status-atendimento.html', 'atendimento.js', '?id=20', rota => {
     if (rota === '/auth/me') return { id: 3 };
@@ -191,6 +212,45 @@ test('recebidos exige login e preserva a lista no retorno', async () => {
     throw Object.assign(new Error('Entre'), { status: 401 });
   });
   assert.equal(a.redirecionamentos[0], 'login.html?retorno=meus-pedidos.html%3Ftipo%3DRECEBIDAS');
+});
+
+test('painel mostra pedidos recentes dos dois lados e abre recebidos para resposta', async () => {
+  const a = await ambiente('minha-conta.html', 'painel-conta.js', '', rota => {
+    if (rota === '/auth/me') return { id: 2, nome: 'Otávio' };
+    assert.match(rota, /^\/solicitacoes\?tipo=(RECEBIDAS|ENVIADAS)&pagina=1$/);
+    return { total: 7, itens: Array.from({ length: 7 }, (_, i) => ({ ...pedido(), id: 20 + i })) };
+  });
+  assert.equal(a.el('painel-saudacao').textContent, 'Olá, Otávio!');
+  assert.equal(a.el('painel-recebidos').children.length, 5);
+  assert.equal(a.el('painel-recebidos-resumo').textContent, '7 pedido(s) ao todo');
+  const link = a.el('painel-recebidos').children[0].children.at(-1);
+  assert.equal(link.textContent, 'Ver pedido e responder');
+  assert.equal(link.href, 'status-atendimento.html?id=20');
+  assert.equal(a.el('painel-enviados').children[0].children.at(-1).textContent, 'Acompanhar pedido');
+  await a.el('painel-atualizar').emitir('click');
+  assert.equal(a.chamadas.filter(c => c.rota.includes('tipo=RECEBIDAS')).length, 2);
+});
+
+test('painel diferencia listas vazias de falhas e mantém a outra lista acessível', async () => {
+  const a = await ambiente('minha-conta.html', 'painel-conta.js', '', rota => {
+    if (rota === '/auth/me') return { nome: 'Cliente' };
+    if (rota.includes('RECEBIDAS')) throw new Error('Falha de conexão');
+    return { itens: [], total: 0 };
+  });
+  assert.match(a.el('painel-recebidos').children[0].textContent, /Não foi possível carregar/);
+  assert.equal(a.el('painel-recebidos-resumo').textContent, '');
+  assert.match(a.el('painel-enviados').children[0].textContent, /ainda não solicitou/);
+  assert.equal(a.el('painel-atualizar').disabled, false);
+});
+
+test('painel exige sessão e perfil público não carrega dados privados do editor', async () => {
+  const a = await ambiente('minha-conta.html', 'painel-conta.js', '', () => {
+    throw Object.assign(new Error('Entre'), { status: 401 });
+  });
+  assert.deepEqual(a.redirecionamentos, ['login.html']);
+  const b = await ambiente('perfil-prestador.html', 'conta.js', '?id=1', () => assert.fail('Consulta privada em perfil público'));
+  assert.equal(b.chamadas.length, 0);
+  assert.equal(b.el('dados-pessoais').hidden, true);
 });
 
 test('login retoma somente uma rota interna de pedidos e bloqueia destino externo', async () => {

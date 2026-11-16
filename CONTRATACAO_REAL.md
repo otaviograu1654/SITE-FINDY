@@ -28,8 +28,12 @@ permite aceitar, recusar ou cancelar conforme a conta conectada.
 - Somente serviço ativo de perfil aprovado e ativo, com conta ativa, recebe pedidos.
   Ninguém pode contratar o próprio serviço.
 - Somente os participantes consultam o pedido. A listagem não mostra endereço ou
-  telefone; os detalhes privados ficam disponíveis ao cliente e profissional
-  autenticados. Administrador que não participa não recebe esses detalhes.
+  telefone. Nos detalhes, telefones e rua/número são omitidos pela API enquanto
+  PENDENTE; bairro, cidade, UF e mensagem continuam disponíveis. Após ACEITA,
+  os dois participantes autenticados recebem os contatos e endereço completo.
+  RECUSADA e CANCELADA ocultam novamente esses campos. Administrador que não
+  participa não recebe o pedido. Contatos copiados anteriormente não podem ser
+  recolhidos pelo sistema. Não inserir contatos/endereço completo na mensagem livre.
 - O profissional aceita ou recusa um pedido PENDENTE. O aceite exige horário ainda
   futuro e serviço/perfil disponíveis. Não há reserva automática de agenda.
 - O cliente cancela PENDENTE ou ACEITA antes do horário marcado. Não há multa.
@@ -38,6 +42,17 @@ permite aceitar, recusar ou cancelar conforme a conta conectada.
   em requisições simultâneas. Não são enviados e-mails ou avisos automáticos.
 - Iniciar atendimento, concluir, confirmar conclusão e avaliar são a fase 6.
   Não há endpoint nesta entrega para pular diretamente para CONCLUIDA.
+
+Atualização de privacidade em 16/11/2026: o aceite confirma disponibilidade,
+não o preço. Faixa é estimativa; cliente e prestador combinam valor final,
+escopo e pagamento antes do serviço. Esta versão não registra confirmação
+bilateral desse acordo nem processa pagamentos. Não exige migração SQL.
+
+Validação específica: PrivacidadeContatoTests cria dados identificados como
+"Teste privacidade" e e-mails privacidade.*@example.invalid no banco separado
+findy_cadastro_test_20261028. Sem rollback de teste ou limpeza automática;
+registros e relatórios Surefire permanecem para consulta. Executar somente essa
+classe até adaptar as rotinas de limpeza da suíte antiga à preferência do usuário.
 
 ## Banco
 

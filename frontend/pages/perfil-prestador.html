@@ -17,9 +17,30 @@
 
 <main>
 <h1>Perfil profissional</h1>
+<section id="dados-pessoais" hidden>
+<p id="conta-mensagem" class="mensagem" role="status" aria-live="polite">Carregando seus dados…</p>
+    <section class="profile-hero" aria-label="Seu perfil">
+      <div class="avatar-ring"><img id="conta-foto" src="images/chat-avatar.png" alt="Sua foto de perfil"></div>
+      <div class="profile-info"><h2 id="conta-nome">Seu perfil</h2><p id="conta-email"></p><span class="role-tag">Você pode contratar e oferecer serviços</span></div>
+    </section>
+    <section class="panel">
+      <h2>Dados pessoais da conta</h2>
+      <p>Este formulário está disponível também para quem só contrata serviços. Salvar aqui não reenvia seu cadastro profissional para análise.</p>
+      <form id="perfil-form" class="perfil-form">
+        <label>Nome completo<input name="nome" required maxlength="100" autocomplete="name"></label>
+        <label>Telefone<input name="telefone" type="tel" maxlength="20" autocomplete="tel"></label>
+        <label>Bairro<input name="bairro" maxlength="100" autocomplete="address-level3"></label>
+        <label>Cidade<input name="cidade" maxlength="100" autocomplete="address-level2"></label>
+        <label>Estado (UF)<input name="estado" maxlength="2" pattern="[A-Z]{2}" placeholder="MG" autocomplete="address-level1"></label>
+        <label>Escolher foto<input id="foto-arquivo" type="file" accept="image/jpeg,image/png" disabled><small>Selecione do computador ou da galeria: JPG ou PNG de até 2 MB e até 4096 pixels em cada lado. Confira a prévia acima e clique em Salvar meus dados.</small></label>
+        <input name="foto" type="hidden">
+        <button class="btn-black" type="submit" disabled>Salvar meus dados</button>
+      </form>
+    </section>
+</section>
 <p id="prestador-mensagem" class="mensagem" role="status" aria-live="polite">Carregando perfil…</p>
 <div id="prestador-conteudo" hidden>
-  <section class="profile-hero" aria-label="Apresentação profissional">
+  <section class="profile-hero" id="prestador-apresentacao" aria-label="Apresentação profissional" hidden>
     <div class="avatar-ring"><img id="prestador-foto" src="images/chat-avatar.png" alt="Foto do profissional"></div>
     <div class="profile-info">
       <h2 id="prestador-nome"></h2><span class="role-tag">Prestador de serviços</span>
@@ -47,7 +68,7 @@
   </div>
   <section class="panel" id="prestador-editor" hidden>
     <h2>Seu cadastro profissional</h2>
-    <p>Preencha em três etapas. Ao enviar, seu perfil segue para análise. A conta continua disponível para contratar.</p>
+    <p>Ao enviar este cadastro, seu perfil segue para análise, mesmo que já estivesse aprovado. Para mudar apenas dados pessoais ou foto, use o formulário acima. A conta continua disponível para contratar.</p>
     <ol class="cadastro-progresso" aria-label="Etapas do cadastro">
       <li aria-current="step">1. Sobre você</li><li>2. Seu trabalho</li><li>3. Revisão</li>
     </ol>

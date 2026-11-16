@@ -28,7 +28,7 @@
     <h1 class="hire-page__title">Solicitar serviço</h1>
     <a href="meus-pedidos.html">Acompanhar meus pedidos</a>
     <p id="hire-mensagem" class="pedido-mensagem" role="status" aria-live="polite">Carregando serviço…</p>
-    <p id="hire-telefone-aviso" class="pedido-aviso" hidden>Preencha seu telefone com DDD em <a href="minha-conta.html" target="_blank" rel="noopener">Minha conta (nova aba)</a> para o profissional poder falar com você.</p>
+    <p id="hire-telefone-aviso" class="pedido-aviso" hidden>Preencha seu telefone com DDD em <a href="perfil-prestador.html#dados-pessoais" target="_blank" rel="noopener">Dados pessoais do perfil (nova aba)</a> para o profissional poder falar com você.</p>
     <div class="hire-layout" id="hire-layout" hidden>
       <form class="hire-form" id="hire-form">
         <section class="hire-summary">
@@ -57,7 +57,7 @@
             <div class="field"><label for="hire-estado">UF</label><input id="hire-estado" required maxlength="2" pattern="[A-Za-z]{2}" placeholder="MG" autocomplete="address-level1"></div>
           </div>
           <div class="field"><label for="hire-observacoes">Descreva o que precisa (opcional)</label><textarea id="hire-observacoes" rows="4" maxlength="5000"></textarea></div>
-          <p>Seu contato e o endereço ficam disponíveis somente a você e ao profissional escolhido. O pedido depende da resposta dele.</p>
+          <p>O profissional escolhido verá a descrição, a data e a região do atendimento. Os telefones dos dois e o endereço completo serão liberados somente entre vocês após ele aceitar. Não coloque telefone, e-mail ou endereço completo na descrição livre. O aceite confirma disponibilidade, e o valor final deve ser combinado entre vocês antes do serviço.</p>
         </fieldset>
       </form>
       <aside class="hire-sidebar"><div class="hire-price-card">
@@ -112,7 +112,7 @@
       </div>
 
       <div class="chat-panel__quick-replies" id="chat-panel-quick-replies">
-        <button type="button" class="chat-quick-reply" data-resposta="Escolha um serviço no perfil do profissional, preencha o pedido e clique em &quot;Enviar solicitação&quot;. Acompanhe a resposta em Meus pedidos.">
+        <button type="button" class="chat-quick-reply" data-resposta="Escolha um serviço no perfil do profissional, entre na sua conta e preencha data futura, horário, quantidade e local. Clique em Enviar solicitação e acompanhe em Meus pedidos, na lista de enviados. O prestador pode aceitar ou recusar; o aceite confirma disponibilidade, não o preço final.">
           Como funciona a contratação?
         </button>
         <button type="button" class="chat-quick-reply" data-resposta="Nada é cobrado pela Findy ao solicitar. Combine o valor final, a forma e o momento do pagamento diretamente com o profissional.">
@@ -122,7 +122,16 @@
           Posso cancelar depois?
         </button>
         <button type="button" class="chat-quick-reply" data-resposta="Consulte a data e a situação em Meus pedidos. O horário depende do aceite do profissional.">
-          Como não esqueço o horário marcado?
+          Como acompanho a resposta e o horário?
+        </button>
+        <button type="button" class="chat-quick-reply" data-resposta="A faixa de preço é uma estimativa. Depois do aceite, use os contatos disponíveis nos detalhes para combinar valor final, o que está incluído e pagamento antes do serviço. A Findy não registra a confirmação desse acordo nesta versão.">
+          O preço mostrado já é o valor final?
+        </button>
+        <button type="button" class="chat-quick-reply" data-resposta="Antes do aceite, o prestador vê descrição, data e região. Telefones e endereço completo só são liberados aos dois participantes depois que ele aceita. Pedidos recusados ou cancelados ocultam novamente esses campos. Não inclua contatos ou endereço completo na descrição livre.">
+          Quando os contatos são liberados?
+        </button>
+        <button type="button" class="chat-quick-reply" data-resposta="Ainda não há chat entre os participantes. Após o aceite, consulte os telefones nos detalhes para ligar ou usar WhatsApp, se o número tiver WhatsApp. A mensagem inicial do pedido não é uma conversa com troca de respostas.">
+          Como falo com o profissional?
         </button>
       </div>
     </div>

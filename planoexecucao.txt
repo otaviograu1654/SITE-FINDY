@@ -654,3 +654,94 @@ PRESERVAÇÃO DOS DADOS DE TESTES - PREFERÊNCIA DO USUÁRIO - 30/10/2026
   pode não gerar registro; guardar também resultados e erros da execução para
   permitir análise, sem forçar persistência de transações inválidas.
 - Esta atualização registra a orientação; a suíte ainda não foi adaptada.
+
+PAINEL MINHA CONTA E EDIÇÃO DO PERFIL - 16/11/2026
+- Autorizado reorganizar Minha conta como painel de solicitações e levar os dados
+  pessoais para Perfil profissional. Formulário de nome, telefone, localização
+  e foto movido para área privada dessa página, acessível também a clientes sem
+  perfil profissional. Com ?id=, a página permanece exclusivamente pública.
+- Minha conta agora mostra até cinco pedidos recebidos e cinco enviados recentes,
+  situação de cada um, totais das listas, atalhos para todos os pedidos e botão
+  Atualizar painel. Pedidos recebidos pendentes oferecem Ver pedido e responder.
+  Usa /solicitacoes existente, sem inventar contagem de não lidos ou marcar leitura.
+  Não há avisos automáticos; usuário atualiza o painel para conferir mudanças.
+- Dados pessoais salvos pelo formulário separado usam PUT /perfil e não alteram
+  aprovação. Enviar cadastro profissional usa PUT /prestadores/me/cadastro e
+  sempre coloca em PENDENTE, inclusive reenvio sem mudanças. Orientação adicionada
+  na tela; regras de aprovação do backend não foram alteradas.
+- Dados dos dois formulários e nome/foto do cabeçalho sincronizados ao salvar.
+- Elevação dos cards de profissionais já implementada em style.css com hover,
+  sombra, foco de teclado e respeito a movimento reduzido. Nenhuma alteração
+  adicional foi necessária no efeito nesta etapa.
+- Testes desta etapa usam API simulada, sem gravar ou apagar dados de banco.
+  Os 30 testes JavaScript passaram. Conferência visual e publicação pendentes.
+
+AJUSTES DE HOVER E APRESENTAÇÃO DO PERFIL - 16/11/2026
+- Efeito de elevação ampliado para cards de categorias da home (a.card), além
+  dos profissionais. Regra usa any-hover para incluir mouse em dispositivos
+  híbridos; sobe 7px com sombra e transição, respeitando movimento reduzido.
+- index.html e categoria.html carregam style.css com versão 20261116-2 para
+  renovar o CSS em cache. Não foi alterada a preferência de movimento do usuário.
+- No perfil próprio, manter apenas o primeiro bloco azul de dados da conta.
+  O bloco de apresentação profissional é exibido exclusivamente no perfil público
+  por ID, evitando duplicação na edição sem remover a apresentação dos visitantes.
+- Validação: 30 testes JavaScript passaram; sintaxe e diff sem erros. Conferência
+  visual pendente; alterações locais, sem deploy nem alterações no banco.
+
+PROTEÇÃO DE CONTATOS DOS PEDIDOS - 16/11/2026
+- Usuário escolheu liberar contatos somente após o aceite do prestador.
+- /solicitacoes/{id} e respostas de criação/ação mantêm autorização por participante.
+  API omite telefoneCliente, telefoneProfissional e endereco em PENDENTE,
+  RECUSADA e CANCELADA. Bairro, cidade, UF e mensagem continuam disponíveis.
+  contatosLiberados indica a regra aplicada; ACEITA libera os dados aos dois.
+- Listagens e perfis públicos continuam sem campos de telefone e endereço exato.
+  Alterar o ID na URL não dá acesso a pedido alheio, inclusive para admin.
+- Tela informa compartilhamento após aceite, orienta não inserir dados de contato
+  no texto livre e explica que aceite confirma disponibilidade, não preço final.
+  Valor final, escopo e pagamento são combinados pelas partes; ainda não existe
+  confirmação bilateral de preço registrada pelo sistema.
+- Novos testes PrivacidadeContatoTests preservam dados identificáveis e não têm
+  rollback de teste nem limpeza automática. Trava impede executar esses testes
+  em banco diferente de findy_cadastro_test_20261028. Suíte antiga não executada
+  nesta etapa, pois sua limpeza automática ainda precisa ser adaptada.
+- Sem migração SQL. Reiniciar backend local para carregar a regra; para online,
+  publicar a nova versão no Render. Conferência visual pendente.
+- Validação concluída: três testes de integração de privacidade passaram no banco
+  separado e 31 testes JavaScript passaram. Consulta posterior confirmou pedidos
+  138 PENDENTE, 139 RECUSADA, 140 CANCELADA e 141 ACEITA preservados, juntamente
+  com contas e serviços de teste. Relatórios em backend/plataformaservicos/target/surefire-reports.
+
+PERGUNTAS FREQUENTES DO FIDO - 16/11/2026
+- Atualizados os textos em categoria.html e contratacao.html para refletir o fluxo
+  atual. Removida a informação incorreta de recuperação de senha indisponível.
+- FAQ orienta usar Esqueceu a senha?, conferir e-mail/spam e abrir link de uso único
+  válido por 30 minutos. O backend redefine a senha; Brevo envia o e-mail.
+- Respostas cobrem cadastro, publicação do prestador, edição dos dados pessoais,
+  aprovação, pedidos recebidos, privacidade após aceite, ausência de chat interno,
+  contato por telefone/WhatsApp, estimativa de preço e negociação entre as partes.
+- Mudança de conteúdo apenas. Verificados atributos HTML e respostas completas:
+  nove perguntas em categorias e sete na contratação. Sem envio de e-mails,
+  execução de testes de banco ou publicação nesta atualização.
+
+VISIBILIDADE DA SENHA NO LOGIN - 16/11/2026
+- Adicionado botão Mostrar/Ocultar junto à senha do login. Começa oculta e o
+  botão não envia o formulário nem altera o valor digitado. Operável por teclado,
+  com indicação acessível do estado. Sem mudanças na autenticação do backend.
+- O MVP atual cobre busca e solicitação até aceite/recusa/cancelamento. Teste
+  completo no navegador, revisão visual e publicação das mudanças ainda pendentes;
+  conclusão, avaliações e notificações automáticas seguem como próximas etapas.
+
+TRÊS RODADAS DO FLUXO DO MVP - 16/11/2026
+- Executadas três rodadas independentes com FluxoMvpTests e PrivacidadeContatoTests:
+  quatro testes de integração por rodada e 31 JavaScript por rodada, todos aprovados.
+  Total de 105 execuções, zero falhas nos cenários cobertos.
+- Fluxo: cadastro/login, foto, perfil pendente, aprovação admin, publicação,
+  categoria sem duplicação, solicitação, enviados/recebidos, aceite, recusa,
+  cancelamento, privacidade, permissões, logout e consulta após novo login.
+- Sem limpeza automática: confirmados 21 pedidos preservados (IDs 142 a 162),
+  seis aceitos, seis cancelados, três pendentes e seis recusados. Dados sintéticos
+  de contas, fotos e serviços também mantidos. Nenhuma mudança no Neon/Render.
+- Logs separados em backend/plataformaservicos/target/verificacao-fluxo-b6ae6591.
+  Resumo durável em docs/validacao-mvp-2026-11-16.md.
+- Limite: ferramenta de navegador indisponível. Frontend testado com DOM/API
+  simulados; visual, cliques reais, celular e envio real de e-mail não conferidos.

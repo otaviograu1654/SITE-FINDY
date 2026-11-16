@@ -79,3 +79,12 @@ button:disabled { opacity: .55; cursor: wait; }
 #cadastro-habilidades label {padding:7px 0;}
 .cadastro-revisao,.admin-ficha {overflow-wrap:anywhere;}
 .cadastro-revisao p,.admin-ficha p {margin:12px 0;white-space:pre-wrap;}
+
+/* Painel da conta: solicitações recentes e atalhos para acompanhamento. */
+.conta-paineis { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; margin: 24px 0; }
+.conta-paineis > .panel { margin: 0; min-width: 0; }
+.conta-pedido { padding: 18px 0; border-bottom: 1px solid #d7dce2; overflow-wrap: anywhere; }
+.conta-pedido h3 { font-size: 1rem; }
+.conta-pedido p { margin-top: 8px; }
+.conta-pedido a:focus-visible { outline: 3px solid #1687be; outline-offset: 4px; }
+@media (max-width: 760px) { .conta-paineis { grid-template-columns: 1fr; } }

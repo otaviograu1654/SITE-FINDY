@@ -105,14 +105,23 @@ public class SolicitacaoService {
 
     @Transactional(readOnly = true)
     public Map<String, Object> consultar(Long usuarioId, Long id) {
-        // Contato e endereço só são entregues aos dois participantes autenticados.
+        // Somente participantes autenticados recebem contatos após o aceite.
         var pedidos = banco.queryForList(RESUMO + """
                 ,so.mensagem,so.endereco,so.bairro,so.cidade,so.estado,
                 cliente.telefone AS "telefoneCliente", profissional.telefone AS "telefoneProfissional"
                 """ + ORIGEM + " WHERE so.id=? AND (so.cliente_id=? OR p.usuario_id=?)",
                 id, usuarioId, usuarioId);
         if (pedidos.isEmpty()) throw naoEncontrado("Solicitação não encontrada na sua conta.");
-        return pedidos.getFirst();
+        var pedido = pedidos.getFirst();
+        boolean liberados = List.of("ACEITA", "EM_ANDAMENTO", "AGUARDANDO_CONFIRMACAO", "CONCLUIDA")
+                .contains(pedido.get("status"));
+        pedido.put("contatosLiberados", liberados);
+        if (!liberados) {
+            pedido.remove("telefoneCliente");
+            pedido.remove("telefoneProfissional");
+            pedido.remove("endereco");
+        }
+        return pedido;
     }
 
     public Map<String, Object> agir(Long usuarioId, Long id, String acao) {

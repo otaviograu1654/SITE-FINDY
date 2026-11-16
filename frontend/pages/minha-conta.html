@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Apresenta os dados pessoais e os acessos às funções da conta conectada. -->
+<!-- Apresenta o painel da conta com pedidos recentes e atalhos de acompanhamento. -->
 
 <html lang="pt-BR">
 <head>
@@ -19,39 +19,40 @@
 
   <main id="minha-conta">
     <h1>Minha conta</h1>
-    <p id="conta-mensagem" class="mensagem" role="status" aria-live="polite">Carregando seus dados…</p>
-    <section class="profile-hero" aria-label="Seu perfil">
-      <div class="avatar-ring"><img id="conta-foto" src="images/chat-avatar.png" alt="Sua foto de perfil"></div>
-      <div class="profile-info"><h2 id="conta-nome">Seu perfil</h2><p id="conta-email"></p><span class="role-tag">Você pode contratar e oferecer serviços</span></div>
-    </section>
+    <p id="painel-saudacao"></p>
+    <p>Confira as solicitações dos clientes e acompanhe os serviços que você pediu.</p>
+    <p id="conta-mensagem" class="mensagem" role="status" aria-live="polite">Carregando seu painel…</p>
+    <div class="conta-paineis">
+      <section class="panel" aria-labelledby="recebidos-titulo">
+        <h2 id="recebidos-titulo">Solicitações recebidas</h2>
+        <p id="painel-recebidos-resumo"></p>
+        <p>Pedidos mais recentes dos clientes. Os que aguardam resposta podem ser aceitos ou recusados nos detalhes.</p>
+        <div id="painel-recebidos" class="conta-pedidos"></div>
+        <a href="meus-pedidos.html?tipo=RECEBIDAS" class="btn-black perfil-link">Ver todos os recebidos</a>
+      </section>
+      <section class="panel" aria-labelledby="enviados-titulo">
+        <h2 id="enviados-titulo">Serviços que solicitei</h2>
+        <p id="painel-enviados-resumo"></p>
+        <div id="painel-enviados" class="conta-pedidos"></div>
+        <a href="meus-pedidos.html?tipo=ENVIADAS" class="btn-black perfil-link">Ver todos os enviados</a>
+      </section>
+    </div>
+    <button id="painel-atualizar" class="btn-black" type="button">Atualizar painel</button>
+    <p>O painel mostra até cinco pedidos recentes de cada lista. Use Atualizar painel para conferir mudanças de situação e novas solicitações.</p>
     <section class="panel">
-      <h2>Dados pessoais</h2>
-      <form id="perfil-form" class="perfil-form">
-        <label>Nome completo<input name="nome" required maxlength="100" autocomplete="name"></label>
-        <label>Telefone<input name="telefone" type="tel" maxlength="20" autocomplete="tel"></label>
-        <label>Bairro<input name="bairro" maxlength="100" autocomplete="address-level3"></label>
-        <label>Cidade<input name="cidade" maxlength="100" autocomplete="address-level2"></label>
-        <label>Estado (UF)<input name="estado" maxlength="2" pattern="[A-Z]{2}" placeholder="MG" autocomplete="address-level1"></label>
-        <label>Escolher foto<input id="foto-arquivo" type="file" accept="image/jpeg,image/png" disabled><small>Selecione do computador ou da galeria: JPG ou PNG de até 2 MB e até 4096 pixels em cada lado. Confira a prévia acima e clique em Salvar meus dados.</small></label>
-        <input name="foto" type="hidden">
-        <button class="btn-black" type="submit" disabled>Salvar meus dados</button>
-      </form>
-    </section>
-    <section class="panel">
-      <h2>Acompanhe seus pedidos</h2>
-      <p>Contratou um profissional? Consulte os enviados. Oferece serviços? Veja as solicitações dos clientes nos recebidos e abra um pedido para responder.</p>
-      <a href="meus-pedidos.html?tipo=ENVIADAS" class="btn-black perfil-link">Pedidos enviados</a>
-      <a href="meus-pedidos.html?tipo=RECEBIDAS" class="btn-black perfil-link">Pedidos recebidos como prestador</a>
+      <h2>Meu perfil e dados pessoais</h2>
+      <p>Edite seu nome, telefone, localização e foto na página de Perfil profissional. Quem só contrata serviços também pode atualizar os dados por lá.</p>
+      <a href="perfil-prestador.html#dados-pessoais" class="btn-black perfil-link">Editar meus dados</a>
     </section>
     <section class="panel">
       <h2>Quer oferecer serviços?</h2>
       <p>Preencha seu perfil e envie para aprovação. Depois, cadastre uma oferta em Meus serviços e escolha a categoria em que deseja aparecer. Marcar habilidades não cria uma oferta automaticamente.</p>
-      <p id="conta-publicacao" class="perfil-texto"></p>
       <a href="perfil-prestador.html" class="btn-black perfil-link">Ativar ou editar perfil profissional</a>
       <a href="meus-servicos.html" class="btn-black perfil-link">Cadastrar meus serviços</a>
     </section>
   </main>
 </div>
-<script src="conta.js" defer></script>
+<script src="pedidos-comum.js" defer></script>
+<script src="painel-conta.js" defer></script>
 </body>
 </html>

@@ -247,6 +247,10 @@ class SolicitacaoTests {
         mvc.perform(get("/solicitacoes/" + id).session(estranhoSessao)).andExpect(status().isNotFound());
         agir(id, estranhoSessao, "ACEITAR", 404);
         mvc.perform(get("/solicitacoes/" + id).session(profissionalSessao)).andExpect(status().isOk())
+                .andExpect(jsonPath("$.contatosLiberados").value(false))
+                .andExpect(jsonPath("$.endereco").doesNotExist());
+        agir(id, profissionalSessao, "ACEITAR", 200);
+        mvc.perform(get("/solicitacoes/" + id).session(profissionalSessao)).andExpect(status().isOk())
                 .andExpect(jsonPath("$.endereco").value("Rua de teste, 10"));
     }
 

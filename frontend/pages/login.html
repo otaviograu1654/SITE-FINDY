@@ -29,7 +29,10 @@
 
       <div class="field">
         <label for="login-senha">Senha</label>
-        <input type="password" id="login-senha" placeholder="Insira sua senha" required maxlength="72" autocomplete="current-password">
+        <div class="login-senha-campo">
+          <input type="password" id="login-senha" placeholder="Insira sua senha" required maxlength="72" autocomplete="current-password">
+          <button type="button" class="login-senha-toggle" data-mostrar-senha aria-controls="login-senha" aria-label="Mostrar senha" aria-pressed="false">Mostrar</button>
+        </div>
         <a href="recuperar-senha.html" class="field__link">Esqueceu a senha?</a>
       </div>
 

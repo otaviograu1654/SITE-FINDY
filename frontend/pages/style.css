@@ -151,6 +151,7 @@ a {
   color: var(--color-white);
   min-height: 0; /* permite que o card encolha dentro da célula do grid,
                      em vez de forçar a célula a crescer além do 1fr */
+  transition: transform 180ms ease, box-shadow 180ms ease;
 
   /* A foto de fundo de cada card (definida pelas classes --photo-*)
      preenche todo o cartão, cortando o excesso em vez de distorcer. */
@@ -270,6 +271,16 @@ a {
   border-radius: 4px;
   width: 260px;
 }
+
+.login-senha-campo { display: flex; align-items: stretch; gap: 6px; }
+.login-senha-campo input { min-width: 0; width: 100%; flex: 1; }
+.login-senha-toggle {
+  flex-shrink: 0; padding: 8px 12px; border: 1px solid #fff;
+  border-radius: var(--radius); background: #fff; color: #075d78;
+  font: inherit; font-weight: 600; cursor: pointer;
+}
+.login-senha-toggle:hover { background: #e0f1fa; }
+.login-senha-toggle:focus-visible { outline: 3px solid #111; outline-offset: 3px; }
 
 .field__link {
   position: absolute;
@@ -655,21 +666,24 @@ a {
   transition: transform 180ms ease, box-shadow 180ms ease;
 }
 
+a.card:focus-visible,
 .professional-card:focus-visible {
   outline: 3px solid #1687be;
   outline-offset: 4px;
 }
 
-@media (hover: hover) {
+/* any-hover inclui computadores com mouse e tela sensível ao toque. */
+@media (any-hover: hover) {
+  a.card:hover,
   .professional-card:hover {
-    transform: translateY(-5px);
+    transform: translateY(-7px);
     box-shadow: 0 12px 24px rgb(21 41 56 / 20%);
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .professional-card { transition: none; }
-  .professional-card:hover { transform: none; }
+  a.card, .professional-card { transition: none; }
+  a.card:hover, .professional-card:hover { transform: none; }
 }
 
 /* Cada foto ocupa uma altura fixa dentro do cartão — o rodapé azul

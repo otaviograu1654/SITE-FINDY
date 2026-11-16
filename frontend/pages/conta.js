@@ -5,7 +5,19 @@
   const { api, mensagem, enviar, foto } = Findy;
   const login = document.getElementById('login-form');
   const cadastro = document.getElementById('signup-form');
-  const conta = document.getElementById('minha-conta');
+  const conta = document.getElementById('dados-pessoais');
+
+  if (login) {
+    const alternar = login.querySelector('[data-mostrar-senha]');
+    alternar?.addEventListener('click', () => {
+      const senha = document.getElementById('login-senha');
+      const mostrar = senha.type === 'password';
+      senha.type = mostrar ? 'text' : 'password';
+      alternar.textContent = mostrar ? 'Ocultar' : 'Mostrar';
+      alternar.setAttribute('aria-label', mostrar ? 'Ocultar senha' : 'Mostrar senha');
+      alternar.setAttribute('aria-pressed', String(mostrar));
+    });
+  }
 
   if (login) login.addEventListener('submit', async evento => {
     evento.preventDefault();
@@ -44,7 +56,7 @@
     });
   });
 
-  if (!conta) return;
+  if (!conta || new URLSearchParams(location.search).has('id')) return;
   const formulario = document.getElementById('perfil-form');
   const aviso = document.getElementById('conta-mensagem');
   const botao = formulario.querySelector('button[type="submit"]');
@@ -84,14 +96,15 @@
     }
   });
   window.addEventListener('pagehide', liberarPrevia);
-  function mostrar(dados) {
+  function mostrar(dados, avisar = true) {
     document.getElementById('conta-nome').textContent = dados.nome;
-    document.dispatchEvent(new CustomEvent('findy:perfil-atualizado', { detail: dados }));
+    if (avisar) document.dispatchEvent(new CustomEvent('findy:perfil-atualizado', { detail: dados }));
     document.getElementById('conta-foto').src = foto(dados.foto);
     for (const campo of ['nome', 'telefone', 'cidade', 'estado', 'foto', 'bairro']) {
       formulario.elements.namedItem(campo).value = dados[campo] || '';
     }
   }
+  document.addEventListener('findy:perfil-atualizado', evento => mostrar(evento.detail, false));
   formulario.elements.namedItem('estado').addEventListener('input', evento => {
     evento.target.value = evento.target.value.toUpperCase();
   });
@@ -129,23 +142,13 @@
       const [usuario, perfil] = await Promise.all([api('/auth/me'), api('/perfil')]);
       document.getElementById('conta-email').textContent = usuario.email;
       mostrar(perfil);
-      try {
-        const profissional = await api('/prestadores/me');
-        const faltas = [];
-        if (profissional.statusAprovacao !== 'APROVADO') faltas.push('Perfil profissional ainda não aprovado.');
-        if (!profissional.ativo) faltas.push('Perfil profissional desativado.');
-        if (!profissional.servicos?.some(s => s.ativo)) faltas.push('Você ainda não tem serviço ativo cadastrado.');
-        document.getElementById('conta-publicacao').textContent = faltas.length
-          ? faltas.join(' ') : 'Seu perfil tem ofertas ativas publicadas nas categorias cadastradas.';
-      } catch (erro) {
-        if (erro.status !== 404) throw erro;
-        document.getElementById('conta-publicacao').textContent = 'Seu perfil profissional ainda não foi criado.';
-      }
+      conta.hidden = false;
       botao.disabled = false;
       arquivoFoto.disabled = false;
       mensagem(aviso, '');
     } catch (erro) {
       if (erro.status === 401) return location.replace('login.html');
+      conta.hidden = false;
       mensagem(aviso, erro.message, true);
     }
   })();

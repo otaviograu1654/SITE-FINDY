@@ -23,6 +23,13 @@
   $('prestador-experiencia').textContent=d.iniciante?`Estou começando agora. ${d.experiencia||''}`:d.experiencia||'Não informada.';
   lista($('prestador-habilidades'),d.habilidades);servicos($('prestador-servicos'),d.servicos);
  }
+ document.addEventListener('findy:perfil-atualizado',evento=>{
+  if(id!==null||!pessoa)return;
+  pessoa={...pessoa,...evento.detail};
+  for(const n of ['nome','telefone','bairro','cidade','estado'])campo(n).value=pessoa[n]||'';
+  if(!$('cadastro-foto').files.length)$('cadastro-foto-previa').src=foto(pessoa.foto);
+  apresentar({...perfil,...pessoa});if(etapa===2)revisar();
+ });
  function situacao(){
   $('prestador-status').textContent=perfil?`${rotulos[perfil.statusAprovacao]}${perfil.ativo?'':' (desativado)'}`:'Perfil ainda não enviado';
   $('prestador-motivo').hidden=!perfil?.motivoRecusa;$('prestador-motivo').textContent=perfil?.motivoRecusa||'';
@@ -90,6 +97,7 @@
    trabalho.iniciante=campo('iniciante').checked;trabalho.habilidades=habilidades();
    perfil=await api('/prestadores/me/cadastro',{method:'PUT',body:{pessoa:pessoal,trabalho}});
    pessoa={...pessoa,...pessoal};apresentar({...pessoa,...perfil});situacao();
+   document.dispatchEvent(new CustomEvent('findy:perfil-atualizado',{detail:pessoa}));
    mensagem(aviso,'Cadastro salvo e enviado à análise. Cadastre suas ofertas em Meus serviços.');etapa=0;mostrarEtapa();
   }catch(e){mensagem(aviso,e.message,true);}finally{ocupado=false;els.forEach(el=>{el.disabled=false;});}
  };
@@ -97,7 +105,7 @@
   try{perfil=await api('/prestadores/me/ativacao',{method:'PATCH',body:{ativo:!perfil.ativo}});situacao();mensagem(aviso,'Situação atualizada.');}catch(e){mensagem(aviso,e.message,true);}
  });
  (async()=>{try{
-  if(id!==null){if(!/^[0-9]+$/.test(id))throw Error('Perfil não encontrado.');apresentar(await api(`/prestadores/${id}`));}
+  if(id!==null){if(!/^[0-9]+$/.test(id))throw Error('Perfil não encontrado.');apresentar(await api(`/prestadores/${id}`));$('prestador-apresentacao').hidden=false;}
   else{
    const [conta,usuario,catalogo]=await Promise.all([api('/perfil'),api('/auth/me'),api('/prestadores/habilidades')]);pessoa=conta;
    try{perfil=await api('/prestadores/me');}catch(e){if(e.status!==404)throw e;}

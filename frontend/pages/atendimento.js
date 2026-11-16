@@ -16,9 +16,18 @@
     detalhe('Horário solicitado', data(pedido.dataInicio));
     detalhe('Quantidade', `${pedido.quantidade} ${unidades[pedido.unidadeCobranca]}`);
     detalhe('Estimativa', faixa(pedido.estimativaMinima, pedido.estimativaMaxima));
-    detalhe('Local do atendimento', [pedido.endereco, pedido.bairro, pedido.cidade, pedido.estado].filter(Boolean).join(', '));
-    detalhe('Observações', pedido.mensagem); detalhe('Telefone do cliente', pedido.telefoneCliente);
-    detalhe('Telefone do profissional', pedido.telefoneProfissional);
+    detalhe(pedido.contatosLiberados ? 'Local do atendimento' : 'Região do atendimento',
+      [pedido.contatosLiberados ? pedido.endereco : null, pedido.bairro, pedido.cidade, pedido.estado].filter(Boolean).join(', '));
+    detalhe('Observações', pedido.mensagem);
+    if (pedido.contatosLiberados) {
+      detalhe('Telefone do cliente', pedido.telefoneCliente);
+      detalhe('Telefone do profissional', pedido.telefoneProfissional);
+    }
+    $('status-privacidade').textContent = pedido.contatosLiberados
+      ? 'Telefones e endereço completo disponíveis apenas aos dois participantes deste pedido, para combinar o atendimento.'
+      : pedido.status === 'PENDENTE'
+        ? 'Telefones e endereço completo serão liberados aos dois participantes após o aceite do prestador.'
+        : 'Os telefones e o endereço completo não estão disponíveis neste pedido encerrado.';
     const futuro = new Date(pedido.dataInicio) > new Date();
     for (const botao of botoes) {
       botao.hidden = botao.dataset.acao === 'CANCELAR'
@@ -27,7 +36,7 @@
             && (botao.dataset.acao === 'RECUSAR' || futuro));
     }
     $('status-aviso').textContent = pedido.status === 'ACEITA'
-      ? 'O profissional aceitou o horário solicitado. Combinem o valor final e os detalhes pelo contato informado.'
+      ? 'O profissional confirmou a disponibilidade para o horário solicitado. O aceite não confirma o preço: cliente e prestador devem combinar o valor final e os detalhes pelo contato informado.'
       : pedido.status === 'PENDENTE' ? 'Aguardando resposta do profissional. O horário e o valor ainda precisam ser combinados.'
       : pedido.status === 'RECUSADA' ? 'O profissional recusou este pedido. Você pode escolher outro serviço.'
       : pedido.status === 'CANCELADA' ? 'Este pedido foi cancelado.' : 'Consulte a situação deste atendimento.';
