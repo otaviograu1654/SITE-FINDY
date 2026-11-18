@@ -1,0 +1,135 @@
+/* Define o mesmo visual do cabeçalho em todas as páginas, usando os tokens do style.css (carregue-o antes). */
+#cabecalho-findy {
+  box-sizing: border-box;
+  display: block;
+  width: calc(100% - 2 * var(--gutter));
+  max-width: 1220px; /* mesma largura útil do conteúdo das páginas */
+  margin: var(--sp-4) auto 0;
+  padding: var(--sp-4) var(--sp-5);
+  border: 1px solid var(--color-line-soft);
+  border-radius: var(--radius-lg);
+  background: var(--color-white);
+  color: var(--color-black);
+  box-shadow: var(--shadow-md);
+  font-family: inherit;
+  font-size: .875rem;
+  line-height: 1.5;
+  position: relative;
+  z-index: 20;
+}
+#cabecalho-findy *, #cabecalho-findy *::before, #cabecalho-findy *::after { box-sizing: border-box; }
+#cabecalho-findy [hidden] { display: none !important; }
+
+#cabecalho-findy .findy-topo__linha { display: flex; align-items: center; gap: var(--sp-4); }
+#cabecalho-findy .findy-topo__logo { display: inline-flex; flex-shrink: 0; border-radius: var(--radius-sm); }
+#cabecalho-findy .findy-topo__imagem { display: block; width: 56px; height: 56px; object-fit: contain; }
+#cabecalho-findy .findy-topo__nav { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: var(--sp-1); flex: 1; margin: 0; padding: 0; }
+#cabecalho-findy .findy-topo__acoes { display: flex; align-items: center; gap: var(--sp-2); flex-shrink: 0; }
+
+/* Links de navegação */
+#cabecalho-findy .findy-topo__link:not(.findy-topo__botao) {
+  display: inline-flex; align-items: center; justify-content: center;
+  padding: var(--sp-2) var(--sp-3);
+  border: 2px solid transparent; border-radius: var(--radius-sm);
+  color: var(--color-black); background: transparent;
+  font-size: .82rem; font-weight: 600; line-height: 1.4; white-space: nowrap;
+  transition: background-color var(--dur) var(--ease), color var(--dur) var(--ease), border-color var(--dur) var(--ease);
+}
+#cabecalho-findy .findy-topo__link:not(.findy-topo__botao):hover { background: var(--color-blue-pale); color: var(--color-blue-deep); }
+#cabecalho-findy .findy-topo__link[aria-current='page']:not(.findy-topo__botao) { background: var(--color-blue-pale); border-color: var(--color-blue-light); color: var(--color-blue-deep); }
+
+/* Botões do cabeçalho: mesma receita dos botões do site (contorno de 2px + água subindo) */
+#cabecalho-findy .findy-topo__botao, #cabecalho-findy .findy-topo__buscar {
+  --btn-bg: var(--color-blue-dark); --btn-fg: var(--color-white); --btn-bd: var(--color-blue-dark); --btn-fill: var(--color-black);
+  display: inline-flex; align-items: center; justify-content: center;
+  min-height: var(--control-h); padding: 0 var(--sp-5);
+  border: 2px solid var(--btn-bd); border-radius: var(--radius-sm);
+  font: inherit; font-weight: 600; text-decoration: none; cursor: pointer;
+  color: var(--btn-fg);
+  background-color: var(--btn-bg);
+  background-image: linear-gradient(to top, var(--btn-fill) 42%, var(--btn-bg) 58%);
+  background-size: 100% 250%; background-position: 0 0; background-repeat: no-repeat;
+  transition: background-position .55s var(--ease), border-color var(--dur) var(--ease), transform var(--dur-fast) var(--ease);
+}
+#cabecalho-findy .findy-topo__botao:is(:hover, :focus-visible):not(:disabled),
+#cabecalho-findy .findy-topo__buscar:is(:hover, :focus-visible):not(:disabled) { background-position: 0 100%; border-color: var(--btn-fill); color: var(--color-white); }
+#cabecalho-findy .findy-topo__botao:active:not(:disabled), #cabecalho-findy .findy-topo__buscar:active:not(:disabled) { transform: translateY(1px) scale(.99); }
+#cabecalho-findy button:disabled { opacity: .55; cursor: not-allowed; }
+
+/* Menu da conta */
+#cabecalho-findy .findy-topo__conta { position: relative; margin: 0; padding: 0; border: 0; }
+#cabecalho-findy .findy-topo__conta-resumo {
+  display: flex; align-items: center; gap: var(--sp-3);
+  min-height: var(--control-h); padding: var(--sp-1) var(--sp-3) var(--sp-1) var(--sp-1);
+  border: 2px solid var(--color-line); border-radius: var(--radius-sm);
+  background: var(--color-white); color: var(--color-black);
+  cursor: pointer; list-style: none; font: inherit;
+  transition: background-color var(--dur) var(--ease), border-color var(--dur) var(--ease);
+}
+#cabecalho-findy .findy-topo__conta-resumo:hover, #cabecalho-findy .findy-topo__conta[open] .findy-topo__conta-resumo { background: var(--color-blue-pale); border-color: var(--color-blue-light); }
+#cabecalho-findy .findy-topo__conta-resumo::-webkit-details-marker { display: none; }
+#cabecalho-findy .findy-topo__avatar { width: 34px; height: 34px; border-radius: 50%; object-fit: cover; flex-shrink: 0; border: 2px solid var(--color-blue); }
+#cabecalho-findy .findy-topo__nome { max-width: 160px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: 600; }
+#cabecalho-findy .findy-topo__seta { font-size: 1rem; transition: transform var(--dur) var(--ease); }
+#cabecalho-findy .findy-topo__conta[open] .findy-topo__seta { transform: rotate(180deg); }
+
+/* Listas suspensas (conta e categorias) com a mesma entrada suave */
+#cabecalho-findy .findy-topo__conta-opcoes, #cabecalho-findy .findy-topo__categorias-lista {
+  position: absolute; z-index: 2;
+  padding: var(--sp-2);
+  border: 1px solid var(--color-line-soft); border-radius: var(--radius);
+  background: var(--color-white); box-shadow: var(--shadow-md);
+  animation: surgir var(--dur) var(--ease) both;
+}
+#cabecalho-findy .findy-topo__conta-opcoes {
+  top: calc(100% + var(--sp-2)); right: 0;
+  display: flex; flex-direction: column; gap: var(--sp-1);
+  width: 240px; max-width: calc(100vw - 44px); margin: 0;
+  transform-origin: top right;
+}
+#cabecalho-findy .findy-topo__conta-opcoes .findy-topo__link { justify-content: flex-start; white-space: normal; }
+#cabecalho-findy .findy-topo__conta-opcoes .findy-topo__botao { width: 100%; margin-top: var(--sp-1); }
+
+/* Linha de ferramentas: categorias + busca */
+#cabecalho-findy .findy-topo__ferramentas { display: flex; align-items: center; gap: var(--sp-4); margin-top: var(--sp-4); padding-top: var(--sp-4); border-top: 1px solid var(--color-line-soft); }
+#cabecalho-findy .findy-topo__categorias { position: relative; flex-shrink: 0; margin: 0; padding: 0; border: 0; }
+#cabecalho-findy .findy-topo__categorias summary {
+  display: flex; align-items: center; min-height: var(--control-h); padding: 0 var(--sp-4);
+  border: 2px solid var(--color-line); border-radius: var(--radius-sm);
+  background: var(--color-white); cursor: pointer; font-weight: 600; list-style: none;
+  transition: background-color var(--dur) var(--ease), border-color var(--dur) var(--ease);
+}
+#cabecalho-findy .findy-topo__categorias summary::-webkit-details-marker { display: none; }
+#cabecalho-findy .findy-topo__categorias summary:hover, #cabecalho-findy .findy-topo__categorias[open] summary { background: var(--color-blue-pale); border-color: var(--color-blue-light); }
+#cabecalho-findy .findy-topo__categorias-lista {
+  top: calc(100% + var(--sp-2)); left: 0;
+  width: 250px; max-width: calc(100vw - 64px); margin: 0; list-style: none;
+  transform-origin: top left;
+}
+#cabecalho-findy .findy-topo__categorias-lista a { justify-content: flex-start; width: 100%; white-space: normal; }
+
+#cabecalho-findy .findy-topo__busca { display: flex; align-items: stretch; gap: var(--sp-2); width: 100%; max-width: 660px; margin: 0; }
+#cabecalho-findy .findy-topo__busca input {
+  flex: 1; min-width: 0; width: 100%; min-height: var(--control-h);
+  padding: 0 var(--sp-4);
+  border: 2px solid var(--color-line); border-radius: var(--radius-sm);
+  background: var(--color-white); color: var(--color-black); font: inherit;
+  transition: border-color var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
+}
+#cabecalho-findy .findy-topo__busca input:focus { outline: none; border-color: var(--color-blue); box-shadow: 0 0 0 4px rgba(0,176,235,.18); }
+#cabecalho-findy .findy-topo__aviso { margin: var(--sp-3) 0 0; line-height: 1.5; color: var(--color-red-dark); font-weight: 600; }
+
+@media (max-width: 900px) {
+  #cabecalho-findy .findy-topo__linha { flex-wrap: wrap; }
+  #cabecalho-findy .findy-topo__acoes { margin-left: auto; }
+  #cabecalho-findy .findy-topo__nav { order: 3; flex-basis: 100%; justify-content: flex-start; }
+}
+@media (max-width: 600px) {
+  #cabecalho-findy { padding: var(--sp-3); border-radius: var(--radius); }
+  #cabecalho-findy .findy-topo__imagem { width: 44px; height: 44px; }
+  #cabecalho-findy .findy-topo__nome { max-width: min(120px, 27vw); }
+  #cabecalho-findy .findy-topo__link:not(.findy-topo__botao) { padding: var(--sp-2); font-size: .78rem; }
+  #cabecalho-findy .findy-topo__ferramentas { flex-wrap: wrap; gap: var(--sp-3); }
+  #cabecalho-findy .findy-topo__busca { flex-basis: 100%; max-width: none; }
+  #cabecalho-findy .findy-topo__busca input { font-size: 1rem; }
+}
