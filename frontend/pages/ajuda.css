@@ -1,0 +1,40 @@
+/* Componente de ajuda compartilhado, isolado dos estilos de cada página. */
+#findy-ajuda {
+  position: fixed; right: 20px; bottom: max(20px, env(safe-area-inset-bottom)); z-index: 100;
+  font: 14px/1.6 'Segoe UI', Arial, sans-serif; color: #17324d;
+}
+#findy-ajuda *, #findy-ajuda *::before, #findy-ajuda *::after { box-sizing: border-box; }
+#findy-ajuda [hidden] { display: none !important; }
+#findy-ajuda button { cursor: pointer; font: inherit; }
+#findy-ajuda button:focus-visible, #findy-ajuda summary:focus-visible, #findy-ajuda a:focus-visible { outline: 3px solid #1389b8; outline-offset: 3px; }
+#findy-ajuda .findy-ajuda__abrir {
+  display: flex; align-items: center; gap: 10px; margin-left: auto; min-height: 56px;
+  padding: 8px 18px 8px 8px; border: 1px solid #c9dfe9; border-radius: 999px;
+  color: #075d89; background: #fff; font-weight: 600; box-shadow: 0 6px 24px rgb(24 55 80 / 14%);
+}
+#findy-ajuda .findy-ajuda__abrir:hover { background: #edf7fc; }
+#findy-ajuda .findy-ajuda__abrir img { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; }
+#findy-ajuda .findy-ajuda__painel {
+  position: absolute; right: 0; bottom: 72px; display: flex; flex-direction: column;
+  width: 390px; max-width: calc(100vw - 40px); max-height: calc(100vh - 120px);
+  max-height: min(660px, calc(100dvh - 120px)); border: 1px solid #dce5ee; border-radius: 20px;
+  background: #fff; box-shadow: 0 16px 48px rgb(24 55 80 / 20%); overflow: hidden;
+}
+#findy-ajuda .findy-ajuda__topo { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 18px 20px; background: #edf7fc; border-bottom: 1px solid #dce5ee; flex-shrink: 0; }
+#findy-ajuda h2 { margin: 0; font-size: 17px; line-height: 1.4; color: #17324d; }
+#findy-ajuda .findy-ajuda__fechar { border: 0; background: transparent; color: #17324d; font-size: 26px; line-height: 1; width: 36px; height: 36px; border-radius: 8px; flex-shrink: 0; }
+#findy-ajuda .findy-ajuda__fechar:hover { background: #dceff8; }
+#findy-ajuda .findy-ajuda__conteudo { overflow-y: auto; min-height: 0; padding: 16px 20px 20px; overscroll-behavior: contain; }
+#findy-ajuda .findy-ajuda__intro { margin: 0 0 16px; color: #5b6f81; }
+#findy-ajuda .findy-ajuda__pergunta { margin: 0 0 10px; padding: 0; border: 1px solid #dce5ee; border-radius: 12px; background: #f8fafc; }
+#findy-ajuda summary { cursor: pointer; padding: 14px; font-size: 14px; font-weight: 600; color: #17324d; }
+#findy-ajuda .findy-ajuda__pergunta[open] { background: #fff; border-color: #a6cde0; }
+#findy-ajuda .findy-ajuda__resposta { padding: 0 14px 16px; color: #465f73; }
+#findy-ajuda .findy-ajuda__resposta p { margin: 0; line-height: 1.7; overflow-wrap: anywhere; }
+#findy-ajuda .findy-ajuda__resposta a { display: inline-block; margin-top: 12px; color: #09658b; font-weight: 600; text-decoration: underline; }
+@media (max-width: 480px) {
+  #findy-ajuda { right: 16px; }
+  #findy-ajuda .findy-ajuda__abrir { padding: 8px; }
+  #findy-ajuda .findy-ajuda__abrir span { display: none; }
+  #findy-ajuda .findy-ajuda__painel { width: calc(100vw - 32px); max-width: none; }
+}

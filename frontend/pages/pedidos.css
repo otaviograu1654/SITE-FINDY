@@ -4,20 +4,24 @@
 .pedido-nav a { color: inherit; font-weight: 600; }
 .pedido-nav a:focus-visible, .pedido-card a:focus-visible { outline: 3px solid #1687be; outline-offset: 4px; }
 .pedido-filtros, .pedido-acoes { display: flex; align-items: center; flex-wrap: wrap; gap: 14px; }
+.pedido-filtros { justify-content: space-between; margin: 8px 0; }
+.pedido-filtros h2 { font-size: 1.2rem; }
 .pedido-filtros select { padding: 10px; border: 1px solid #aeb5bf; border-radius: 10px; font: inherit; }
 .pedido-lista { display: grid; gap: 18px; }
-.pedido-abas { display: flex; flex-wrap: wrap; gap: 12px; margin: 24px 0; }
-.pedido-abas a { padding: 12px 18px; border: 1px solid #aeb5bf; border-radius: 12px; background: #fff; color: #182330; font-weight: 600; text-decoration: none; }
-.pedido-abas a[aria-current="page"] { background: #182330; border-color: #182330; color: #fff; }
+.pedido-abas { display: flex; flex-wrap: wrap; align-self: flex-start; gap: 6px; margin: 12px 0; padding: 6px; border-radius: 14px; background: #e8eff5; }
+.pedido-abas a { padding: 12px 18px; border-radius: 10px; color: #536b80; font-size: .9rem; font-weight: 600; text-decoration: none; }
+.pedido-abas a[aria-current="page"] { background: #fff; color: #09658b; box-shadow: 0 2px 8px rgb(24 55 80 / 8%); }
 .pedido-abas a:focus-visible { outline: 3px solid #1687be; outline-offset: 4px; }
-.pedido-card, .pedido-painel { background: #fff; border: 1px solid #d7dce2; border-radius: 18px; padding: 24px; overflow-wrap: anywhere; }
+.pedido-card, .pedido-painel { background: #fff; border: 1px solid var(--color-line); border-radius: 20px; padding: clamp(20px, 3vw, 30px); box-shadow: var(--shadow-soft); overflow-wrap: anywhere; }
 .pedido-card h3 { font-size: 1.1rem; }
-.pedido-card p, .pedido-painel p { margin: 12px 0; }
-.pedido-situacao { font-weight: 700; }
+.pedido-card p, .pedido-painel p { margin: 12px 0; color: var(--color-gray-text); }
+.pedido-card > a { display: inline-flex; margin-top: 8px; padding: 10px 16px; border: 1px solid #cce2ee; border-radius: 10px; color: var(--color-blue-dark); font-size: .9rem; font-weight: 600; background: #f0f8fc; }
+.pedido-card > a:hover { background: #e0f1fa; }
+.pedido-card .pedido-situacao { display: inline-block; padding: 5px 10px; border-radius: 8px; background: #eaf5fb; color: var(--color-blue-dark); font-size: .8rem; font-weight: 700; }
 .pedido-detalhes { display: grid; grid-template-columns: minmax(130px, 1fr) 3fr; gap: 12px 20px; margin: 20px 0; }
-.pedido-detalhes dt { font-weight: 700; }
-.pedido-detalhes dd { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; min-width: 0; }
-.pedido-aviso { background: #eaf4fa; border-left: 4px solid #167ba8; padding: 16px; line-height: 1.6; }
+.pedido-detalhes dt { font-weight: 600; color: var(--color-gray-text); padding-bottom: 12px; border-bottom: 1px solid #edf2f7; font-size: .9rem; }
+.pedido-detalhes dd { margin: 0; padding-bottom: 12px; border-bottom: 1px solid #edf2f7; white-space: pre-wrap; overflow-wrap: anywhere; min-width: 0; }
+.pedido-aviso { background: #eef7fc; border-left: 3px solid #1389b8; border-radius: 10px; padding: 16px 20px; line-height: 1.7; font-size: .9rem; }
 .mensagem-erro { color: #a32018; }
 .pedido-mensagem { line-height: 1.6; padding: 10px 0; }
 .hire-form fieldset { border: 0; padding: 0; margin: 0; min-width: 0; display: grid; gap: 20px; }
@@ -28,4 +32,6 @@
   .pedido-detalhes dd { margin-bottom: 12px; }
   .pedido-filtros, .pedido-acoes { align-items: stretch; }
   .pedido-acoes button, .pedido-filtros select { width: 100%; }
+  .pedido-abas { align-self: stretch; }
+  .pedido-abas a { flex: 1; text-align: center; min-width: 180px; }
 }

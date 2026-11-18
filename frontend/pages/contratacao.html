@@ -15,6 +15,7 @@
   <link rel="stylesheet" href="cabecalho.css">
   <script src="api.js" defer></script>
   <script src="cabecalho.js" defer></script>
+  <link rel="stylesheet" href="ajuda.css?v=20261118-1">
 </head>
 <body>
   <header id="cabecalho-findy"><a href="index.html">Findy — Início</a></header>
@@ -79,64 +80,7 @@
     </section>
   </main>
 
-  <!-- ===================== WIDGET DE CHAT (CANTO INFERIOR) ===================== -->
-  <div class="chat-widget">
-    <p class="chat-widget__bubble">Dúvidas? Fale com o Fido!</p>
-
-    <img
-      src="images/chat-avatar.png"
-      alt="Abrir chat com Fido, assistente virtual da Findy"
-      class="chat-widget__avatar"
-      id="chat-avatar"
-      role="button"
-      tabindex="0"
-      aria-haspopup="dialog"
-      aria-expanded="false"
-      aria-controls="chat-panel"
-    >
-
-    <div class="chat-panel" id="chat-panel" role="dialog" aria-label="Chat com Fido" hidden>
-      <header class="chat-panel__header">
-        <img src="images/chat-avatar.png" alt="" class="chat-panel__header-avatar" aria-hidden="true">
-        <div class="chat-panel__header-text">
-          <p class="chat-panel__title">Fido</p>
-          <p class="chat-panel__subtitle">Assistente virtual da Findy</p>
-        </div>
-        <button type="button" class="chat-panel__close" id="chat-panel-close" aria-label="Fechar chat">&times;</button>
-      </header>
-
-      <div class="chat-panel__messages" id="chat-panel-messages">
-        <p class="chat-message chat-message--bot">
-          Oi! Eu sou o Fido &#129415; Escolha uma das perguntas abaixo:
-        </p>
-      </div>
-
-      <div class="chat-panel__quick-replies" id="chat-panel-quick-replies">
-        <button type="button" class="chat-quick-reply" data-resposta="Escolha um serviço no perfil do profissional, entre na sua conta e preencha data futura, horário, quantidade e local. Clique em Enviar solicitação e acompanhe em Meus pedidos, na lista de enviados. O prestador pode aceitar ou recusar; o aceite confirma disponibilidade, não o preço final.">
-          Como funciona a contratação?
-        </button>
-        <button type="button" class="chat-quick-reply" data-resposta="Nada é cobrado pela Findy ao solicitar. Combine o valor final, a forma e o momento do pagamento diretamente com o profissional.">
-          Já vou pagar agora?
-        </button>
-        <button type="button" class="chat-quick-reply" data-resposta="Você pode cancelar um pedido pendente ou aceito antes do horário marcado, pelo botão Cancelar pedido. Não há cobrança de multa pela Findy.">
-          Posso cancelar depois?
-        </button>
-        <button type="button" class="chat-quick-reply" data-resposta="Consulte a data e a situação em Meus pedidos. O horário depende do aceite do profissional.">
-          Como acompanho a resposta e o horário?
-        </button>
-        <button type="button" class="chat-quick-reply" data-resposta="A faixa de preço é uma estimativa. Depois do aceite, use os contatos disponíveis nos detalhes para combinar valor final, o que está incluído e pagamento antes do serviço. A Findy não registra a confirmação desse acordo nesta versão.">
-          O preço mostrado já é o valor final?
-        </button>
-        <button type="button" class="chat-quick-reply" data-resposta="Antes do aceite, o prestador vê descrição, data e região. Telefones e endereço completo só são liberados aos dois participantes depois que ele aceita. Pedidos recusados ou cancelados ocultam novamente esses campos. Não inclua contatos ou endereço completo na descrição livre.">
-          Quando os contatos são liberados?
-        </button>
-        <button type="button" class="chat-quick-reply" data-resposta="Ainda não há chat entre os participantes. Após o aceite, consulte os telefones nos detalhes para ligar ou usar WhatsApp, se o número tiver WhatsApp. A mensagem inicial do pedido não é uma conversa com troca de respostas.">
-          Como falo com o profissional?
-        </button>
-      </div>
-    </div>
-  </div>
-
   <script src="script.js" defer></script><script src="pedidos-comum.js" defer></script><script src="contratacao.js" defer></script>
+  <script src="ajuda.js?v=20261118-1" defer></script>
 </body>
 </html>

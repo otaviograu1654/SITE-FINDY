@@ -12,6 +12,7 @@
   <link rel="stylesheet" href="cabecalho.css">
   <script src="api.js" defer></script>
   <script src="cabecalho.js" defer></script>
+  <link rel="stylesheet" href="ajuda.css?v=20261118-1">
 </head>
 <body class="perfil-contratante">
   <header id="cabecalho-findy"><a href="index.html">Findy — Início</a></header>
@@ -37,8 +38,13 @@
         <a href="meus-pedidos.html?tipo=ENVIADAS" class="btn-black perfil-link">Ver todos os enviados</a>
       </section>
     </div>
-    <button id="painel-atualizar" class="btn-black" type="button">Atualizar painel</button>
-    <p>O painel mostra até cinco pedidos recentes de cada lista. Use Atualizar painel para conferir mudanças de situação e novas solicitações.</p>
+    <section class="panel conta-atualizacao" aria-labelledby="painel-atualizacao-titulo">
+      <div>
+        <h2 id="painel-atualizacao-titulo">Seu painel atualizado</h2>
+        <p>Confira novas solicitações e mudanças de situação. Mostramos até cinco pedidos recentes em cada lista.</p>
+      </div>
+      <button id="painel-atualizar" class="btn-black" type="button">Atualizar painel</button>
+    </section>
     <section class="panel">
       <h2>Meu perfil e dados pessoais</h2>
       <p>Edite seu nome, telefone, localização e foto na página de Perfil profissional. Quem só contrata serviços também pode atualizar os dados por lá.</p>
@@ -54,5 +60,6 @@
 </div>
 <script src="pedidos-comum.js" defer></script>
 <script src="painel-conta.js" defer></script>
+  <script src="ajuda.js?v=20261118-1" defer></script>
 </body>
 </html>
