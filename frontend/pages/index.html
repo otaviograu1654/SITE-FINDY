@@ -11,74 +11,62 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
   <link rel="icon" type="image/x-icon" href="images/findy-logo.png">
-  <link rel="stylesheet" href="style.css?v=20261116-2">
+  <link rel="stylesheet" href="style.css?v=20261116-3">
   <link rel="stylesheet" href="cabecalho.css">
   <script src="api.js" defer></script>
   <script src="cabecalho.js" defer></script>
-  <link rel="stylesheet" href="ajuda.css?v=20261118-1">
 </head>
-<body class="pagina-inicio">
+<body>
   <header id="cabecalho-findy"><a href="index.html">Findy — Início</a></header>
 
   <!-- ===================== SEÇÃO 1: TOPO + GRADE DE SERVIÇOS ===================== -->
-  <main>
-    <section class="inicio-intro" aria-labelledby="inicio-titulo">
-      <p class="inicio-intro__selo">Serviços e profissionais</p>
-      <h1 id="inicio-titulo">Encontre quem faz.<br>Combine o que você precisa.</h1>
-      <p>Explore as categorias, conheça os profissionais e envie seu pedido. Os detalhes e o valor final são combinados entre vocês.</p>
-      <div class="inicio-intro__rodape">
-        <a class="btn btn--dark" href="#categorias">Explorar categorias &rarr;</a>
-        <span>Você também pode oferecer seus serviços.</span>
+  <section class="hero-grid">
+
+    <!-- Bloco do cabeçalho: fica na 1ª célula da grade (linha 1, coluna 1) -->
+    <div class="brand-block">
+      <div class="logo">
+        <img src="images/findy-logo.png" alt="Findy" class="logo__image">
       </div>
-    </section>
-    <section class="hero-grid" id="categorias" aria-label="Categorias de serviços">
+      <p class="brand-block__tagline">Encontre seu melhor serviço</p>
+    </div>
 
     <!-- As 7 categorias de serviço. A ordem no HTML é o que decide a posição na grade. -->
     <a href="categoria.html?categoria=Servi%C3%A7os%20Dom%C3%A9sticos" class="card card--dom card--photo-dom">
       <h2 class="card__title">Serviços<br>Domésticos</h2>
-      <p class="card__descricao">Encontre ajuda com limpeza, organização e cuidados para sua casa.</p>
       <span class="card__arrow" aria-hidden="true">&rarr;</span>
     </a>
 
     <a href="categoria.html?categoria=Eventos" class="card card--blue card--photo-evt">
       <h2 class="card__title">Eventos</h2>
-      <p class="card__descricao">Conheça profissionais para organizar, registrar e cuidar do seu evento.</p>
       <span class="card__arrow" aria-hidden="true">&rarr;</span>
     </a>
 
     <a href="categoria.html?categoria=Infantil" class="card card--dark card--photo-inf">
       <h2 class="card__title">Infantil</h2>
-      <p class="card__descricao">Busque serviços de cuidados, recreação e apoio escolar.</p>
       <span class="card__arrow" aria-hidden="true">&rarr;</span>
     </a>
 
     <a href="categoria.html?categoria=Servi%C3%A7os%20Gerais" class="card card--blue card--tall card--photo-ger">
       <h2 class="card__title">Serviços<br>Gerais</h2>
-      <p class="card__descricao">Encontre quem faça pequenos reparos, pintura, montagem e jardinagem.</p>
       <span class="card__arrow" aria-hidden="true">&rarr;</span>
     </a>
 
     <a href="categoria.html?categoria=Constru%C3%A7%C3%A3o%20Civil" class="card card--red card--photo-con">
       <h2 class="card__title">Construção<br>Civil</h2>
-      <p class="card__descricao">Procure profissionais para sua obra, reforma e serviços de construção.</p>
       <span class="card__arrow" aria-hidden="true">&rarr;</span>
     </a>
 
     <a href="categoria.html?categoria=Marketing%20e%20Vendas" class="card card--dark card--photo-mkt">
       <h2 class="card__title">Marketing<br>e Vendas</h2>
-      <p class="card__descricao">Encontre apoio para divulgar seu trabalho e desenvolver seu negócio.</p>
       <span class="card__arrow" aria-hidden="true">&rarr;</span>
     </a>
 
     <a href="categoria.html?categoria=Tecnologia%20e%20Design" class="card card--red card--photo-tec">
       <h2 class="card__title">Tecnologia<br>e Design</h2>
-      <p class="card__descricao">Conheça profissionais de criação de sites, design e manutenção de computadores.</p>
       <span class="card__arrow" aria-hidden="true">&rarr;</span>
     </a>
 
   </section>
-  </main>
 
-  <script src="ajuda.js?v=20261118-1" defer></script>
 </body>
 </html>
