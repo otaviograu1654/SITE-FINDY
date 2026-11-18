@@ -1,0 +1,159 @@
+/* Define os estilos dos perfis, formulários e painéis de gerenciamento da conta. */
+
+/* Depende dos tokens, botões, campos e .panel definidos em style.css
+   (carregue style.css antes deste arquivo). */
+
+/* ===================================================================
+   1. ESTRUTURA DAS PÁGINAS DE CONTA
+   =================================================================== */
+.wrap main { padding: 0; }
+.wrap main > h1 { margin-bottom: var(--sp-5); }
+.wrap main > p { margin-bottom: var(--sp-4); }
+.wrap main > button { margin-bottom: var(--sp-4); }
+
+/* Filtro solto no topo da administração */
+.wrap main > label {
+  display: grid;
+  gap: var(--sp-2);
+  max-width: 360px;
+  margin-bottom: var(--sp-5);
+  font-weight: 600;
+  font-size: .95rem;
+}
+
+/* ===================================================================
+   2. MENSAGENS E TEXTOS
+   =================================================================== */
+.mensagem { padding: var(--sp-3) 0; line-height: 1.6; color: var(--color-gray-text); }
+.mensagem-erro { color: var(--color-red-dark); font-weight: 600; }
+.wrap main > .mensagem:empty { margin: 0; padding: 0; }
+.perfil-status { font-weight: 700; color: var(--color-blue-deep); }
+.perfil-texto { white-space: pre-wrap; overflow-wrap: anywhere; }
+.perfil-acoes { display: flex; flex-wrap: wrap; align-items: center; gap: var(--sp-3); margin-top: var(--sp-5); }
+.perfil-link { margin: var(--sp-3) var(--sp-3) 0 0; }
+.perfil-link:not(.btn-black) {
+  display: inline-block;
+  color: var(--color-blue-dark);
+  font-weight: 600;
+  text-decoration: underline;
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 3px;
+  transition: color var(--dur-fast) var(--ease);
+}
+.perfil-link:not(.btn-black):hover { color: var(--color-blue); }
+
+/* ===================================================================
+   3. FORMULÁRIOS
+   Campos, selects e botões já seguem o padrão do style.css.
+   =================================================================== */
+.perfil-form { display: grid; gap: var(--sp-5); margin-top: var(--sp-5); }
+.panel > .perfil-form:first-child, .panel > [hidden] + .perfil-form { margin-top: 0; }
+.perfil-form label { display: grid; gap: var(--sp-2); font-weight: 600; font-size: .95rem; }
+.perfil-form small { font-weight: 400; font-size: .82rem; line-height: 1.5; color: var(--color-gray-text); }
+.perfil-form button { justify-self: start; }
+.perfil-form fieldset { display: grid; gap: var(--sp-5); min-width: 0; padding: 0; border: 0; }
+.perfil-form legend { margin-bottom: var(--sp-4); font-size: 1.25rem; font-weight: 700; }
+
+.perfil-form .servico-checkbox, .servico-checkbox {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  font-weight: 500;
+}
+.servico-checkbox input { width: auto; }
+.servico-campos { min-width: 0; padding: 0; border: 0; }
+
+/* Seletor de arquivo com o mesmo contorno dos demais botões */
+.perfil-form input[type="file"] { font-family: inherit; font-size: .9rem; color: var(--color-gray-text); }
+.perfil-form input[type="file"]::file-selector-button {
+  min-height: 36px;
+  margin-right: var(--sp-3);
+  padding: 0 var(--sp-4);
+  border: 2px solid var(--color-black);
+  border-radius: var(--radius-sm);
+  background-color: var(--color-white);
+  color: var(--color-black);
+  font-family: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color var(--dur) var(--ease), color var(--dur) var(--ease);
+}
+.perfil-form input[type="file"]:not(:disabled)::file-selector-button:hover {
+  background-color: var(--color-black);
+  color: var(--color-white);
+}
+.perfil-form input[type="file"]:disabled { opacity: .55; }
+
+/* ===================================================================
+   4. SERVIÇOS CADASTRADOS
+   =================================================================== */
+.servico-item { padding: var(--sp-5) 0; border-bottom: 1px solid var(--color-line-soft); overflow-wrap: anywhere; }
+.servico-item:last-child { border-bottom: none; }
+.servico-item p { margin: var(--sp-2) 0; }
+
+/* ===================================================================
+   5. CADASTRO GUIADO E FICHA ADMINISTRATIVA
+   =================================================================== */
+.cadastro-progresso { display: flex; flex-wrap: wrap; gap: var(--sp-3); margin: var(--sp-5) 0; padding: 0; list-style: none; }
+.cadastro-progresso li {
+  padding: var(--sp-2) var(--sp-4);
+  border: 2px solid var(--color-blue-light);
+  border-radius: var(--radius-sm);
+  background-color: var(--color-blue-pale);
+  color: var(--color-blue-deep);
+  font-size: .9rem;
+  font-weight: 500;
+  transition: background-color var(--dur) var(--ease), color var(--dur) var(--ease), border-color var(--dur) var(--ease);
+}
+.cadastro-progresso [aria-current] {
+  border-color: var(--color-blue-dark);
+  background-color: var(--color-blue-dark);
+  color: var(--color-white);
+  font-weight: 700;
+}
+
+.cadastro-avatar {
+  width: 112px;
+  height: 112px;
+  border: 3px solid var(--color-blue);
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+#cadastro-habilidades details, .admin-ficha details {
+  margin: var(--sp-3) 0;
+  padding: var(--sp-4);
+  border: 2px solid var(--color-line);
+  border-radius: var(--radius-sm);
+  background-color: var(--color-white);
+  transition: border-color var(--dur) var(--ease), background-color var(--dur) var(--ease);
+}
+#cadastro-habilidades details[open], .admin-ficha details[open] { border-color: var(--color-blue-light); background-color: var(--color-blue-pale); }
+#cadastro-habilidades summary { margin-bottom: var(--sp-3); font-weight: 600; cursor: pointer; transition: color var(--dur-fast) var(--ease); }
+#cadastro-habilidades summary:hover { color: var(--color-blue-dark); }
+#cadastro-habilidades label { padding: var(--sp-2) 0; }
+
+.cadastro-revisao, .admin-ficha { overflow-wrap: anywhere; }
+.cadastro-revisao p, .admin-ficha p { margin: var(--sp-3) 0; white-space: pre-wrap; }
+.admin-ficha { margin-top: var(--sp-4); }
+
+/* ===================================================================
+   6. PAINEL DA CONTA
+   =================================================================== */
+.conta-paineis { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--sp-5); margin: var(--sp-5) 0; }
+.conta-paineis > .panel { margin: 0; min-width: 0; }
+.conta-pedido { padding: var(--sp-4) 0; border-bottom: 1px solid var(--color-line-soft); overflow-wrap: anywhere; }
+.conta-pedido:last-child { border-bottom: none; }
+.conta-pedido h3 { margin: 0; font-size: 1rem; }
+.conta-pedido p { margin-top: var(--sp-2); }
+
+/* ===================================================================
+   7. RESPONSIVIDADE (mesmos pontos de quebra do style.css)
+   =================================================================== */
+@media (max-width: 900px) {
+  .conta-paineis { grid-template-columns: 1fr; }
+}
+@media (max-width: 600px) {
+  .perfil-form button { width: 100%; justify-self: stretch; }
+  .perfil-acoes > * { flex: 1 1 100%; }
+}
