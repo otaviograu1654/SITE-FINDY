@@ -14,6 +14,8 @@ import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.web.servlet.MockMvc;
 import java.time.OffsetDateTime;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -119,5 +121,123 @@ class PrivacidadeContatoTests {
         Long cancelado = criar(); agir(cancelado, profissionalSessao, "ACEITAR");
         agir(cancelado, clienteSessao, "CANCELAR");
         oculto(cancelado, clienteSessao); oculto(cancelado, profissionalSessao);
+    }
+
+    @Test void clienteConcluiEAvaliaAposPrestadorIniciar() throws Exception {
+        Long id = criar(); agir(id, profissionalSessao, "ACEITAR"); agir(id, profissionalSessao, "INICIAR");
+        agir(id, clienteSessao, "CONCLUIR");
+        mvc.perform(get("/solicitacoes/" + id).session(clienteSessao)).andExpect(status().isOk())
+                .andExpect(jsonPath("$.status").value("CONCLUIDA"))
+                .andExpect(jsonPath("$.dataConclusao").isNotEmpty());
+        mvc.perform(post("/solicitacoes/" + id + "/avaliacao").session(clienteSessao)
+                .contentType(MediaType.APPLICATION_JSON).content("{\"nota\":5,\"comentario\":\"Bom serviço\"}"))
+                .andExpect(status().isCreated()).andExpect(jsonPath("$.avaliacao.nota").value(5));
+        mvc.perform(get("/solicitacoes/" + id).session(profissionalSessao))
+                .andExpect(jsonPath("$.avaliacao.comentario").value("Bom serviço"));
+        Long perfil = banco.queryForObject("SELECT prestador_id FROM servicos WHERE id=?", Long.class, servicoId);
+        mvc.perform(get("/prestadores/" + perfil)).andExpect(status().isOk())
+                .andExpect(jsonPath("$.avaliacaoMedia").value(5.0))
+                .andExpect(jsonPath("$.totalAvaliacoes").value(1))
+                .andExpect(jsonPath("$.avaliacoes[0].cliente").value("Teste"))
+                .andExpect(jsonPath("$.avaliacoes[0].email").doesNotExist());
+        assertThat(banco.queryForObject("SELECT avaliado_id FROM avaliacoes WHERE solicitacao_id=?", Long.class, id))
+                .isEqualTo(profissional.getId());
+    }
+
+    @Test void bloqueiaConclusaoAntesDoInicioEPermissoesIncorretas() throws Exception {
+        Long id = criar();
+        mudarComErro(id, clienteSessao, "INICIAR", 403);
+        mudarComErro(id, clienteSessao, "CONCLUIR", 409);
+        agir(id, profissionalSessao, "ACEITAR"); mudarComErro(id, clienteSessao, "CONCLUIR", 409);
+        mvc.perform(post("/solicitacoes/" + id + "/avaliacao").session(clienteSessao)
+                .contentType(MediaType.APPLICATION_JSON).content("{\"nota\":5}"))
+                .andExpect(status().isConflict());
+        agir(id, profissionalSessao, "INICIAR");
+        mudarComErro(id, profissionalSessao, "CONCLUIR", 403);
+        mudarComErro(id, clienteSessao, "CANCELAR", 409);
+        mudarComErro(id, adminSessao, "CONCLUIR", 404);
+        agir(id, clienteSessao, "CONCLUIR");
+        mudarComErro(id, clienteSessao, "CONCLUIR", 409);
+        mvc.perform(post("/solicitacoes/" + id + "/avaliacao").session(profissionalSessao)
+                .contentType(MediaType.APPLICATION_JSON).content("{\"nota\":5}"))
+                .andExpect(status().isForbidden());
+        mvc.perform(post("/solicitacoes/" + id + "/avaliacao").session(adminSessao)
+                .contentType(MediaType.APPLICATION_JSON).content("{\"nota\":5}"))
+                .andExpect(status().isNotFound());
+        mvc.perform(post("/solicitacoes/" + id + "/avaliacao")
+                .contentType(MediaType.APPLICATION_JSON).content("{\"nota\":5}"))
+                .andExpect(status().isUnauthorized());
+        for (String nota : new String[]{"0", "6", "null"}) {
+            mvc.perform(post("/solicitacoes/" + id + "/avaliacao").session(clienteSessao)
+                    .contentType(MediaType.APPLICATION_JSON).content("{\"nota\":" + nota + "}"))
+                    .andExpect(status().isBadRequest());
+        }
+        mvc.perform(post("/solicitacoes/" + id + "/avaliacao").session(clienteSessao)
+                .contentType(MediaType.APPLICATION_JSON).content("{\"nota\":5,\"comentario\":\"" + "x".repeat(1001) + "\"}"))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test void duasAvaliacoesSimultaneasGeramSomenteUmaNota() throws Exception {
+        Long id = criar(); agir(id, profissionalSessao, "ACEITAR"); agir(id, profissionalSessao, "INICIAR"); agir(id, clienteSessao, "CONCLUIR");
+        var primeira = CompletableFuture.supplyAsync(() -> enviarNota(id));
+        var segunda = CompletableFuture.supplyAsync(() -> enviarNota(id));
+        assertThat(new int[]{primeira.get(15, TimeUnit.SECONDS), segunda.get(15, TimeUnit.SECONDS)})
+                .containsExactlyInAnyOrder(201, 409);
+        assertThat(banco.queryForObject("SELECT COUNT(*) FROM avaliacoes WHERE solicitacao_id=?", Long.class, id)).isEqualTo(1);
+    }
+
+    void mudarComErro(Long id, MockHttpSession sessao, String acao, int codigo) throws Exception {
+        mvc.perform(patch("/solicitacoes/" + id + "/situacao").session(sessao)
+                .contentType(MediaType.APPLICATION_JSON).content("{\"acao\":\"" + acao + "\"}"))
+                .andExpect(status().is(codigo));
+    }
+
+    int enviarNota(Long id) {
+        try {
+            return mvc.perform(post("/solicitacoes/" + id + "/avaliacao").session(sessao(cliente))
+                    .contentType(MediaType.APPLICATION_JSON).content("{\"nota\":4}"))
+                    .andReturn().getResponse().getStatus();
+        } catch (Exception e) { throw new IllegalStateException(e); }
+    }
+
+    @Test void sininhoContaSomentePedidosPendentesDoDestinatario() throws Exception {
+        Long id=criar();
+        mvc.perform(get("/solicitacoes/pendentes/resumo")).andExpect(status().isUnauthorized());
+        mvc.perform(get("/solicitacoes/pendentes/resumo").session(clienteSessao)).andExpect(jsonPath("$.total").value(0));
+        mvc.perform(get("/solicitacoes/pendentes/resumo").session(profissionalSessao)).andExpect(jsonPath("$.total").value(1));
+        agir(id,profissionalSessao,"ACEITAR");
+        mvc.perform(get("/solicitacoes/pendentes/resumo").session(profissionalSessao)).andExpect(jsonPath("$.total").value(0));
+    }
+
+    @Test void portfolioValidaFotosPermissoesPublicacaoELimiteSemApagarRegistros() throws Exception {
+        var original=new java.awt.image.BufferedImage(1400,700,java.awt.image.BufferedImage.TYPE_INT_RGB);
+        var saida=new java.io.ByteArrayOutputStream(); javax.imageio.ImageIO.write(original,"png",saida);
+        var foto=new org.springframework.mock.web.MockMultipartFile("foto","trabalho.png","image/png",saida.toByteArray());
+        Long perfil=banco.queryForObject("SELECT id FROM prestadores WHERE usuario_id=?",Long.class,profissional.getId());
+        banco.update("UPDATE prestadores SET status_aprovacao='PENDENTE' WHERE id=?",perfil);
+        mvc.perform(multipart("/portfolio/me").file(foto)).andExpect(status().isUnauthorized());
+        mvc.perform(multipart("/portfolio/me").file(new org.springframework.mock.web.MockMultipartFile("foto","x.svg","image/png","<svg/>".getBytes())).session(profissionalSessao))
+                .andExpect(status().isUnsupportedMediaType());
+        mvc.perform(multipart("/portfolio/me").file(new org.springframework.mock.web.MockMultipartFile("foto","grande.png","image/png",new byte[2097153])).session(profissionalSessao))
+                .andExpect(status().isPayloadTooLarge());
+        for(int n=0;n<10;n++) mvc.perform(multipart("/portfolio/me").file(foto).param("legenda","Trabalho de teste "+n).session(profissionalSessao))
+                .andExpect(status().isCreated());
+        Long id=banco.queryForObject("SELECT MIN(id) FROM portfolio_prestadores WHERE prestador_id=?",Long.class,perfil);
+        String imagem="/portfolio/fotos/"+id;
+        mvc.perform(get(imagem)).andExpect(status().isNotFound());
+        mvc.perform(get("/portfolio/prestadores/"+perfil)).andExpect(status().isNotFound());
+        byte[] bytes=mvc.perform(get(imagem).session(profissionalSessao)).andExpect(status().isOk()).andReturn().getResponse().getContentAsByteArray();
+        assertThat(javax.imageio.ImageIO.read(new java.io.ByteArrayInputStream(bytes)).getWidth()).isEqualTo(1200);
+        mvc.perform(get("/portfolio/me").session(profissionalSessao)).andExpect(jsonPath("$.length()").value(10));
+        mvc.perform(multipart("/portfolio/me").file(foto).session(profissionalSessao)).andExpect(status().isConflict());
+        mvc.perform(delete("/portfolio/me/"+id).session(clienteSessao)).andExpect(status().isNotFound());
+        banco.update("UPDATE prestadores SET status_aprovacao='APROVADO' WHERE id=?",perfil);
+        mvc.perform(get(imagem)).andExpect(status().isOk()).andExpect(header().string("X-Content-Type-Options","nosniff"));
+        mvc.perform(get("/portfolio/prestadores/"+perfil)).andExpect(jsonPath("$.length()").value(10));
+        mvc.perform(delete("/portfolio/me/"+id).session(profissionalSessao)).andExpect(status().isNoContent());
+        mvc.perform(get(imagem)).andExpect(status().isNotFound());
+        assertThat(banco.queryForObject("SELECT ativo FROM portfolio_prestadores WHERE id=?",Boolean.class,id)).isFalse();
+        mvc.perform(multipart("/portfolio/me").file(foto).session(profissionalSessao)).andExpect(status().isCreated());
+        assertThat(banco.queryForObject("SELECT status_aprovacao FROM prestadores WHERE id=?",String.class,perfil)).isEqualTo("APROVADO");
     }
 }

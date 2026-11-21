@@ -1,12 +1,10 @@
 PLANO DE EXECUÇÃO - FINDY
-Atualizado em 16/11/2026. Resumo em passos; histórico anterior disponível no Git.
-
+Atualizado em 20/11/2026. Resumo em passos; histórico anterior disponível no Git.
 OBJETIVO
 MVP para encontrar profissionais e solicitar serviços diretamente.
 Tecnologias: HTML/CSS/JavaScript, Java 21, Spring Boot, Maven e PostgreSQL.
 Uma conta pode contratar e oferecer serviços; ADMIN analisa os profissionais.
 IMPLEMENTADO indica código existente; não substitui conferência visual ou online.
-
 COMO ABRIR NESTE COMPUTADOR JÁ CONFIGURADO
 1. Abrir Docker Desktop e aguardar iniciar.
 2. Na raiz: docker compose up -d --wait
@@ -17,7 +15,6 @@ COMO ABRIR NESTE COMPUTADOR JÁ CONFIGURADO
 Não recriar tabelas, substituir .env nem apagar o volume no uso diário.
 Não iniciar o container manual antigo findy-postgres junto do Compose.
 Live Server não é necessário; na porta 5501 ele depende da API local na 8080.
-
 AMBIENTES E DADOS
 - Desenvolvimento: banco findy no Docker local, localhost:5433.
 - Testes: findy_cadastro_test_20261028 no mesmo PostgreSQL local, separado.
@@ -27,20 +24,17 @@ AMBIENTES E DADOS
 - Git envia código e scripts; dados dos bancos não são sincronizados pelo push.
 - Não publicar .env, credenciais, tokens ou senhas nos documentos.
 - Fotos enviadas ficam no PostgreSQL; imagens estáticas em frontend/pages/images.
-
 PASSO 1 - PREPARAR A BASE [IMPLEMENTADO]
 Backend Spring Boot/Maven e frontend servido pelo próprio backend.
 Docker Compose para PostgreSQL com volume persistente.
 Configuração de publicação no Render com conexão ao Neon.
 Detalhes: database/README.md e PUBLICACAO.md; conferir instruções antigas.
-
 PASSO 2 - CONTAS E ACESSO [IMPLEMENTADO]
 Cadastro, login/logout, sessão e senhas protegidas por BCrypt.
 Dados pessoais e upload de foto JPG/PNG; separação USUARIO/ADMIN.
 Recuperação por link temporário: Brevo envia e-mail, Findy redefine a senha.
 Link válido por 30 minutos, uso único; senha alterada invalida sessões antigas.
 Envio exige BREVO_API_KEY, EMAIL_FROM e APP_URL configurados no ambiente.
-
 PASSO 3 - CADASTRO PROFISSIONAL [IMPLEMENTADO EM 28/10]
 Três etapas: Sobre você, Seu trabalho e Revisão.
 Habilidades em sete categorias, opção iniciante e prévia pública.
@@ -48,14 +42,12 @@ Para enviar: foto, telefone com DDD, bairro, cidade e UF completos.
 Admin aprova, solicita correção ou recusa definitivamente, com histórico.
 Recusa definitiva bloqueia reenvio do perfil, preservando a conta de cliente.
 SQL: database/cadastro_profissional.sql. Guia: CADASTRO_PROFISSIONAL.md.
-
 PASSO 4 - SERVIÇOS E BUSCA [IMPLEMENTADO]
 Prestador cadastra ofertas, categoria, unidade e faixa opcional de preço.
 Perfil/conta ativos, aprovação e serviço ativo são necessários para publicação.
 Habilidade não cria oferta automaticamente; categoria vem do serviço.
 Busca e paginação retornam um profissional, mesmo com várias ofertas na categoria.
 Perfis fictícios são identificados; não remover dados reais ao limpar exemplos.
-
 PASSO 5 - PEDIDOS REAIS [IMPLEMENTADO EM 30/10]
 Cliente escolhe serviço, data futura, quantidade, região/endereço e mensagem.
 Faixa de preço é referência: valor final, escopo e pagamento são negociados.
@@ -64,7 +56,6 @@ Prestador aceita/recusa; cliente cancela antes do horário, pendente ou aceito.
 Somente participantes acessam o pedido; admin externo também não tem acesso.
 Aceite exige horário futuro e serviço/perfil disponíveis; alterações são transacionais.
 SQL: database/contratacao_real.sql. Regras/API: CONTRATACAO_REAL.md.
-
 PASSO 6 - NAVEGAÇÃO E ACESSO A PEDIDOS [IMPLEMENTADO]
 Cabeçalho compartilhado em cabecalho.js/cabecalho.css, sem copiar entre páginas.
 Login é exceção: mantém somente sua barra própria, evitando dois cabeçalhos.
@@ -72,7 +63,6 @@ Menu da conta mostra nome/foto/seta, atalhos e Sair para usuários e admins.
 Pedidos enviados e recebidos visíveis em Meus pedidos, com atualização manual.
 Atalhos para recebidos em Minha conta e Meus serviços; link para responder.
 Configurações ainda serão definidas; não há tela fictícia de configurações.
-
 PASSO 7 - PAINEL E PERFIL [IMPLEMENTADO EM 16/11]
 Minha conta virou painel com até cinco pedidos recentes de cada lista e totais.
 Dados pessoais/foto foram para área privada em Perfil profissional.
@@ -81,7 +71,6 @@ Salvar dados pessoais ou serviços não exige nova aprovação.
 Enviar cadastro profissional para análise sempre volta a PENDENTE.
 Apenas o primeiro bloco azul aparece na edição; o outro é da apresentação pública.
 Nome/foto e dados dos formulários são sincronizados ao salvar.
-
 PASSO 8 - PRIVACIDADE DOS CONTATOS [IMPLEMENTADO EM 16/11]
 PENDENTE não retorna telefones nem rua/número na API; mostra região/mensagem.
 Após ACEITA, dados completos são liberados somente aos dois participantes.
@@ -89,7 +78,6 @@ RECUSADA/CANCELADA ocultam novamente; não é possível recolher contato já cop
 Listagens e perfis públicos continuam sem campos de telefone/endereço completo.
 Avisos orientam não colocar dados de contato nos textos livres.
 Aceite confirma disponibilidade, não preço final. Sem migração SQL nesta etapa.
-
 PASSO 9 - AJUSTES DE INTERFACE [IMPLEMENTADO EM 16/11]
 Cards inteiros de profissionais são links, com foco e abertura em nova aba.
 Cards de categorias/profissionais sobem no hover; respeitam movimento reduzido.
@@ -98,7 +86,6 @@ Login tem botão Mostrar/Ocultar senha, sem enviar o formulário.
 FAQ do Fido atualizado: senha, dados, pedidos, contatos, preços e ausência de chat.
 Fido é FAQ; não há conversa entre participantes, e-mail ou lembrete automático.
 Após aceite, participantes usam telefone ou WhatsApp, se o número tiver WhatsApp.
-
 PASSO 10 - VERIFICAR O FLUXO [TESTES AUTOMATIZADOS EM 16/11]
 Três rodadas: quatro testes backend e 31 JavaScript em cada; 105 execuções aprovadas.
 Fluxo: cadastro/login, foto, análise, publicação, solicitação e resposta.
@@ -111,7 +98,6 @@ Botões Aceitar/Recusar aparecem ao prestador em pedido pendente.
 Aceitar fica desabilitado com explicação se horário passou; pedir nova solicitação.
 Navegador indisponível nesta sessão: não houve verificação visual/cliques reais.
 Testes locais não confirmam versão publicada nem entrega real de e-mail hoje.
-
 PASSO 11 - PRESERVAR EVIDÊNCIAS [REGRA DO USUÁRIO]
 Não apagar dados gerados pelos testes, passando ou falhando; guardar resultados.
 FluxoMvpTests e PrivacidadeContatoTests preservam registros com identificação única.
@@ -120,27 +106,24 @@ Suíte antiga ainda tem rollback/limpeza; adaptar antes de executá-la novamente
 Manter atomicidade: falha legítima pode não criar registro, mas deve ter relatório.
 Não usar banco online ou de desenvolvimento para testes que gravam dados.
 Não executar Maven clean se quiser preservar os relatórios existentes em target.
-
 PASSO 12 - ORGANIZAR O PROJETO [REALIZADO EM 16/11]
 Removidas frontend/js, frontend/css e frontend/assets: somente .gitkeep, sem uso.
 Preservadas frontend/pages/images, frontend/tests, docs, database e backend.
 Plano reduzido para até 200 linhas, com passos, resultados e pendências atuais.
 Detalhes permanecem nos documentos específicos e no histórico Git.
-
 PRÓXIMOS PASSOS - UMA ETAPA POR VEZ
 13. Conferir no navegador: login, menu, cards, perfil e fluxo entre duas contas.
 14. Revisar computador/celular: alinhamentos, formulários e mensagens de erro.
 15. Conferir branch/commit/push e deploy no Render antes de apresentar a versão online.
     Não presumir publicação por alteração local; verificar commit/versão no Render.
 16. Preparar demonstração: cliente diferente do prestador e conta ADMIN separada.
-17. Planejar início/conclusão do atendimento, confirmação e avaliação após conclusão.
-18. Definir aviso/contador de pedidos, distinguindo pendente de não lido.
+17. Início/conclusão e avaliação implementados em 20/11; conferir telas e publicação.
+18. Feito: sininho de pedidos recebidos pendentes ao lado do menu da conta.
 19. Implementar gaveta de navegação no celular e definir configurações da conta.
 20. Corrigir recuperação permitindo repetir senha atual: comparar hash sem consumir token.
 21. Adaptar limpeza da suíte antiga; planejar remoção seletiva de demonstrações depois.
 22. Melhorar atualização de arquivos estáticos para reduzir problemas de cache.
 Cobrança, assinatura, chat interno e pagamentos ficam para outra versão.
-
 OUTRO COMPUTADOR / BANCO NOVO
 Git, JDK 21 e Docker Desktop; obter branch combinada, criar .env próprio.
 Criar volume findy_postgres_data; iniciar Compose conforme database/README.md.
@@ -154,13 +137,11 @@ Uma nova instalação não recebe automaticamente contas do seu Docker ou Neon.
 Colega pela internet: usar link do Render; acesso às tabelas exige permissão separada.
 Na mesma rede: pode usar http://IP-DO-SEU-PC:8080, com backend ativo e rede permitida.
 Não expor a porta do PostgreSQL; localhost aponta para o computador de quem acessa.
-
 CONSULTAR OS BANCOS LOCAIS
 Desenvolvimento: docker exec -it findy-postgres-1 psql -U postgres -d findy
 Testes: docker exec -it findy-postgres-1 psql -U postgres -d findy_cadastro_test_20261028
 No psql: \dt lista tabelas; \q sai. Não exibir hashes de senha na apresentação.
 Interface gráfica: localhost, porta 5433, banco escolhido e credenciais do seu .env.
-
 ESTILIZAÇÃO GERAL - 18/11/2026
 Inicial com apresentação e categorias; azul mais sóbrio, fundo claro e cards brancos.
 Cabeçalho, campos, botões, painel da conta, admin e pedidos com aparência consistente.
@@ -168,7 +149,6 @@ Ajustes de espaçamento, contraste, foco e organização para telas menores.
 Alterados os quatro CSS e a apresentação do index.html; regras da API preservadas.
 32 testes JavaScript passaram; estrutura de CSS/HTML e caminhos de imagens conferidos.
 Conferência visual pendente: conexão nativa do navegador indisponível. Sem deploy.
-
 PAINEL, FAQ E CATEGORIAS - 18/11/2026
 Atualizar painel e explicação dentro de caixa alinhada aos demais painéis.
 FAQ compartilhado em ajuda.js/ajuda.css nas 12 páginas; removida conversa antiga.
@@ -176,3 +156,31 @@ Respostas abrem abaixo da pergunta, com rolagem para leitura, Escape e fechar.
 Categorias com ampliação leve e descrição no hover/foco; texto visível sem mouse.
 35 testes JavaScript passaram; HTML/CSS conferidos e arquivos locais atualizados.
 Conferência visual pendente; sem alteração de backend/banco ou deploy.
+WHATSAPP E PRÓXIMA ETAPA - 20/11/2026
+Implementado Conversar no WhatsApp nos detalhes após aceite e contatos liberados.
+Destino é a outra pessoa do pedido, com DDI 55 e mensagem revisada antes de enviar.
+Telefone inválido não gera link; não verificamos se o número possui WhatsApp.
+Cancelamento/recusa ou falha na releitura removem o link. Sem mudanças no banco.
+39 testes JavaScript aprovados; abertura real do WhatsApp e visual ainda pendentes.
+CONCLUSÃO E AVALIAÇÃO - IMPLEMENTADO EM 20/11/2026
+1. Prestador inicia ACEITA -> EM_ANDAMENTO.
+2. Cliente marca CONCLUIDA após início; servidor registra data_conclusao.
+3. Não depende de confirmação adicional do prestador; avaliação abre em seguida.
+4. Cliente daquele pedido envia nota 1 a 5 e comentário opcional.
+5. Backend determina avaliador/avaliado e rejeita pedido alheio, não concluído ou repetido.
+6. Reaproveitar avaliacoes e UNIQUE(solicitacao_id); exibir média/quantidade no perfil.
+7. Testes de transições/permissões e duplicidade concorrente preservam dados no banco separado.
+Nota/comentário públicos usam primeiro nome; cinco avaliações recentes no perfil.
+WhatsApp continua disponível no atendimento concluído para os participantes.
+Validação: sete testes backend e 41 JavaScript aprovados, incluindo avaliação concorrente.
+Dados preservados; primeira tentativa falhou por Docker desligado, relatório arquivado.
+Reiniciar backend para testar; sem deploy e sem SQL novo com as tabelas atuais.
+SININHO E PORTFÓLIO - 21/11/2026
+Sininho autenticado abre recebidos, conta PENDENTE e atualiza ao navegar/voltar à aba/agir.
+Portfólio: dono envia/remove; até 10 fotos JPG/PNG de 2 MB, legenda opcional.
+Validação real do formato, redução a 1200 px e remoção de metadados; salvo no PostgreSQL.
+Galeria pública só com perfil aprovado/ativo; envio não reinicia análise.
+Remoção desativa foto; dados de testes preservados.
+Banco local/testes: portfolio_profissional.sql aplicado. Aplicar também no Neon antes do deploy.
+Reiniciar backend; conferência visual e deploy ainda pendentes.
+Validação desta entrega: 46 testes JavaScript e nove testes backend aprovados; registros preservados.

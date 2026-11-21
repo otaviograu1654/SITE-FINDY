@@ -34,16 +34,41 @@
       <p id="status-aviso" class="pedido-aviso"></p>
       <p id="status-privacidade" class="pedido-aviso"></p>
       <dl id="status-detalhes" class="pedido-detalhes"></dl>
+      <section id="status-contato" class="pedido-contato" aria-labelledby="status-contato-titulo" hidden>
+        <h3 id="status-contato-titulo">Combine o atendimento</h3>
+        <p id="status-contato-aviso"></p>
+        <a id="status-whatsapp" class="pedido-whatsapp" target="_blank" rel="noopener noreferrer" referrerpolicy="no-referrer" hidden>Conversar no WhatsApp &rarr;</a>
+      </section>
       <p>A faixa de preço é uma estimativa. Cliente e prestador devem combinar entre si o valor final, o que está incluído e a forma de pagamento antes de iniciar o serviço. A Findy não cobra nem registra a confirmação desse acordo nesta versão.</p>
       <div class="pedido-acoes">
         <button type="button" class="btn btn--dark" data-acao="ACEITAR" hidden>Aceitar pedido</button>
         <button type="button" class="btn hire-btn-outline" data-acao="RECUSAR" hidden>Recusar pedido</button>
         <button type="button" class="btn hire-btn-outline" data-acao="CANCELAR" hidden>Cancelar pedido</button>
+        <button type="button" class="btn btn--dark" data-acao="INICIAR" hidden>Iniciar serviço</button>
+        <button type="button" class="btn btn--dark" data-acao="CONCLUIR" hidden>Serviço concluído</button>
       </div>
+      <section id="status-avaliacao" class="pedido-avaliacao" aria-labelledby="avaliacao-titulo" hidden>
+        <h3 id="avaliacao-titulo">Avaliação do serviço</h3>
+        <p id="avaliacao-resumo" hidden></p>
+        <form id="avaliacao-form" hidden>
+          <p>O serviço foi concluído. Conte como foi sua experiência com o profissional.</p>
+          <label for="avaliacao-nota">Sua nota</label>
+          <select id="avaliacao-nota" required>
+            <option value="">Selecione uma nota</option>
+            <option value="1">1 — Muito ruim</option><option value="2">2 — Ruim</option>
+            <option value="3">3 — Regular</option><option value="4">4 — Bom</option><option value="5">5 — Excelente</option>
+          </select>
+          <label for="avaliacao-comentario">Comentário (opcional)</label>
+          <textarea id="avaliacao-comentario" rows="3" maxlength="1000" placeholder="Conte sua experiência com o atendimento"></textarea>
+          <small>A nota e o comentário ficam no perfil público do profissional, com seu primeiro nome. Não inclua telefones, endereços ou outros dados pessoais. Uma avaliação por pedido.</small>
+          <button id="avaliacao-enviar" class="btn btn--dark" type="submit">Enviar avaliação</button>
+        </form>
+        <p id="avaliacao-mensagem" role="status" aria-live="polite" hidden></p>
+      </section>
     </section>
   </main>
   <script src="script.js" defer></script>
-  <script src="pedidos-comum.js" defer></script><script src="atendimento.js?v=20261116-3" defer></script>
+  <script src="pedidos-comum.js" defer></script><script src="atendimento.js?v=20261120-2" defer></script>
   <script src="ajuda.js?v=20261118-1" defer></script>
 </body>
 </html>

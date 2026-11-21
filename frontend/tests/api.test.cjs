@@ -54,3 +54,8 @@ test('resolve fotos na hospedagem e preserva links antigos de imagem', () => {
   assert.equal(api.foto('https://images.example/avatar.jpg'), 'https://images.example/avatar.jpg');
   assert.equal(api.foto('data:image/png;base64,teste'), 'images/chat-avatar.png');
 });
+
+test('fotos de portfólio usam o backend no Live Server', () => {
+  const { api } = ambiente('5501');
+  assert.equal(api.foto('/portfolio/fotos/10'), 'http://localhost:8080/portfolio/fotos/10');
+});

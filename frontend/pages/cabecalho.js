@@ -59,7 +59,13 @@
     ['Meus serviços', 'meus-servicos.html'],
   ]) opcoesConta.append(link(rotulo, destino));
   opcoesConta.append(sair); conta.append(resumoConta, opcoesConta);
-  acoes.append(entrar, conta); linha.append(logo, nav, acoes);
+  const sino = elemento('a', 'findy-topo__sino'); sino.id = 'cabecalho-pendentes'; sino.hidden = true;
+  sino.href = 'meus-pedidos.html?tipo=RECEBIDAS';
+  const icone = elemento('span', ''); icone.setAttribute('aria-hidden', 'true');
+  icone.innerHTML = '<svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4"/></svg>';
+  const contador = elemento('span', 'findy-topo__contador'); contador.id = 'cabecalho-pendentes-total'; contador.hidden = true;
+  sino.append(icone, contador);
+  acoes.append(entrar, sino, conta); linha.append(logo, nav, acoes);
 
   const ferramentas = elemento('div', 'findy-topo__ferramentas');
   const categorias = elemento('details', 'findy-topo__categorias');
@@ -95,6 +101,7 @@
   conta.addEventListener('toggle', () => { if (conta.open) categorias.open = false; });
   categorias.addEventListener('toggle', () => { if (categorias.open) conta.open = false; });
   function visitante() {
+    sino.hidden = true;
     entrar.hidden = false; sair.hidden = true; conta.hidden = true; conta.open = false; admin.hidden = true;
   }
   function mostrarPerfil(perfil) {
@@ -106,6 +113,28 @@
   document.addEventListener('findy:perfil-atualizado', evento => {
     if (!conta.hidden) mostrarPerfil(evento.detail);
   });
+  let consultando = false;
+  async function atualizarPendentes() {
+    if (conta.hidden || consultando) return;
+    consultando = true;
+    try {
+      const dados = await api('/solicitacoes/pendentes/resumo');
+      if (conta.hidden) return;
+      const total = Math.max(0, Number(dados.total) || 0);
+      contador.textContent = total > 99 ? '99+' : String(total); contador.hidden = total === 0;
+      sino.title = total ? `${total} pedido(s) aguardando sua resposta` : 'Nenhum pedido aguardando sua resposta';
+      sino.setAttribute('aria-label', sino.title); sino.hidden = false;
+    } catch (erro) {
+      if (erro.status === 401) visitante();
+      else { sino.hidden = false; contador.hidden = false; contador.textContent = '!';
+        sino.title = 'Não foi possível conferir pedidos pendentes. Abra seus pedidos recebidos.';
+        sino.setAttribute('aria-label', sino.title); }
+    } finally { consultando = false; }
+  }
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible') atualizarPendentes();
+  });
+  document.addEventListener('findy:pedidos-atualizados', atualizarPendentes);
   sair.addEventListener('click', async () => {
     if (sair.disabled) return;
     sair.disabled = true; aviso.hidden = true;
@@ -117,6 +146,7 @@
     try {
       const usuario = await api('/auth/me');
       mostrarPerfil(usuario); entrar.hidden = true; sair.hidden = false; conta.hidden = false;
+      await atualizarPendentes();
       try { mostrarPerfil(await api('/perfil')); }
       catch (erro) { if (erro.status === 401) { visitante(); return; } }
       try { await api('/admin/me'); admin.hidden = false; }

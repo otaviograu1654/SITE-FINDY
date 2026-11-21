@@ -215,3 +215,21 @@ test('páginas usam o cabeçalho compartilhado, exceto login que mantém sua bar
   }
   assert.equal(arquivos.length, 12);
 });
+
+test('sininho só aparece logado e atualiza pendências sem confundir falha com zero', async () => {
+  const visitante = await ambiente(); assert.equal(visitante.el('cabecalho-pendentes').hidden, true);
+  let total = 3, falhar = false;
+  const a = await ambiente({ responder: rota => {
+    if (rota === '/solicitacoes/pendentes/resumo') { if (falhar) throw erro(503); return { total }; }
+    return usuario(rota);
+  } });
+  assert.equal(a.el('cabecalho-pendentes').hidden, false);
+  assert.equal(a.el('cabecalho-pendentes').href, 'meus-pedidos.html?tipo=RECEBIDAS');
+  assert.equal(a.el('cabecalho-pendentes-total').textContent, '3');
+  total = 0; await a.eventos['findy:pedidos-atualizados']();
+  assert.equal(a.el('cabecalho-pendentes-total').hidden, true);
+  total = 101; await a.eventos['findy:pedidos-atualizados']();
+  assert.equal(a.el('cabecalho-pendentes-total').textContent, '99+');
+  falhar = true; await a.eventos['findy:pedidos-atualizados']();
+  assert.equal(a.el('cabecalho-pendentes-total').textContent, '!');
+});

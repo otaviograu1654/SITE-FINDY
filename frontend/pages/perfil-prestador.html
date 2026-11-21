@@ -54,6 +54,9 @@
       <h3>Experiência</h3><p id="prestador-experiencia" class="perfil-texto"></p>
       <h3>Habilidades</h3><ul id="prestador-habilidades"></ul>
       <h3>Serviços</h3><div id="prestador-servicos"></div>
+      <h3>Avaliações de serviços concluídos</h3>
+      <p id="prestador-nota" class="perfil-status"></p>
+      <div id="prestador-avaliacoes"></div>
     </section>
     <section class="panel" id="prestador-situacao" hidden>
       <h2>Situação do perfil</h2><p id="prestador-status" class="perfil-status"></p>
@@ -67,6 +70,18 @@
       </div>
     </section>
   </div>
+  <section class="panel" id="portfolio-secao" hidden>
+    <h2>Portfólio de trabalhos</h2>
+    <p id="portfolio-mensagem" role="status" aria-live="polite"></p>
+    <div id="portfolio-galeria" class="portfolio-galeria"></div>
+    <form id="portfolio-form" class="perfil-form" hidden>
+      <p>Mostre até 10 fotos dos seus trabalhos. As fotos aparecem publicamente quando seu perfil está aprovado e ativo. Enviar fotos não exige nova aprovação.</p>
+      <p>Use fotos autorizadas, sem telefones, endereços ou dados pessoais de clientes.</p>
+      <label>Foto do trabalho<input id="portfolio-arquivo" name="foto" type="file" accept="image/jpeg,image/png" required><small>JPG ou PNG, até 2 MB e 4096 pixels por lado.</small></label>
+      <label>Legenda (opcional)<input name="legenda" maxlength="160" placeholder="Ex.: Instalação de piso em porcelanato"></label>
+      <button class="btn-black" type="submit">Enviar foto</button>
+    </form>
+  </section>
   <section class="panel" id="prestador-editor" hidden>
     <h2>Seu cadastro profissional</h2>
     <p>Ao enviar este cadastro, seu perfil segue para análise, mesmo que já estivesse aprovado. Para mudar apenas dados pessoais ou foto, use o formulário acima. A conta continua disponível para contratar.</p>
@@ -113,7 +128,7 @@
   </section>
 </div>
 </main>
-</div><script src="conta.js" defer></script><script src="prestador.js" defer></script>
+</div><script src="conta.js" defer></script><script src="prestador.js" defer></script><script src="portfolio.js" defer></script>
   <script src="ajuda.js?v=20261118-1" defer></script>
 </body>
 </html>

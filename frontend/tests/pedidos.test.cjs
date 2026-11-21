@@ -140,7 +140,7 @@ test('cliente vê cancelamento e profissional vê aceite/recusa; atualização u
       assert.equal(a.el('status-badge').textContent, 'Pedido aceito');
       await a.el('status-atualizar').emitir('click');
       assert.equal(a.el('status-badge').textContent, 'Pedido aceito');
-      assert.deepEqual(visiveis(), []);
+      assert.deepEqual(visiveis(), ['INICIAR']);
     }
   }
 });
@@ -176,6 +176,122 @@ test('detalhes mostram contatos apenas quando servidor libera após aceite e ret
   atual = { ...atual, status: 'CANCELADA', contatosLiberados: false };
   await a.el('status-atualizar').emitir('click');
   assert.doesNotMatch(detalhes(), /34911112222|34933334444|Rua privada/);
+});
+
+test('WhatsApp após aceite aponta para a outra pessoa e prepara mensagem sem enviar', async () => {
+  for (const id of [1, 2]) {
+    const atual = { ...pedido(), status: 'ACEITA', contatosLiberados: true,
+      telefoneCliente: '(34) 91111-2222', telefoneProfissional: '+55 (34) 93333-4444' };
+    const a = await ambiente('status-atendimento.html', 'atendimento.js', '?id=20', rota =>
+      rota === '/auth/me' ? { id } : atual);
+    const link = a.el('status-whatsapp');
+    assert.equal(link.hidden, false);
+    const url = new URL(link.href);
+    assert.equal(url.origin, 'https://wa.me');
+    assert.equal(url.pathname, id === 1 ? '/5534933334444' : '/5534911112222');
+    assert.match(url.searchParams.get('text'), /pedido #20 no Findy/);
+    assert.match(url.searchParams.get('text'), /Criação de sites/);
+    assert.match(url.searchParams.get('text'), id === 1 ? /Sou o cliente/ : /Sou o prestador/);
+    assert.match(a.el('status-contato-aviso').textContent, /nada é enviado automaticamente/);
+    assert.ok(a.chamadas.every(c => !c.opcoes));
+  }
+});
+
+test('WhatsApp não aparece antes do aceite, após encerramento ou para outra conta', async () => {
+  for (const status of ['PENDENTE', 'RECUSADA', 'CANCELADA']) {
+    const a = await ambiente('status-atendimento.html', 'atendimento.js', '?id=20', rota =>
+      rota === '/auth/me' ? { id: 1 } : { ...pedido(), status, contatosLiberados: true, telefoneProfissional: '34999999999' });
+    assert.equal(a.el('status-contato').hidden, true);
+    assert.equal(a.el('status-whatsapp').href, undefined);
+  }
+  const b = await ambiente('status-atendimento.html', 'atendimento.js', '?id=20', rota =>
+    rota === '/auth/me' ? { id: 3 } : { ...pedido(), status: 'ACEITA', contatosLiberados: true, telefoneProfissional: '34999999999' });
+  assert.equal(b.el('status-whatsapp').hidden, true);
+});
+
+test('WhatsApp normaliza DDD/DDI brasileiros e explica telefone inválido sem inventar destino', async () => {
+  for (const telefone of ['(34) 99999-9999', '5534999999999', '005534999999999']) {
+    const a = await ambiente('status-atendimento.html', 'atendimento.js', '?id=20', rota =>
+      rota === '/auth/me' ? { id: 1 } : { ...pedido(), status: 'ACEITA', contatosLiberados: true, telefoneProfissional: telefone });
+    assert.equal(new URL(a.el('status-whatsapp').href).pathname, '/5534999999999');
+  }
+  for (const telefone of [null, '', '123', '+1 202 555 0100', 'javascript:alert(1)']) {
+    const a = await ambiente('status-atendimento.html', 'atendimento.js', '?id=20', rota =>
+      rota === '/auth/me' ? { id: 1 } : { ...pedido(), status: 'ACEITA', contatosLiberados: true, telefoneProfissional: telefone });
+    assert.equal(a.el('status-whatsapp').hidden, true);
+    assert.equal(a.el('status-whatsapp').href, undefined);
+    assert.match(a.el('status-contato-aviso').textContent, /ausente ou fora do formato/);
+  }
+});
+
+test('WhatsApp é removido ao cancelar ou quando a releitura do pedido falha', async () => {
+  let atual = { ...pedido(), status: 'ACEITA', contatosLiberados: true, telefoneProfissional: '34999999999' };
+  let falhar = false;
+  const a = await ambiente('status-atendimento.html', 'atendimento.js', '?id=20', rota => {
+    if (rota === '/auth/me') return { id: 1 };
+    if (falhar) throw new Error('Sem conexão');
+    return atual;
+  });
+  assert.equal(a.el('status-whatsapp').hidden, false);
+  atual = { ...atual, status: 'CANCELADA', contatosLiberados: false };
+  await a.el('status-atualizar').emitir('click');
+  assert.equal(a.el('status-whatsapp').href, undefined);
+  atual = { ...atual, status: 'ACEITA', contatosLiberados: true };
+  await a.el('status-atualizar').emitir('click'); assert.equal(a.el('status-whatsapp').hidden, false);
+  falhar = true; await a.el('status-atualizar').emitir('click');
+  assert.equal(a.el('status-whatsapp').href, undefined);
+});
+
+test('prestador inicia e cliente conclui e avalia sem nova confirmação do profissional', async () => {
+  let atual = { ...pedido(), status: 'ACEITA', contatosLiberados: true };
+  const resposta = (id) => (rota, opcoes) => {
+    if (rota === '/auth/me') return { id };
+    if (opcoes?.method === 'PATCH') atual = { ...atual, status: opcoes.body.acao === 'INICIAR' ? 'EM_ANDAMENTO' : 'CONCLUIDA' };
+    if (rota.endsWith('/avaliacao')) atual = { ...atual, avaliacao: { nota: opcoes.body.nota, comentario: opcoes.body.comentario } };
+    return atual;
+  };
+  const prestador = await ambiente('status-atendimento.html', 'atendimento.js', '?id=20', resposta(2));
+  const visiveis = a => a.acoes.filter(b => !b.hidden).map(b => b.dataset.acao);
+  assert.deepEqual(visiveis(prestador), ['INICIAR']);
+  await prestador.acoes.find(b => b.dataset.acao === 'INICIAR').emitir('click');
+  assert.equal(prestador.el('status-badge').textContent, 'Em andamento');
+  assert.deepEqual(visiveis(prestador), []);
+  const cliente = await ambiente('status-atendimento.html', 'atendimento.js', '?id=20', resposta(1));
+  assert.deepEqual(visiveis(cliente), ['CONCLUIR']);
+  assert.equal(cliente.el('avaliacao-form').hidden, true);
+  await cliente.acoes.find(b => b.dataset.acao === 'CONCLUIR').emitir('click');
+  assert.equal(cliente.el('avaliacao-form').hidden, false);
+  assert.equal(cliente.el('avaliacao-nota').focused, true);
+  cliente.el('avaliacao-nota').value = '5'; cliente.el('avaliacao-comentario').value = 'Ótimo atendimento';
+  await cliente.el('avaliacao-form').emitir('submit');
+  assert.equal(cliente.chamadas.at(-1).rota, '/solicitacoes/20/avaliacao');
+  assert.equal(cliente.chamadas.at(-1).opcoes.body.nota, 5);
+  assert.equal(cliente.el('avaliacao-form').hidden, true);
+  assert.match(cliente.el('avaliacao-resumo').textContent, /5\/5.*Ótimo/);
+  await cliente.el('status-atualizar').emitir('click');
+  assert.equal(cliente.el('avaliacao-form').hidden, true);
+});
+
+test('falha ao avaliar preserva texto e clique repetido não duplica o envio', async () => {
+  let terminar, falhar = false;
+  const a = await ambiente('status-atendimento.html', 'atendimento.js', '?id=20', (rota, opcoes) => {
+    if (rota === '/auth/me') return { id: 1 };
+    if (rota.endsWith('/avaliacao')) {
+      if (falhar) throw new Error('Falha ao salvar');
+      return new Promise(resolve => { terminar = resolve; });
+    }
+    return { ...pedido(), status: 'CONCLUIDA' };
+  });
+  a.el('avaliacao-nota').value = '4'; a.el('avaliacao-comentario').value = 'Meu comentário';
+  const envio = a.el('avaliacao-form').emitir('submit');
+  await a.el('avaliacao-form').emitir('submit');
+  assert.equal(a.chamadas.filter(c => c.rota.endsWith('/avaliacao')).length, 1);
+  terminar({ ...pedido(), status: 'CONCLUIDA', avaliacao: { nota: 4 } }); await envio;
+  falhar = true; await a.el('status-atualizar').emitir('click');
+  await a.el('avaliacao-form').emitir('submit');
+  assert.equal(a.el('avaliacao-comentario').value, 'Meu comentário');
+  assert.equal(a.el('avaliacao-enviar').disabled, false);
+  assert.match(a.el('avaliacao-mensagem').textContent, /Falha ao salvar/);
 });
 
 test('pedido alheio não exibe detalhes e conflito exige releitura', async () => {

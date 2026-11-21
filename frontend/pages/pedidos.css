@@ -24,6 +24,18 @@
 .pedido-aviso { background: #eef7fc; border-left: 3px solid #1389b8; border-radius: 10px; padding: 16px 20px; line-height: 1.7; font-size: .9rem; }
 .mensagem-erro { color: #a32018; }
 .pedido-mensagem { line-height: 1.6; padding: 10px 0; }
+.pedido-contato { margin: 24px 0; padding: 22px; border: 1px solid #c9e2d8; border-radius: 14px; background: #f3faf6; }
+.pedido-contato h3 { font-size: 1.1rem; }
+.pedido-contato p { font-size: .9rem; max-width: 700px; }
+.pedido-whatsapp { display: inline-flex; align-items: center; justify-content: center; padding: 12px 18px; border-radius: 10px; background: #126b48; color: #fff; font-weight: 600; font-size: .95rem; }
+.pedido-whatsapp:hover { background: #0b5336; }
+.pedido-whatsapp:focus-visible { outline: 3px solid #1389b8; outline-offset: 3px; }
+.pedido-avaliacao { margin-top: 24px; padding: 24px; background: #f8fafc; border: 1px solid var(--color-line); border-radius: 14px; }
+#avaliacao-form { display: grid; gap: 12px; margin-top: 16px; }
+#avaliacao-form select, #avaliacao-form textarea { width: 100%; padding: 12px; border: 1px solid var(--color-line); border-radius: 10px; background: #fff; font: inherit; }
+#avaliacao-form small { color: var(--color-gray-text); }
+#avaliacao-comentario { resize: vertical; }
+#avaliacao-form button { justify-self: start; }
 .hire-form fieldset { border: 0; padding: 0; margin: 0; min-width: 0; display: grid; gap: 20px; }
 .hire-form fieldset:disabled { opacity: .6; }
 .hire-form input[readonly] { background: #f0f3f5; }
@@ -34,4 +46,5 @@
   .pedido-acoes button, .pedido-filtros select { width: 100%; }
   .pedido-abas { align-self: stretch; }
   .pedido-abas a { flex: 1; text-align: center; min-width: 180px; }
+  .pedido-whatsapp { width: 100%; }
 }

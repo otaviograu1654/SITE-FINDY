@@ -40,8 +40,13 @@ permite aceitar, recusar ou cancelar conforme a conta conectada.
   Recusa e cancelamento encerram esta etapa; não é possível reabrir o pedido.
 - Mudanças de situação usam transação e bloqueio da linha para evitar sobrescrita
   em requisições simultâneas. Não são enviados e-mails ou avisos automáticos.
-- Iniciar atendimento, concluir, confirmar conclusão e avaliar são a fase 6.
-  Não há endpoint nesta entrega para pular diretamente para CONCLUIDA.
+- Atualização de 20/11/2026: profissional inicia ACEITA -> EM_ANDAMENTO;
+  cliente marca CONCLUIDA, sem confirmação adicional do prestador. Data de
+  conclusão é registrada pelo servidor. Não é permitido concluir antes do início.
+- Cliente pode avaliar CONCLUIDA com nota inteira de 1 a 5 e comentário opcional
+  de até 1000 caracteres. Uma avaliação por pedido, determinada pela sessão.
+  Prestador e administrador não podem avaliar pelo cliente. Perfil mostra média,
+  quantidade e até cinco avaliações recentes, com primeiro nome do cliente.
 
 Atualização de privacidade em 16/11/2026: o aceite confirma disponibilidade,
 não o preço. Faixa é estimativa; cliente e prestador combinam valor final,
@@ -55,6 +60,15 @@ registros e relatórios Surefire permanecem para consulta. Executar somente essa
 classe até adaptar as rotinas de limpeza da suíte antiga à preferência do usuário.
 
 ## Banco
+
+WhatsApp (20/11/2026): os detalhes oferecem um link `wa.me` apenas quando a API
+libera os contatos e a conta é participante de um pedido aceito ou posterior.
+Cliente acessa o número do profissional e vice-versa. Telefones brasileiros são
+normalizados com DDI 55; telefone ausente/inválido não gera link. O sistema não
+confirma cadastro do número no WhatsApp. A mensagem contém pedido/serviço, sem
+endereço ou telefone no texto, e é revisada/enviada pelo usuário no WhatsApp.
+Não há API de envio de mensagens, pagamento ou migração SQL nesta entrega.
+Validação: 39 testes JavaScript passaram; não foi enviada mensagem real.
 
 Executar `database/contratacao_real.sql` depois de `cadastro_profissional.sql` e
 antes de iniciar esta versão. É incremental e pode ser repetido, sem recriar
@@ -85,7 +99,8 @@ Todas as rotas abaixo exigem a sessão normal por cookie HttpOnly.
 | GET /solicitacoes?tipo=ENVIADAS&pagina=1 | Pedidos enviados pela conta. |
 | GET /solicitacoes?tipo=RECEBIDAS&pagina=1 | Pedidos recebidos pelo profissional. |
 | GET /solicitacoes/{id} | Detalhes reservados aos participantes. |
-| PATCH /solicitacoes/{id}/situacao | Ação ACEITAR, RECUSAR ou CANCELAR. |
+| PATCH /solicitacoes/{id}/situacao | Ação ACEITAR, RECUSAR, CANCELAR, INICIAR ou CONCLUIR. |
+| POST /solicitacoes/{id}/avaliacao | Cliente avalia pedido concluído com nota e comentário opcional. |
 
 Listagem: `itens`, `pagina`, `totalPaginas`, `total`; 20 por página, mais recentes
 primeiro. Sem perfil profissional, a listagem de recebidos é vazia.
@@ -134,7 +149,7 @@ Links usam apenas IDs: `contratacao.html?servico=123` e
 `status-atendimento.html?id=456`. Dados e valores são consultados no servidor.
 O login mantém esse destino após autenticar, limitado às rotas internas de pedidos.
 Não há mais papel simulado, avaliação fictícia, reinício de simulação ou status
-em localStorage. Conclusão e avaliação ainda serão implementadas na fase 6.
+em localStorage. Conclusão e avaliação estão conectadas à API desde 20/11/2026.
 
 As telas Minha conta, Perfil profissional e Meus serviços mostram os requisitos
 de publicação. Habilidades não substituem ofertas: perfil aprovado/ativo, conta
@@ -147,8 +162,17 @@ publicável, sem telefone ou e-mail, para preencher o formulário real.
 
 ## Próxima entrega
 
-Conferir as telas visualmente e seguir para a fase 6 quando solicitado. Continuam
-pendentes a conclusão, confirmação, avaliação e a correção da reutilização de senha.
+Conferir visualmente o fluxo: prestador aceita e inicia, cliente conclui e avalia;
+atualizar perfil público para conferir a nota. Reutilização de senha segue pendente.
+Não é necessário novo SQL se avaliacoes e data_conclusao já existem conforme
+os scripts atuais. O início é declarado pelo prestador após o aceite; não exige
+aguardar o horário proposto. Concluir não exige nota: o cliente pode avaliar depois.
+
+Validação de 20/11/2026: sete testes de integração (fluxo, privacidade, conclusão,
+permissões e avaliação concorrente) e 41 JavaScript aprovados. Dados preservados
+no banco separado. Primeira tentativa sem Docker falhou antes de criar registros;
+relatórios arquivados em target/falha-avaliacao-sem-banco-ad48b45c. A repetição
+aprovada está registrada em target/teste-conclusao-6e174028.log e surefire-reports.
 
 ## Verificação desta entrega
 

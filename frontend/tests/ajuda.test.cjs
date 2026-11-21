@@ -39,7 +39,7 @@ test('FAQ abre com foco no fechamento e fecha com Escape, botão e clique fora',
 test('resposta fica junto da pergunta, rola para ser vista e fecha a pergunta anterior', () => {
   const a = ambiente();
   const itens = todos(a.body).filter(el => el.tag === 'details');
-  assert.equal(itens.length, 16);
+  assert.equal(itens.length, 18);
   for (const item of itens) {
     assert.equal(item.children[0].tag, 'summary');
     assert.ok(item.children[0].textContent);

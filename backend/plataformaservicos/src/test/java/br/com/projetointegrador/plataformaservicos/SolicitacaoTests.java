@@ -265,7 +265,7 @@ class SolicitacaoTests {
     @Test void recusaEImpedeReabrirPedidoEncerrado() throws Exception {
         Long id = criar(); agir(id, profissionalSessao, "RECUSAR", 200);
         agir(id, profissionalSessao, "ACEITAR", 409); agir(id, clienteSessao, "CANCELAR", 409);
-        agir(id, clienteSessao, "CONCLUIR", 400);
+        agir(id, clienteSessao, "CONCLUIR", 409);
     }
 
     @Test void cancelaPendenteEBloqueiaAcoesAposHorario() throws Exception {

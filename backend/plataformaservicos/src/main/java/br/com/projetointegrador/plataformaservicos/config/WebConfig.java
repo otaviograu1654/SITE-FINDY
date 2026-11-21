@@ -33,7 +33,7 @@ public class WebConfig implements WebMvcConfigurer {
                 "/admin/**",
                 "/servicos",
                 "/meus-servicos/**",
-                "/fotos/**"
+                "/fotos/**", "/portfolio/**", "/solicitacoes/**"
         }) {
             registry.addMapping(rota)
                     .allowedOrigins(
@@ -41,7 +41,7 @@ public class WebConfig implements WebMvcConfigurer {
                             "http://127.0.0.1:5501"
                     )
                     .allowedMethods(
-                            "GET", "POST", "PUT", "PATCH", "OPTIONS"
+                            "GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"
                     )
                     .allowedHeaders("Content-Type")
                     .allowCredentials(true);

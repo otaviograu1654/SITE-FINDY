@@ -34,10 +34,18 @@ public class SolicitacaoService {
                 ROUND(so.valor_unitario*so.quantidade,2) AS "estimativaMinima",
                 ROUND(COALESCE(so.valor_unitario_maximo,so.valor_unitario)*so.quantidade,2) AS "estimativaMaxima",
                 so.subtotal, so.taxa, so.total,
-                so.data_inicio AS "dataInicio", so.data_solicitacao AS "dataSolicitacao"
+                so.data_inicio AS "dataInicio", so.data_solicitacao AS "dataSolicitacao",
+                so.data_conclusao AS "dataConclusao"
             """;
 
     public SolicitacaoService(JdbcTemplate banco) { this.banco = banco; }
+
+    @Transactional(readOnly = true)
+    public Map<String, Object> pendentes(Long usuarioId) {
+        Long total = banco.queryForObject("SELECT COUNT(*) " + ORIGEM
+                + " WHERE p.usuario_id=? AND so.status='PENDENTE'", Long.class, usuarioId);
+        return Map.of("total", total == null ? 0L : total);
+    }
 
     public record Pagina(List<Map<String, Object>> itens, int pagina, long totalPaginas, long total) {}
 
@@ -47,7 +55,7 @@ public class SolicitacaoService {
                 AND LENGTH(REGEXP_REPLACE(COALESCE(telefone,''),'[^0-9]','','g')) BETWEEN 10 AND 13
                 """, Integer.class, clienteId);
         if (contatos == null || contatos == 0)
-            throw erro(HttpStatus.BAD_REQUEST, "Preencha seu telefone com DDD em Minha conta antes de solicitar.");
+            throw erro(HttpStatus.BAD_REQUEST, "Preencha seu telefone com DDD nos dados pessoais do perfil antes de solicitar.");
         // As travas mantêm preço e disponibilidade consistentes durante a criação.
         var ofertas = banco.queryForList("""
                 SELECT s.preco, s.preco_maximo, s.unidade_cobranca, p.usuario_id
@@ -121,6 +129,11 @@ public class SolicitacaoService {
             pedido.remove("telefoneProfissional");
             pedido.remove("endereco");
         }
+        var avaliacoes = banco.queryForList("""
+                SELECT nota, comentario, data_avaliacao AS "dataAvaliacao"
+                FROM avaliacoes WHERE solicitacao_id=?
+                """, id);
+        pedido.put("avaliacao", avaliacoes.isEmpty() ? null : avaliacoes.getFirst());
         return pedido;
     }
 
@@ -161,9 +174,46 @@ public class SolicitacaoService {
                     throw erro(HttpStatus.CONFLICT, "O cancelamento só é permitido antes do horário marcado.");
                 destino = "CANCELADA";
             }
+            case "INICIAR" -> {
+                if (!usuarioId.equals(pedido.profissional()))
+                    throw erro(HttpStatus.FORBIDDEN, "Somente o profissional pode iniciar o serviço.");
+                if (!"ACEITA".equals(pedido.status())) throw conflito();
+                destino = "EM_ANDAMENTO";
+            }
+            case "CONCLUIR" -> {
+                if (!usuarioId.equals(pedido.cliente()))
+                    throw erro(HttpStatus.FORBIDDEN, "Somente o cliente pode concluir o serviço.");
+                if (!"EM_ANDAMENTO".equals(pedido.status())) throw conflito();
+                destino = "CONCLUIDA";
+            }
             default -> throw erro(HttpStatus.BAD_REQUEST, "Ação inválida.");
         }
-        banco.update("UPDATE solicitacoes SET status=? WHERE id=?", destino, id);
+        banco.update("""
+                UPDATE solicitacoes SET status=?,
+                    data_conclusao=CASE WHEN ?='CONCLUIDA' THEN CURRENT_TIMESTAMP ELSE data_conclusao END
+                WHERE id=?
+                """, destino, destino, id);
+        return consultar(usuarioId, id);
+    }
+
+    public Map<String, Object> avaliar(Long usuarioId, Long id, Integer nota, String comentario) {
+        if (nota == null || nota < 1 || nota > 5 || (comentario != null && comentario.length() > 1000))
+            throw erro(HttpStatus.BAD_REQUEST, "Informe nota de 1 a 5 e comentário de até 1000 caracteres.");
+        // A trava serializa avaliações simultâneas; a restrição UNIQUE também protege o banco.
+        var pedidos = banco.queryForList("SELECT so.status, so.cliente_id, p.usuario_id " + ORIGEM
+                + " WHERE so.id=? AND (so.cliente_id=? OR p.usuario_id=?) FOR UPDATE OF so", id, usuarioId, usuarioId);
+        if (pedidos.isEmpty()) throw naoEncontrado("Solicitação não encontrada na sua conta.");
+        var pedido = pedidos.getFirst();
+        if (!usuarioId.equals(pedido.get("cliente_id")))
+            throw erro(HttpStatus.FORBIDDEN, "Somente o cliente pode avaliar o serviço.");
+        if (!"CONCLUIDA".equals(pedido.get("status")))
+            throw erro(HttpStatus.CONFLICT, "Conclua o serviço antes de avaliar.");
+        int criadas = banco.update("""
+                INSERT INTO avaliacoes(solicitacao_id,avaliador_id,avaliado_id,nota,comentario)
+                VALUES (?,?,?,?,?) ON CONFLICT (solicitacao_id) DO NOTHING
+                """, id, usuarioId, pedido.get("usuario_id"), nota,
+                comentario == null || comentario.isBlank() ? null : comentario.trim());
+        if (criadas == 0) throw erro(HttpStatus.CONFLICT, "Este pedido já foi avaliado.");
         return consultar(usuarioId, id);
     }
 

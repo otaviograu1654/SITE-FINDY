@@ -49,7 +49,7 @@ window.Findy = (() => {
   function foto(valor) {
     if (!valor) return 'images/chat-avatar.png';
     try {
-      const url = new URL(valor, valor.startsWith('/fotos/') && base ? base : location.href);
+      const url = new URL(valor, (/^\/(?:fotos|portfolio\/fotos)\//.test(valor)) && base ? base : location.href);
       return ['http:', 'https:'].includes(url.protocol) ? url.href : 'images/chat-avatar.png';
     } catch { return 'images/chat-avatar.png'; }
   }

@@ -82,3 +82,7 @@
   #cabecalho-findy .findy-topo__busca { flex-basis: 100%; }
   #cabecalho-findy .findy-topo__busca input { font-size: 16px; }
 }
+
+#cabecalho-findy .findy-topo__sino { position: relative; display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; flex-shrink: 0; color: #09658b; background: #edf6fb; border: 1px solid #dce5ee; border-radius: 12px; text-decoration: none; }
+#cabecalho-findy .findy-topo__sino:hover { background: #dceef8; }
+#cabecalho-findy .findy-topo__contador { position: absolute; top: -5px; right: -5px; min-width: 20px; padding: 2px 4px; border-radius: 12px; background: #b72b40; color: white; font-size: 11px; font-weight: 700; text-align: center; }

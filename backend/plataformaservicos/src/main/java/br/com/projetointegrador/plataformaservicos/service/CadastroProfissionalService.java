@@ -60,6 +60,22 @@ public class CadastroProfissionalService {
             FROM servicos s JOIN categorias c ON c.id=s.categoria_id
             WHERE s.prestador_id=?
             """ + (publico ? " AND s.ativo" : "") + " ORDER BY s.id",id));
+        var resumo = banco.queryForMap("""
+            SELECT ROUND(AVG(a.nota),1) AS media, COUNT(*) AS quantidade
+            FROM avaliacoes a JOIN solicitacoes so ON so.id=a.solicitacao_id
+            JOIN servicos s ON s.id=so.servico_id
+            WHERE s.prestador_id=? AND so.status='CONCLUIDA'
+            """, id);
+        resultado.put("avaliacaoMedia", resumo.get("media"));
+        resultado.put("totalAvaliacoes", resumo.get("quantidade"));
+        resultado.put("avaliacoes", banco.queryForList("""
+            SELECT a.nota, a.comentario, a.data_avaliacao AS "dataAvaliacao",
+                split_part(TRIM(u.nome),' ',1) AS cliente
+            FROM avaliacoes a JOIN usuarios u ON u.id=a.avaliador_id
+            JOIN solicitacoes so ON so.id=a.solicitacao_id JOIN servicos s ON s.id=so.servico_id
+            WHERE s.prestador_id=? AND so.status='CONCLUIDA'
+            ORDER BY a.data_avaliacao DESC,a.id DESC LIMIT 5
+            """, id));
         if (publico) {
             // Região ? texto livre privado: a localização pública usa apenas campos estruturados.
             for (String campo : List.of("regiaoAtendimento","ativo","statusAprovacao","motivoRecusa","dataAnalise")) resultado.remove(campo);

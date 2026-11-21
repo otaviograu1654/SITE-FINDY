@@ -22,6 +22,12 @@
   $('prestador-descricao').textContent=d.descricaoProfissional||'Preencha seu cadastro para oferecer serviços.';
   $('prestador-experiencia').textContent=d.iniciante?`Estou começando agora. ${d.experiencia||''}`:d.experiencia||'Não informada.';
   lista($('prestador-habilidades'),d.habilidades);servicos($('prestador-servicos'),d.servicos);
+  $('prestador-nota').textContent=d.totalAvaliacoes?`${Number(d.avaliacaoMedia).toLocaleString('pt-BR')} de 5 — ${d.totalAvaliacoes} avaliação(ões)`:'Este profissional ainda não recebeu avaliações.';
+  const avaliacoes=$('prestador-avaliacoes');avaliacoes.replaceChildren();
+  for(const a of d.avaliacoes||[]){
+   const item=document.createElement('article');item.className='avaliacao-item';
+   p(item,`${a.nota}/5 — ${a.cliente}`);if(a.comentario)p(item,a.comentario);avaliacoes.append(item);
+  }
  }
  document.addEventListener('findy:perfil-atualizado',evento=>{
   if(id!==null||!pessoa)return;

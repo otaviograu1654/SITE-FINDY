@@ -36,7 +36,7 @@
   ],
   [
     "Posso conversar pelo site?",
-    "Ainda não há chat entre cliente e prestador. Você pode enviar uma mensagem inicial no pedido. Após o aceite, os telefones ficam disponíveis para ligação ou WhatsApp, se o número tiver WhatsApp. O Fido responde apenas perguntas frequentes."
+    "Ainda não há chat entre cliente e prestador. Após o aceite, abra os detalhes do pedido e use Conversar no WhatsApp, se o número tiver WhatsApp. Você revisa e envia a mensagem por lá. O Fido responde apenas perguntas frequentes."
   ],
   [
     "Como funciona a contratação?",
@@ -64,7 +64,15 @@
   ],
   [
     "Como falo com o profissional?",
-    "Ainda não há chat entre os participantes. Após o aceite, consulte os telefones nos detalhes para ligar ou usar WhatsApp, se o número tiver WhatsApp. A mensagem inicial do pedido não é uma conversa com troca de respostas."
+    "Após o aceite, abra os detalhes do pedido e clique em Conversar no WhatsApp. O botão usa o telefone da outra pessoa e prepara uma mensagem sobre o pedido; você decide enviá-la. O número precisa ter WhatsApp. Também é possível usar o telefone para ligar."
+  ],
+  [
+    "Como marco o serviço como concluído?",
+    "Depois do aceite, o prestador abre o pedido e clica em Iniciar serviço. Quando o atendimento terminar, o cliente abre o mesmo pedido e clica em Serviço concluído. Não é necessária outra confirmação do prestador."
+  ],
+  [
+    "Quando posso avaliar o profissional?",
+    "O cliente pode avaliar após marcar o serviço como concluído. Escolha nota de 1 a 5 e escreva um comentário opcional de até 1000 caracteres. É permitida uma avaliação por pedido, exibida no perfil do profissional com seu primeiro nome. Não inclua dados pessoais no comentário."
   ]
 ];
   function elemento(tag, classe, texto) {

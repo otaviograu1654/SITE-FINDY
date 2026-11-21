@@ -174,3 +174,16 @@ Ver [CONTRATACAO_REAL.md](../CONTRATACAO_REAL.md) para a API, regras e limitaç�
 As telas de contratação/status e Meus pedidos estão conectadas à API, usando IDs
 de ofertas e solicitações. Os valores são estimativas a combinar,
 sem taxa de 10%, cobrança ou desbloqueio pago de contatos.
+
+## Portfólio profissional
+
+Antes de publicar esta versão, execute `portfolio_profissional.sql` no SQL Editor
+no Neon. No banco local e no banco separado de testes, a tabela já foi aplicada.
+O script é aditivo e pode ser repetido; não apaga dados existentes.
+As imagens JPG/PNG ficam no PostgreSQL (persistem após reiniciar o Render),
+com limite de 10 fotos ativas de até 2 MB por profissional. A API redimensiona
+para até 1200 pixels e remove metadados. Remover foto desativa o registro.
+A galeria só é pública com perfil aprovado/ativo e conta ativa; o dono acessa
+as próprias fotos enquanto aguarda análise. Enviar fotos não altera a aprovação.
+O sininho consulta `/solicitacoes/pendentes/resumo`: conta pendentes recebidos,
+não mensagens não lidas; atualiza ao navegar, voltar à aba ou agir no pedido.
